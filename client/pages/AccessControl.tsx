@@ -41,6 +41,7 @@ import {
   type User,
 } from "@/store/acl";
 import { Pencil, Plus, Trash2 } from "lucide-react";
+import { t } from "@/i18n";
 
 export default function AccessControl() {
   const ar = document.documentElement.getAttribute("dir") === "rtl";
