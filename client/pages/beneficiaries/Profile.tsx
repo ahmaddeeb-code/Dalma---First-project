@@ -33,6 +33,12 @@ import {
   LifeBuoy,
   MessagesSquare,
   Stethoscope,
+  Trash2,
+  UploadCloud,
+  Edit3,
+  Save,
+  X,
+  Archive,
   User2,
   WalletMinimal,
 } from "lucide-react";
