@@ -1,4 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Bell, HeartHandshake, LayoutDashboard, LogOut, ShieldCheck, UserCircle2 } from "lucide-react";
@@ -11,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getCurrentUser, logout } from "@/store/auth";
+import { getCurrentUser, logout, subscribeAuth } from "@/store/auth";
 import { loadACL } from "@/store/acl";
 
 const navItems = [
@@ -26,11 +27,7 @@ const navItems = [
 
 function useAuthUser() {
   return useSyncExternalStore(
-    (cb) => {
-      const handler = () => cb();
-      window.addEventListener("storage", handler);
-      return () => window.removeEventListener("storage", handler);
-    },
+    (cb) => subscribeAuth(cb),
     () => getCurrentUser(),
     () => getCurrentUser(),
   );
