@@ -244,6 +244,7 @@ export default function Translations() {
           </div>
         </CardHeader>
         <CardContent>
+          <div className="w-full overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -254,7 +255,7 @@ export default function Translations() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {rows.map((r) => (
+              {pageItems.map((r) => (
                 <TableRow key={r.key}>
                   <TableCell className="font-mono text-xs">{r.key}</TableCell>
                   <TableCell className="text-sm">{r.en}</TableCell>
@@ -288,6 +289,22 @@ export default function Translations() {
               ))}
             </TableBody>
           </Table>
+          </div>
+          <div className="mt-4">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious href="#" onClick={(e)=>{ e.preventDefault(); setPage(p=>Math.max(1, p-1)); }} />
+                </PaginationItem>
+                <PaginationItem>
+                  <span className="px-3 py-2 text-sm text-muted-foreground">{page} / {totalPages}</span>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext href="#" onClick={(e)=>{ e.preventDefault(); setPage(p=>Math.min(totalPages, p+1)); }} />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
         </CardContent>
       </Card>
     </div>
