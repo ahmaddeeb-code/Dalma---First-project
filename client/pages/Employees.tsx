@@ -254,7 +254,7 @@ export default function Employees() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((u) => (
+              {pageItems.map((u) => (
                 <TableRow key={u.id}>
                   <TableCell className="font-medium">{u.name}</TableCell>
                   <TableCell>{u.email}</TableCell>
