@@ -535,93 +535,119 @@ export default function Beneficiaries() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  {canEdit && (
-                    <TableHead>
-                      <Checkbox
-                        checked={
-                          selected.length > 0 &&
-                          selected.length === filtered.length
-                        }
-                        onCheckedChange={(v) =>
-                          setSelected(v ? filtered.map((b) => b.id) : [])
-                        }
-                      />
-                    </TableHead>
-                  )}
-                  <TableHead>{ar ? "المستفيد" : "Beneficiary"}</TableHead>
-                  <TableHead>{ar ? "العمر" : "Age"}</TableHead>
-                  <TableHead>{ar ? "الإعاقة" : "Disability"}</TableHead>
-                  <TableHead>{ar ? "البرامج" : "Programs"}</TableHead>
-                  <TableHead>{ar ? "المعالج" : "Therapist"}</TableHead>
-                  <TableHead>{ar ? "الحالة" : "Status"}</TableHead>
-                  <TableHead className="text-center">
-                    {ar ? "الملف" : "Profile"}
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map((b) => (
-                  <TableRow key={b.id}>
+            <div className="w-full overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
                     {canEdit && (
-                      <TableCell>
+                      <TableHead>
                         <Checkbox
-                          checked={selected.includes(b.id)}
+                          checked={
+                            pageItems.length > 0 &&
+                            pageItems.every((b) => selected.includes(b.id))
+                          }
                           onCheckedChange={(v) =>
-                            setSelected((prev) =>
-                              v
-                                ? [...prev, b.id]
-                                : prev.filter((x) => x !== b.id),
-                            )
+                            setSelected((prev) => {
+                              const ids = pageItems.map((b) => b.id);
+                              if (v) return Array.from(new Set([...prev, ...ids]));
+                              return prev.filter((id) => !ids.includes(id));
+                            })
                           }
                         />
-                      </TableCell>
+                      </TableHead>
                     )}
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Avatar>
-                          <AvatarFallback>
-                            <User2 className="h-4 w-4" />
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className="font-medium">
-                            <Link
-                              to={`/beneficiaries/${b.id}`}
-                              className="hover:underline"
-                            >
-                              {b.name}
-                            </Link>
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            {b.beneficiaryId} • {b.civilId}
+                    <TableHead className="cursor-pointer select-none" onClick={()=>{ setSortBy("name"); setSortDir(sortBy==="name" && sortDir==="asc"?"desc":"asc"); }}>
+                      <span className="inline-flex items-center gap-1">{ar ? "المستفيد" : "Beneficiary"} <ArrowUpDown className="h-3 w-3 opacity-60" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={()=>{ setSortBy("age"); setSortDir(sortBy==="age" && sortDir==="asc"?"desc":"asc"); }}>
+                      <span className="inline-flex items-center gap-1">{ar ? "العمر" : "Age"} <ArrowUpDown className="h-3 w-3 opacity-60" /></span>
+                    </TableHead>
+                    <TableHead>{ar ? "الإعاقة" : "Disability"}</TableHead>
+                    <TableHead className="hidden md:table-cell">{ar ? "البرامج" : "Programs"}</TableHead>
+                    <TableHead className="hidden md:table-cell">{ar ? "المعالج" : "Therapist"}</TableHead>
+                    <TableHead>{ar ? "الحالة" : "Status"}</TableHead>
+                    <TableHead className="text-center">
+                      {ar ? "الملف" : "Profile"}
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {pageItems.map((b) => (
+                    <TableRow key={b.id}>
+                      {canEdit && (
+                        <TableCell>
+                          <Checkbox
+                            checked={selected.includes(b.id)}
+                            onCheckedChange={(v) =>
+                              setSelected((prev) =>
+                                v
+                                  ? [...prev, b.id]
+                                  : prev.filter((x) => x !== b.id),
+                              )
+                            }
+                          />
+                        </TableCell>
+                      )}
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <Avatar>
+                            <AvatarFallback>
+                              <User2 className="h-4 w-4" />
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className="font-medium">
+                              <Link
+                                to={`/beneficiaries/${b.id}`}
+                                className="hover:underline"
+                              >
+                                {b.name}
+                              </Link>
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {b.beneficiaryId} • {b.civilId}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{getAge(b)}</TableCell>
-                    <TableCell>
-                      {disabilityLabel(b.medical.disabilityType, ar)}
-                    </TableCell>
-                    <TableCell>{b.education.programs.join(", ")}</TableCell>
-                    <TableCell>
-                      {b.care.assignedTherapist ||
-                        (ar ? "غير محدد" : "Unassigned")}
-                    </TableCell>
-                    <TableCell>{statusBadge(b.status)}</TableCell>
-                    <TableCell className="text-center">
-                      <Button asChild size="sm" variant="secondary">
-                        <Link to={`/beneficiaries/${b.id}`}>
-                          {ar ? "فتح" : "Open"}
-                        </Link>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                      </TableCell>
+                      <TableCell>{getAge(b)}</TableCell>
+                      <TableCell>
+                        {disabilityLabel(b.medical.disabilityType, ar)}
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">{b.education.programs.join(", ")}</TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {b.care.assignedTherapist ||
+                          (ar ? "غير محدد" : "Unassigned")}
+                      </TableCell>
+                      <TableCell>{statusBadge(b.status)}</TableCell>
+                      <TableCell className="text-center">
+                        <Button asChild size="sm" variant="secondary">
+                          <Link to={`/beneficiaries/${b.id}`}>
+                            {ar ? "فتح" : "Open"}
+                          </Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            <div className="mt-4">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious href="#" onClick={(e)=>{ e.preventDefault(); setPage(p=>Math.max(1, p-1)); }} />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <span className="px-3 py-2 text-sm text-muted-foreground">{page} / {totalPages}</span>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext href="#" onClick={(e)=>{ e.preventDefault(); setPage(p=>Math.min(totalPages, p+1)); }} />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
           </CardContent>
         </Card>
 
