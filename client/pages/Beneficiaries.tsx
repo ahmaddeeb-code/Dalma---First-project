@@ -265,11 +265,52 @@ export default function Beneficiaries() {
                 : "Filter by disability, status, program and therapist"}
             </CardDescription>
           </div>
-          {canEdit && (
-            <Button onClick={() => setAddOpen(true)}>
-              {ar ? "إضافة مستفيد" : "Add Beneficiary"}
-            </Button>
-          )}
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2">
+              <Label className="text-xs">{ar?"حجم الصفحة":"Page size"}</Label>
+              <select className="h-9 rounded-md border bg-background px-2 text-sm" value={pageSize} onChange={(e)=>{ setPageSize(Number(e.target.value)); setPage(1); }}>
+                {[10,20,50,100].map(n=> (<option key={n} value={n}>{n}</option>))}
+              </select>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline"><Download className="h-4 w-4 ml-1" /> {ar?"تصدير":"Export"}</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>{ar?"تنسيق":"Format"}</DropdownMenuLabel>
+                {(["csv","xlsx","pdf"] as const).map(fmt => (
+                  <DropdownMenuItem key={fmt} onClick={()=>{
+                    const cols: ColumnDef<Beneficiary>[] = [
+                      { header: ar?"الاسم":"Name", accessor: r=>r.name },
+                      { header: ar?"العمر":"Age", accessor: r=>getAge(r) },
+                      { header: ar?"الإعاقة":"Disability", accessor: r=>r.medical.disabilityType },
+                      { header: ar?"المعالج":"Therapist", accessor: r=>r.care.assignedTherapist||"" },
+                      { header: ar?"الحالة":"Status", accessor: r=>r.status },
+                    ];
+                    exportAll(filtered, cols, fmt, `beneficiaries_${fmt}`);
+                  }}>{ar?"المجموعة المفلترة":"Filtered"} – {fmt.toUpperCase()}</DropdownMenuItem>
+                ))}
+                <DropdownMenuSeparator />
+                {(["csv","xlsx","pdf"] as const).map(fmt => (
+                  <DropdownMenuItem key={fmt} onClick={()=>{
+                    const cols: ColumnDef<Beneficiary>[] = [
+                      { header: ar?"الاسم":"Name", accessor: r=>r.name },
+                      { header: ar?"العمر":"Age", accessor: r=>getAge(r) },
+                      { header: ar?"الإعاقة":"Disability", accessor: r=>r.medical.disabilityType },
+                      { header: ar?"المعالج":"Therapist", accessor: r=>r.care.assignedTherapist||"" },
+                      { header: ar?"الحالة":"Status", accessor: r=>r.status },
+                    ];
+                    exportAll(data, cols, fmt, `beneficiaries_${fmt}`);
+                  }}>{ar?"كامل البيانات":"Full dataset"} – {fmt.toUpperCase()}</DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            {canEdit && (
+              <Button onClick={() => setAddOpen(true)}>
+                {ar ? "إضافة مستفيد" : "Add Beneficiary"}
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-7 gap-3">
           <div className="md:col-span-2">
