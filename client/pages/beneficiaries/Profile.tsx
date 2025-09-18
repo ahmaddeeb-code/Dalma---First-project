@@ -192,7 +192,7 @@ export default function BeneficiaryProfile() {
                   )}
                 </span>
                 <span className="flex items-center gap-2">
-                  <span>{ar ? "الإ��اقة" : "Disability"}:</span>
+                  <span>{ar ? "الإعاقة" : "Disability"}:</span>
                   {edit ? (
                     <Select defaultValue={b.medical.disabilityType} onValueChange={(v)=> (b.medical.disabilityType = v)}>
                       <SelectTrigger className="h-8 w-40"><SelectValue /></SelectTrigger>
@@ -384,7 +384,7 @@ export default function BeneficiaryProfile() {
           </TabsTrigger>
           <TabsTrigger value="education">
             <CalendarDays className="h-4 w-4 ml-1" />{" "}
-            {ar ? "تعليم ��أنشطة" : "Education"}
+            {ar ? "تعليم وأنشطة" : "Education"}
           </TabsTrigger>
           <TabsTrigger value="documents">
             <FileText className="h-4 w-4 ml-1" />{" "}
@@ -697,7 +697,7 @@ export default function BeneficiaryProfile() {
                                 : "Missed"
                               : ar
                                 ? "—"
-                                : "��"}
+                                : "—"}
                         </TableCell>
                         {edit && (
                           <TableCell className="text-right">
@@ -908,18 +908,44 @@ export default function BeneficiaryProfile() {
             </CardHeader>
             <CardContent className="grid md:grid-cols-2 gap-4 text-sm">
               <div>
-                <div>
+                <div className="flex items-center gap-2">
                   <span className="text-muted-foreground">
                     {ar ? "الرعاية" : "Sponsorship"}:
-                  </span>{" "}
-                  {b.financial.sponsorship || (ar ? "لا يوجد" : "None")}
+                  </span>
+                  {edit ? (
+                    <Select defaultValue={b.financial.sponsorship || undefined} onValueChange={(v)=> (b.financial.sponsorship = v)}>
+                      <SelectTrigger className="h-8 w-56"><SelectValue placeholder={ar?"اختر":"Choose"} /></SelectTrigger>
+                      <SelectContent>
+                        {settings.lists.sponsorshipTypes.map((s)=>(<SelectItem key={s} value={s}>{s}</SelectItem>))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    b.financial.sponsorship || (ar ? "لا يوجد" : "None")
+                  )}
                 </div>
-                <div>
+                <div className="mt-2">
                   <span className="text-muted-foreground">
                     {ar ? "البرامج الداعمة" : "Support Programs"}:
                   </span>{" "}
-                  {b.financial.supportPrograms?.join(", ") ||
-                    (ar ? "لا يوجد" : "None")}
+                  {edit ? (
+                    <div className="mt-1 grid grid-cols-2 gap-2">
+                      {settings.lists.supportPrograms.map((p)=>{
+                        const checked = (b.financial.supportPrograms||[]).includes(p);
+                        return (
+                          <label key={p} className="flex items-center gap-2">
+                            <Checkbox checked={checked} onCheckedChange={(v)=>{
+                              const list = new Set(b.financial.supportPrograms||[]);
+                              if(v) list.add(p); else list.delete(p);
+                              b.financial.supportPrograms = Array.from(list);
+                            }} />
+                            <span>{p}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    b.financial.supportPrograms?.join(", ") || (ar ? "لا يوجد" : "None")
+                  )}
                 </div>
               </div>
               <div>
@@ -929,7 +955,7 @@ export default function BeneficiaryProfile() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{ar ? "التاريخ" : "Date"}</TableHead>
+                      <TableHead>{ar ? "الت��ريخ" : "Date"}</TableHead>
                       <TableHead>{ar ? "المبلغ" : "Amount"}</TableHead>
                       <TableHead>{ar ? "الطريقة" : "Method"}</TableHead>
                       <TableHead>{ar ? "ملاحظة" : "Note"}</TableHead>
