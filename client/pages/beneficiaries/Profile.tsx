@@ -65,6 +65,7 @@ import {
   removeBeneficiary,
   archiveBeneficiaries,
 } from "@/store/beneficiaries";
+import { getBeneficiarySettings, subscribeBeneficiarySettings } from "@/store/beneficiary-settings";
 
 import { getCurrentUser, getCurrentUserId } from "@/store/auth";
 import { effectivePrivileges, loadACL } from "@/store/acl";
@@ -558,7 +559,7 @@ export default function BeneficiaryProfile() {
               </CardTitle>
               <CardDescription>
                 {ar
-                  ? "أهداف مخصصة، تقدم، وجدول الجلسات"
+                  ? "أ��داف مخصصة، تقدم، وجدول الجلسات"
                   : "Personalized goals, progress, session schedule"}
               </CardDescription>
             </CardHeader>
@@ -908,7 +909,7 @@ export default function BeneficiaryProfile() {
                 ))}
                 {b.communication.messages.length === 0 && (
                   <li className="text-muted-foreground">
-                    {ar ? "لا توجد رسائل" : "No messages"}
+                    {ar ? "لا توجد ��سائل" : "No messages"}
                   </li>
                 )}
               </ul>
@@ -943,7 +944,7 @@ export default function BeneficiaryProfile() {
               </div>
               <div>
                 <div className="font-medium mb-1">
-                  {ar ? "ملا��ظات" : "Notes"}
+                  {ar ? "ملاحظات" : "Notes"}
                 </div>
                 <p>{b.emergency.notes || (ar ? "لا يوجد" : "None")}</p>
               </div>
