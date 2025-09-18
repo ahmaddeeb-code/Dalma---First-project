@@ -239,12 +239,8 @@ export default function AccessControl() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>{ar ? "الصلاحيات" : "Privileges"}</CardTitle>
-                <CardDescription>
-                  {ar
-                    ? "صلاحيات أساسية تُسند إلى الأدوار أو مباشرة للمستخدمين."
-                    : "Atomic permissions assigned to roles or directly to users."}
-                </CardDescription>
+                <CardTitle>{t("pages.accessControl.privileges.title")}</CardTitle>
+                <CardDescription>{t("pages.accessControl.privileges.desc")}</CardDescription>
               </div>
               <PrivilegeDialog
                 onSubmit={(p) =>
