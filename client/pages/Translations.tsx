@@ -228,13 +228,21 @@ export default function Translations() {
               : "Manage translations by English keys and check completeness"}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <div className="flex items-center gap-2">
             <span className="text-xs text-muted-foreground">{ar?"حجم الصفحة":"Page size"}</span>
             <select className="h-9 rounded-md border bg-background px-2 text-sm" value={pageSize} onChange={(e)=>{ setPageSize(Number(e.target.value)); setPage(1); }}>
               {[20,50,100].map(n=> (<option key={n} value={n}>{n}</option>))}
             </select>
           </div>
+          <Button variant="secondary" onClick={()=>setConfirmScan(true)}>
+            {ar?"تحديث المفاتيح":"Update Keys"}
+          </Button>
+          <label className="inline-flex items-center gap-2">
+            <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" className="hidden" onChange={(e)=>{ const f=e.target.files?.[0]; if(!f) return; setConfirmImport({ mode: "incremental" }); (e.target as any).value=""; (window as any).__pendingExcel=f; }} />
+            <Button>{ar?"استيراد Excel":"Import Excel"}</Button>
+          </label>
+          <Button variant="outline" onClick={exportAllAsExcel}>{ar?"تصدير Excel":"Export Excel"}</Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline"><Download className="h-4 w-4 ml-1" /> {ar?"تصدير جدول":"Export table"}</Button>
