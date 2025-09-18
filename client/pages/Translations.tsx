@@ -57,9 +57,93 @@ export default function Translations() {
     );
   }, [me]);
 
-  const keys = useMemo(() => listI18nKeys(), []);
+  const [keysTick, setKeysTick] = useState(0);
+  const keys = useMemo(() => listI18nKeys(), [keysTick]);
   const [query, setQuery] = useState("");
   const [onlyMissing, setOnlyMissing] = useState(false);
+  const [confirmScan, setConfirmScan] = useState(false);
+  const [confirmImport, setConfirmImport] = useState<null | { mode: "overwrite" | "incremental" }>(null);
+  const [log, setLog] = useState<Array<{ at: string; action: string; details: string }>>(() => {
+    try { return JSON.parse(localStorage.getItem("i18n_logs_v1")||"[]"); } catch { return []; }
+  });
+
+  function pushLog(entry: { action: string; details: string }){
+    const item = { at: new Date().toISOString(), ...entry };
+    const next = [item, ...log].slice(0, 20);
+    localStorage.setItem("i18n_logs_v1", JSON.stringify(next));
+    setLog(next);
+  }
+
+  async function scanProjectKeys(){
+    const mods = import.meta.glob(["/client/**/*.{ts,tsx}"], { as: "raw" });
+    const found = new Map<string, Set<string>>();
+    const keySet = new Set<string>();
+    for (const path in mods){
+      const loader = mods[path] as () => Promise<string>;
+      try {
+        const code = await loader();
+        const rx = /t\(\s*["'`]([^"'`]+)["'`]\s*\)/g;
+        let m: RegExpExecArray | null;
+        while((m = rx.exec(code))){
+          keySet.add(m[1]);
+          const set = found.get(path) || new Set<string>(); set.add(m[1]); found.set(path, set);
+        }
+      } catch {}
+    }
+    const before = new Set(listI18nKeys());
+    const newlyAdded: string[] = [];
+    keySet.forEach(k => { if (!before.has(k)) { addDiscoveredKey(k); newlyAdded.push(k); } });
+    setKeysTick(x=>x+1);
+    pushLog({ action: "scan", details: `${newlyAdded.length} keys added from ${found.size} files` });
+    toast.success(ar?`تمت إضافة ${newlyAdded.length}`:`Added ${newlyAdded.length}`);
+    return { newlyAdded, byFile: found };
+  }
+
+  async function exportAllAsExcel(){
+    const XLSX = await import("xlsx");
+    const allKeys = listI18nKeys();
+    const locales = Array.from(new Set(["en","ar", ...listOverrideLocales()]));
+    const header = ["Key", ...locales];
+    const rows = allKeys.map(k => [k, ...locales.map(loc => getBaseMessage(loc as any, k) || getOverridesForLocale(loc)[k] || "")]);
+    const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Translations");
+    XLSX.writeFile(wb, "translations.xlsx");
+  }
+
+  async function importFromExcel(file: File, mode: "overwrite"|"incremental"){
+    const XLSX = await import("xlsx");
+    const buf = await file.arrayBuffer();
+    const wb = XLSX.read(buf);
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const json: any[] = XLSX.utils.sheet_to_json(ws, { header: 1 });
+    if (!json.length) { toast.error(ar?"ملف فارغ":"Empty file"); return; }
+    const header = (json[0] as any[]).map((h: any)=>String(h||"").trim());
+    const keyIdx = header.findIndex((h)=>/^key$/i.test(h));
+    if (keyIdx===-1){ toast.error(ar?"عمود Key مفقود":"Missing Key column"); return; }
+    const locales = header.filter((h,i)=>i!==keyIdx && h).map(h=>String(h));
+    let added=0, updated=0, skipped=0;
+    for (let i=1;i<json.length;i++){
+      const row = json[i] as any[];
+      const k = String(row[keyIdx]||"").trim();
+      if (!k){ skipped++; continue; }
+      // ensure key is listed
+      if (!listI18nKeys().includes(k)) { addDiscoveredKey(k); added++; }
+      for (const loc of locales){
+        const v = String(row[header.indexOf(loc)]||"");
+        if (mode==="overwrite") {
+          (setOverride as any)(loc, k, v);
+          if (v) updated++;
+          else (removeOverride as any)(loc, k);
+        } else { // incremental
+          if (v) { (setOverride as any)(loc, k, v); updated++; } else { skipped++; }
+        }
+      }
+    }
+    setKeysTick(x=>x+1);
+    pushLog({ action: "import_excel", details: `added ${added}, updated ${updated}, skipped ${skipped}` });
+    toast.success(ar?`تم: مضافة ${added}، محدثة ${updated}`:`Done: added ${added}, updated ${updated}`);
+  }
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
