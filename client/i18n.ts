@@ -561,11 +561,11 @@ const messages = {
       },
       accessControl: {
         title: "التحكم بالصلاحيات",
-        subtitle: "إدارة المستخدمين والأدوار والص��احيات؛ وتعيينها بأمان.",
+        subtitle: "إدارة المستخدمين والأدوار وا��ص��احيات؛ وتعيينها بأمان.",
         tabs: { users: "المستخدمون", roles: "الأدوار", privs: "الصلاحيات" },
         users: {
           title: "المستخدمون",
-          desc: "إنشاء الحسابات وتعيين الأدوار/الصلاحيا��.",
+          desc: "إنشاء الحسابات وتعيين الأدوار/الصلاحيات.",
           headers: {
             name: "الاسم",
             email: "البريد الإلكتروني",
@@ -600,7 +600,7 @@ const messages = {
         },
         privileges: {
           title: "الصلاحيات",
-          desc: "صلاحيات ��ساسية تُسند إلى الأدوار أو مباشرة للمستخدمين.",
+          desc: "صلاحيات أساسية تُسند إلى الأدوار أو مباشرة للمستخدمين.",
           headers: {
             name: "الاسم",
             category: "الفئة",
@@ -688,7 +688,7 @@ const messages = {
         desc: "تحكم في الترجمات بناءً على المفاتيح الإنجليزية وفحص جميع الترجمات",
         totalKeys: "إجمالي المفاتيح",
         missing: "مفقود",
-        needsReview: "بحاج�� لمراجعة",
+        needsReview: "بحاجة لمراجعة",
         tableTitle: "الترجمات",
         tableDesc: "ابحث وحرّر العربية",
         onlyMissing: "إظهار الناقصة فقط",
@@ -816,7 +816,7 @@ const messages = {
         ctaDonate: "ادعمنا بالتبرع",
       },
       metrics: {
-        active: "المستف��دون النشطون",
+        active: "المستفيدون النشطون",
         monthly: "المواعيد الشهرية",
         satisfaction: "متوسط الرضا",
       },
@@ -846,7 +846,7 @@ const messages = {
           title: "لوحة التحكم",
           bullets: [
             "تحليلات المؤشرات",
-            "الأدوار والصلاحي��ت",
+            "الأدوار والصلاحيات",
             "الميزانيات والمالية",
             "سجلات ��لتدقيق",
           ],
@@ -877,7 +877,7 @@ const messages = {
         urgent: "عاجل",
         absences: "تم رصد ٣ غيابات",
         medium: "متوسط",
-        schedule: "تم تحديث جدول العلاجا��",
+        schedule: "تم تحديث جدول العلاجات",
         low: "منخفض",
       },
       security: {
@@ -937,14 +937,53 @@ function loadOv() {
   }
   return ovCache!;
 }
-function saveOv(v: Partial<Record<Locale, Record<string, string>>>) {
-  ovCache = v;
+function saveOv(v: Partial<Record<any, Record<string, string>>>) {
+  ovCache = v as any;
   localStorage.setItem(OV_KEY, JSON.stringify(v));
   transSubs.forEach((cb) => cb());
 }
 export function subscribeTranslations(cb: () => void) {
   transSubs.add(cb);
   return () => transSubs.delete(cb);
+}
+
+// Discovered keys tracking (runtime usage and scans)
+const DISC_KEY = "i18n_discovered_v1";
+function loadDiscovered(): string[] {
+  try {
+    const raw = localStorage.getItem(DISC_KEY);
+    return raw ? (JSON.parse(raw) as string[]) : [];
+  } catch {
+    return [];
+  }
+}
+function saveDiscovered(arr: string[]) {
+  localStorage.setItem(DISC_KEY, JSON.stringify(Array.from(new Set(arr))));
+}
+export function listDiscoveredKeys(): string[] {
+  return loadDiscovered();
+}
+export function addDiscoveredKey(k: string) {
+  if (!k) return;
+  const cur = loadDiscovered();
+  if (!cur.includes(k)) {
+    cur.push(k);
+    saveDiscovered(cur);
+    transSubs.forEach((cb) => cb());
+  }
+}
+export function clearDiscovered() {
+  saveDiscovered([]);
+}
+
+// Override helpers for external tools
+export function listOverrideLocales(): string[] {
+  const ov = loadOv();
+  return Object.keys(ov || {});
+}
+export function getOverridesForLocale(locale: string): Record<string, string> {
+  const ov = loadOv() as any;
+  return (ov && ov[locale]) || {};
 }
 
 function flatten(obj: any, prefix = ""): Record<string, string> {
@@ -960,7 +999,14 @@ function flatten(obj: any, prefix = ""): Record<string, string> {
 }
 
 export function listI18nKeys(): string[] {
-  return Object.keys(flatten(messages.en));
+  const base = Object.keys(flatten(messages.en));
+  const ov = loadOv();
+  const ovKeys = new Set<string>();
+  Object.values(ov || {}).forEach((m) => {
+    if (m) Object.keys(m as any).forEach((k) => ovKeys.add(k));
+  });
+  const disc = listDiscoveredKeys();
+  return Array.from(new Set<string>([...base, ...Array.from(ovKeys), ...disc])).sort();
 }
 export function getBaseMessage(
   locale: Locale,
@@ -978,18 +1024,18 @@ export function getOverride(locale: Locale, key: string): string | undefined {
   const o = loadOv()[locale];
   return o ? o[key] : undefined;
 }
-export function setOverride(locale: Locale, key: string, value: string) {
-  const cur = loadOv();
-  const bucket = { ...(cur[locale] || {}) };
+export function setOverride(locale: any, key: string, value: string) {
+  const cur = loadOv() as any;
+  const bucket = { ...((cur as any)[locale] || {}) };
   bucket[key] = value;
-  const next = { ...cur, [locale]: bucket };
+  const next = { ...(cur as any), [locale]: bucket };
   saveOv(next);
 }
-export function removeOverride(locale: Locale, key: string) {
-  const cur = loadOv();
-  const bucket = { ...(cur[locale] || {}) };
+export function removeOverride(locale: any, key: string) {
+  const cur = loadOv() as any;
+  const bucket = { ...((cur as any)[locale] || {}) };
   delete bucket[key];
-  const next = { ...cur, [locale]: bucket };
+  const next = { ...(cur as any), [locale]: bucket };
   saveOv(next);
 }
 export function clearOverrides(locale?: Locale) {
@@ -1003,11 +1049,12 @@ export function clearOverrides(locale?: Locale) {
 }
 
 export function t(key: MessageKey): string {
+  try { addDiscoveredKey(String(key)); } catch {}
   const loc = getLocale();
   const ov = getOverride(loc, key);
   if (typeof ov === "string" && ov.length) return ov;
   const base = getBaseMessage(loc, key);
   if (typeof base === "string") return base;
   const en = getBaseMessage("en", key);
-  return typeof en === "string" ? en : key;
+  return typeof en === "string" ? en : (key as string);
 }
