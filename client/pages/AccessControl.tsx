@@ -224,7 +224,7 @@ export default function AccessControl() {
                           }
                         >
                           <Trash2 className="ml-1 h-4 w-4" />
-                          حذف
+                          {t("common.delete")}
                         </Button>
                       </TableCell>
                     </TableRow>
