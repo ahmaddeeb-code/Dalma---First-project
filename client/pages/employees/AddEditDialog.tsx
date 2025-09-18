@@ -19,7 +19,7 @@ import {
   upsertUser,
   uid,
 } from "@/store/acl";
-import { getLocale } from "@/i18n";
+import { getLocale, t } from "@/i18n";
 import { toast } from "sonner";
 
 export default function AddEditEmployeeDialog({
@@ -104,7 +104,7 @@ export default function AddEditEmployeeDialog({
       privilegeIds: privIds,
     };
     upsertUser(entity);
-    toast.success(ar ? "تم الحفظ" : "Saved");
+    toast.success(t("pages.translations.saved"));
     onOpenChange(false);
   }
 
@@ -112,23 +112,15 @@ export default function AddEditEmployeeDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>
-            {user
-              ? ar
-                ? "تعديل الموظف"
-                : "Edit Employee"
-              : ar
-                ? "إضافة موظف"
-                : "Add Employee"}
-          </DialogTitle>
+          <DialogTitle>{user ? t("common.edit") + " " + t("pages.employees.addEmployee") : t("pages.employees.addEmployee")}</DialogTitle>
         </DialogHeader>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label>{ar ? "الاسم" : "Name"}</Label>
+            <Label>{t("common.name")}</Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div>
-            <Label>{ar ? "البريد الإلكتروني" : "Email"}</Label>
+            <Label>{t("common.email")}</Label>
             <Input
               type="email"
               value={email}
@@ -152,12 +144,12 @@ export default function AddEditEmployeeDialog({
           </div>
           <div className="flex items-center gap-2 mt-6">
             <Checkbox checked={active} onCheckedChange={(v) => setActive(v === true)} />
-            <Label>{ar ? "نشط" : "Active"}</Label>
+            <Label>{t("common.active")}</Label>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
           <div>
-            <Label className="mb-2 inline-block">{ar ? "��لأدوار" : "Roles"}</Label>
+            <Label className="mb-2 inline-block">{t("common.roles")}</Label>
             <div className="border rounded-md p-2 max-h-48 overflow-auto space-y-2">
               {roles.map((r) => (
                 <label key={r.id} className="flex items-center gap-2 text-sm">
@@ -171,9 +163,7 @@ export default function AddEditEmployeeDialog({
             </div>
           </div>
           <div>
-            <Label className="mb-2 inline-block">
-              {ar ? "الصلاحيات المباشرة" : "Direct Privileges"}
-            </Label>
+            <Label className="mb-2 inline-block">{t("pages.accessControl.users.form.directPrivs")}</Label>
             <div className="border rounded-md p-2 max-h-48 overflow-auto space-y-2">
               {privileges.map((p) => (
                 <label key={p.id} className="flex items-center gap-2 text-sm">
@@ -189,10 +179,10 @@ export default function AddEditEmployeeDialog({
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {ar ? "إلغاء" : "Cancel"}
+            {t("common.cancel")}
           </Button>
           <Button disabled={!valid} onClick={onSave}>
-            {ar ? "حفظ" : "Save"}
+            {t("common.save")}
           </Button>
         </DialogFooter>
       </DialogContent>
