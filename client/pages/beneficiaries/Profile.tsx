@@ -611,12 +611,26 @@ export default function BeneficiaryProfile() {
                 )}
               </div>
               <div>
-                <div className="font-medium mb-2">
+                <div className="font-medium mb-2 flex items-center gap-2">
                   {ar ? "الأهداف" : "Goals"}
+                  {edit && (
+                    <>
+                      <Input className="h-8 w-56" placeholder={ar?"أضف هدفاً":"Add goal"} onKeyDown={(e)=>{ if(e.key==="Enter"){ const v=(e.target as HTMLInputElement).value.trim(); if(v){ b.care.goals.push(v); (e.target as HTMLInputElement).value=""; }}}} />
+                      <Select onValueChange={(id)=>{ const tpl = settings.carePlanTemplates.find(t=>t.id===id); if(tpl){ tpl.goals.forEach(g=>{ if(!b.care.goals.includes(g)) b.care.goals.push(g); }); toast.success(ar?"تم تطبيق القالب":"Template applied"); } }}>
+                        <SelectTrigger className="h-8 w-56"><SelectValue placeholder={ar?"تطبيق قالب":"Apply template"} /></SelectTrigger>
+                        <SelectContent>
+                          {settings.carePlanTemplates.map(t=>(<SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>))}
+                        </SelectContent>
+                      </Select>
+                    </>
+                  )}
                 </div>
                 <ul className="list-disc pl-5 space-y-1 text-sm">
-                  {b.care.goals.map((g) => (
-                    <li key={g}>{g}</li>
+                  {b.care.goals.map((g,idx) => (
+                    <li key={idx} className="flex items-center gap-2">
+                      <span className="flex-1">{g}</span>
+                      {edit && (<Button size="sm" variant="ghost" onClick={()=>{ b.care.goals = b.care.goals.filter((x)=>x!==g); }}>{"✕"}</Button>)}
+                    </li>
                   ))}
                   {b.care.goals.length === 0 && (
                     <li className="text-muted-foreground">
@@ -692,7 +706,7 @@ export default function BeneficiaryProfile() {
               </CardTitle>
               <CardDescription>
                 {ar
-                  ? "البرامج الملتحق بها والأنشطة"
+                  ? "البرامج ال��لتحق بها والأنشطة"
                   : "Enrolled programs and activities"}
               </CardDescription>
             </CardHeader>
