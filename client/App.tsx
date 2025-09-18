@@ -9,6 +9,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/AdminDashboard";
+import AccessControl from "./pages/AccessControl";
 import Placeholder from "./pages/_Placeholder";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/access-control" element={<AccessControl />} />
             <Route
               path="/beneficiaries"
               element={
