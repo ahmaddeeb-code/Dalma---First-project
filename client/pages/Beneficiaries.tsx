@@ -67,8 +67,22 @@ import {
   queryBeneficiaries,
   subscribe as subscribeBeneficiaries,
 } from "@/store/beneficiaries";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { exportAll, exportToCSV, type ColumnDef } from "@/lib/export";
 
 function useBeneficiaries() {
@@ -267,41 +281,99 @@ export default function Beneficiaries() {
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-2">
-              <Label className="text-xs">{ar?"حجم الصفحة":"Page size"}</Label>
-              <select className="h-9 rounded-md border bg-background px-2 text-sm" value={pageSize} onChange={(e)=>{ setPageSize(Number(e.target.value)); setPage(1); }}>
-                {[10,20,50,100].map(n=> (<option key={n} value={n}>{n}</option>))}
+              <Label className="text-xs">
+                {ar ? "حجم الصفحة" : "Page size"}
+              </Label>
+              <select
+                className="h-9 rounded-md border bg-background px-2 text-sm"
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setPage(1);
+                }}
+              >
+                {[10, 20, 50, 100].map((n) => (
+                  <option key={n} value={n}>
+                    {n}
+                  </option>
+                ))}
               </select>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline"><Download className="h-4 w-4 ml-1" /> {ar?"تصدير":"Export"}</Button>
+                <Button variant="outline">
+                  <Download className="h-4 w-4 ml-1" />{" "}
+                  {ar ? "تصدير" : "Export"}
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{ar?"تنسيق":"Format"}</DropdownMenuLabel>
-                {(["csv","xlsx","pdf"] as const).map(fmt => (
-                  <DropdownMenuItem key={fmt} onClick={()=>{
-                    const cols: ColumnDef<Beneficiary>[] = [
-                      { header: ar?"الاسم":"Name", accessor: r=>r.name },
-                      { header: ar?"العمر":"Age", accessor: r=>getAge(r) },
-                      { header: ar?"الإعاقة":"Disability", accessor: r=>r.medical.disabilityType },
-                      { header: ar?"المعالج":"Therapist", accessor: r=>r.care.assignedTherapist||"" },
-                      { header: ar?"الحالة":"Status", accessor: r=>r.status },
-                    ];
-                    exportAll(filtered, cols, fmt, `beneficiaries_${fmt}`);
-                  }}>{ar?"المجموعة المفلترة":"Filtered"} – {fmt.toUpperCase()}</DropdownMenuItem>
+                <DropdownMenuLabel>{ar ? "تنسيق" : "Format"}</DropdownMenuLabel>
+                {(["csv", "xlsx", "pdf"] as const).map((fmt) => (
+                  <DropdownMenuItem
+                    key={fmt}
+                    onClick={() => {
+                      const cols: ColumnDef<Beneficiary>[] = [
+                        {
+                          header: ar ? "الاسم" : "Name",
+                          accessor: (r) => r.name,
+                        },
+                        {
+                          header: ar ? "العمر" : "Age",
+                          accessor: (r) => getAge(r),
+                        },
+                        {
+                          header: ar ? "الإعاقة" : "Disability",
+                          accessor: (r) => r.medical.disabilityType,
+                        },
+                        {
+                          header: ar ? "المعالج" : "Therapist",
+                          accessor: (r) => r.care.assignedTherapist || "",
+                        },
+                        {
+                          header: ar ? "الحالة" : "Status",
+                          accessor: (r) => r.status,
+                        },
+                      ];
+                      exportAll(filtered, cols, fmt, `beneficiaries_${fmt}`);
+                    }}
+                  >
+                    {ar ? "المجموعة المفلترة" : "Filtered"} –{" "}
+                    {fmt.toUpperCase()}
+                  </DropdownMenuItem>
                 ))}
                 <DropdownMenuSeparator />
-                {(["csv","xlsx","pdf"] as const).map(fmt => (
-                  <DropdownMenuItem key={fmt} onClick={()=>{
-                    const cols: ColumnDef<Beneficiary>[] = [
-                      { header: ar?"الاسم":"Name", accessor: r=>r.name },
-                      { header: ar?"العمر":"Age", accessor: r=>getAge(r) },
-                      { header: ar?"الإعاقة":"Disability", accessor: r=>r.medical.disabilityType },
-                      { header: ar?"المعالج":"Therapist", accessor: r=>r.care.assignedTherapist||"" },
-                      { header: ar?"الحالة":"Status", accessor: r=>r.status },
-                    ];
-                    exportAll(data, cols, fmt, `beneficiaries_${fmt}`);
-                  }}>{ar?"كامل البيانات":"Full dataset"} – {fmt.toUpperCase()}</DropdownMenuItem>
+                {(["csv", "xlsx", "pdf"] as const).map((fmt) => (
+                  <DropdownMenuItem
+                    key={fmt}
+                    onClick={() => {
+                      const cols: ColumnDef<Beneficiary>[] = [
+                        {
+                          header: ar ? "الاسم" : "Name",
+                          accessor: (r) => r.name,
+                        },
+                        {
+                          header: ar ? "العمر" : "Age",
+                          accessor: (r) => getAge(r),
+                        },
+                        {
+                          header: ar ? "الإعاقة" : "Disability",
+                          accessor: (r) => r.medical.disabilityType,
+                        },
+                        {
+                          header: ar ? "المعالج" : "Therapist",
+                          accessor: (r) => r.care.assignedTherapist || "",
+                        },
+                        {
+                          header: ar ? "الحالة" : "Status",
+                          accessor: (r) => r.status,
+                        },
+                      ];
+                      exportAll(data, cols, fmt, `beneficiaries_${fmt}`);
+                    }}
+                  >
+                    {ar ? "كامل البيانات" : "Full dataset"} –{" "}
+                    {fmt.toUpperCase()}
+                  </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
@@ -549,22 +621,53 @@ export default function Beneficiaries() {
                           onCheckedChange={(v) =>
                             setSelected((prev) => {
                               const ids = pageItems.map((b) => b.id);
-                              if (v) return Array.from(new Set([...prev, ...ids]));
+                              if (v)
+                                return Array.from(new Set([...prev, ...ids]));
                               return prev.filter((id) => !ids.includes(id));
                             })
                           }
                         />
                       </TableHead>
                     )}
-                    <TableHead className="cursor-pointer select-none" onClick={()=>{ setSortBy("name"); setSortDir(sortBy==="name" && sortDir==="asc"?"desc":"asc"); }}>
-                      <span className="inline-flex items-center gap-1">{ar ? "المستفيد" : "Beneficiary"} <ArrowUpDown className="h-3 w-3 opacity-60" /></span>
+                    <TableHead
+                      className="cursor-pointer select-none"
+                      onClick={() => {
+                        setSortBy("name");
+                        setSortDir(
+                          sortBy === "name" && sortDir === "asc"
+                            ? "desc"
+                            : "asc",
+                        );
+                      }}
+                    >
+                      <span className="inline-flex items-center gap-1">
+                        {ar ? "المستفيد" : "Beneficiary"}{" "}
+                        <ArrowUpDown className="h-3 w-3 opacity-60" />
+                      </span>
                     </TableHead>
-                    <TableHead className="cursor-pointer select-none" onClick={()=>{ setSortBy("age"); setSortDir(sortBy==="age" && sortDir==="asc"?"desc":"asc"); }}>
-                      <span className="inline-flex items-center gap-1">{ar ? "العمر" : "Age"} <ArrowUpDown className="h-3 w-3 opacity-60" /></span>
+                    <TableHead
+                      className="cursor-pointer select-none"
+                      onClick={() => {
+                        setSortBy("age");
+                        setSortDir(
+                          sortBy === "age" && sortDir === "asc"
+                            ? "desc"
+                            : "asc",
+                        );
+                      }}
+                    >
+                      <span className="inline-flex items-center gap-1">
+                        {ar ? "العمر" : "Age"}{" "}
+                        <ArrowUpDown className="h-3 w-3 opacity-60" />
+                      </span>
                     </TableHead>
                     <TableHead>{ar ? "الإعاقة" : "Disability"}</TableHead>
-                    <TableHead className="hidden md:table-cell">{ar ? "البرامج" : "Programs"}</TableHead>
-                    <TableHead className="hidden md:table-cell">{ar ? "المعالج" : "Therapist"}</TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      {ar ? "البرامج" : "Programs"}
+                    </TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      {ar ? "المعالج" : "Therapist"}
+                    </TableHead>
                     <TableHead>{ar ? "الحالة" : "Status"}</TableHead>
                     <TableHead className="text-center">
                       {ar ? "الملف" : "Profile"}
@@ -614,7 +717,9 @@ export default function Beneficiaries() {
                       <TableCell>
                         {disabilityLabel(b.medical.disabilityType, ar)}
                       </TableCell>
-                      <TableCell className="hidden md:table-cell">{b.education.programs.join(", ")}</TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {b.education.programs.join(", ")}
+                      </TableCell>
                       <TableCell className="hidden md:table-cell">
                         {b.care.assignedTherapist ||
                           (ar ? "غير محدد" : "Unassigned")}
@@ -637,13 +742,27 @@ export default function Beneficiaries() {
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
-                    <PaginationPrevious href="#" onClick={(e)=>{ e.preventDefault(); setPage(p=>Math.max(1, p-1)); }} />
+                    <PaginationPrevious
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setPage((p) => Math.max(1, p - 1));
+                      }}
+                    />
                   </PaginationItem>
                   <PaginationItem>
-                    <span className="px-3 py-2 text-sm text-muted-foreground">{page} / {totalPages}</span>
+                    <span className="px-3 py-2 text-sm text-muted-foreground">
+                      {page} / {totalPages}
+                    </span>
                   </PaginationItem>
                   <PaginationItem>
-                    <PaginationNext href="#" onClick={(e)=>{ e.preventDefault(); setPage(p=>Math.min(totalPages, p+1)); }} />
+                    <PaginationNext
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setPage((p) => Math.min(totalPages, p + 1));
+                      }}
+                    />
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>

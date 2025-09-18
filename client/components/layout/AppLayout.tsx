@@ -17,7 +17,13 @@ import {
   ChevronDown,
   ChevronRight,
 } from "lucide-react";
-import { ReactNode, useEffect, useMemo, useSyncExternalStore, useState } from "react";
+import {
+  ReactNode,
+  useEffect,
+  useMemo,
+  useSyncExternalStore,
+  useState,
+} from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -72,11 +78,31 @@ const groups = [
   {
     labelKey: "nav.settings",
     items: [
-      { to: "/admin/access-control", key: "nav.accessControl", icon: ShieldCheck },
-      { to: "/admin/medical-settings", key: "nav.medicalSettings", icon: ShieldCheck },
-      { to: "/admin/beneficiary-settings", key: "nav.beneficiarySettings", icon: ShieldCheck },
-      { to: "/admin/organization-settings", key: "nav.organizationSettings", icon: ShieldCheck },
-      { to: "/admin/security-settings", key: "nav.securitySettings", icon: ShieldCheck },
+      {
+        to: "/admin/access-control",
+        key: "nav.accessControl",
+        icon: ShieldCheck,
+      },
+      {
+        to: "/admin/medical-settings",
+        key: "nav.medicalSettings",
+        icon: ShieldCheck,
+      },
+      {
+        to: "/admin/beneficiary-settings",
+        key: "nav.beneficiarySettings",
+        icon: ShieldCheck,
+      },
+      {
+        to: "/admin/organization-settings",
+        key: "nav.organizationSettings",
+        icon: ShieldCheck,
+      },
+      {
+        to: "/admin/security-settings",
+        key: "nav.securitySettings",
+        icon: ShieldCheck,
+      },
       { to: "/admin/translations", key: "nav.translations", icon: Languages },
     ],
   },
@@ -119,7 +145,8 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   }, [locale]);
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
-  const toggleGroup = (k: string) => setOpenGroups((s) => ({ ...s, [k]: !s[k] }));
+  const toggleGroup = (k: string) =>
+    setOpenGroups((s) => ({ ...s, [k]: !s[k] }));
 
   return (
     <SidebarProvider>
@@ -127,7 +154,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         side={locale === "ar" ? "right" : "left"}
         className={cn(
           locale === "ar" ? "border-l" : "border-r",
-          "bg-gradient-to-b from-[hsl(var(--sidebar-background))] to-[hsl(var(--sidebar-background))]/60"
+          "bg-gradient-to-b from-[hsl(var(--sidebar-background))] to-[hsl(var(--sidebar-background))]/60",
         )}
       >
         <SidebarHeader>
@@ -146,8 +173,15 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               <SidebarGroup key={g.labelKey}>
                 <SidebarGroupLabel className="flex items-center justify-between">
                   <span>{t(g.labelKey as any)}</span>
-                  <button onClick={() => toggleGroup(g.labelKey)} className="rounded-md p-1 hover:bg-sidebar-accent">
-                    {isOpen ? <ChevronDown className="h-4 w-4"/> : <ChevronRight className="h-4 w-4"/>}
+                  <button
+                    onClick={() => toggleGroup(g.labelKey)}
+                    className="rounded-md p-1 hover:bg-sidebar-accent"
+                  >
+                    {isOpen ? (
+                      <ChevronDown className="h-4 w-4" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4" />
+                    )}
                   </button>
                 </SidebarGroupLabel>
                 {isOpen && (
@@ -158,10 +192,19 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                         const active = pathname === n.to;
                         return (
                           <SidebarMenuItem key={n.to}>
-                            <SidebarMenuButton asChild isActive={active} className="rounded-lg">
-                              <NavLink to={n.to} className="flex items-center gap-2">
+                            <SidebarMenuButton
+                              asChild
+                              isActive={active}
+                              className="rounded-lg"
+                            >
+                              <NavLink
+                                to={n.to}
+                                className="flex items-center gap-2"
+                              >
                                 <Icon />
-                                <span className="truncate">{t(n.key as any)}</span>
+                                <span className="truncate">
+                                  {t(n.key as any)}
+                                </span>
                               </NavLink>
                             </SidebarMenuButton>
                           </SidebarMenuItem>

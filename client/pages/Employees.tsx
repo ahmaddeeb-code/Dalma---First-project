@@ -45,9 +45,29 @@ import {
 import { getCurrentUser } from "@/store/auth";
 import { toast } from "sonner";
 import AddEditEmployeeDialog from "@/pages/employees/AddEditDialog";
-import { Filter, Plus, Search, ShieldCheck, Trash2, Download } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import {
+  Filter,
+  Plus,
+  Search,
+  ShieldCheck,
+  Trash2,
+  Download,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { exportAll, type ColumnDef } from "@/lib/export";
 
 function useACLUsers() {
@@ -157,36 +177,79 @@ export default function Employees() {
           <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-2">
               <Label className="text-xs">{t("common.pageSize")}</Label>
-              <select className="h-9 rounded-md border bg-background px-2 text-sm" value={pageSize} onChange={(e)=>{ setPageSize(Number(e.target.value)); setPage(1); }}>
-                {[10,20,50,100].map(n=> (<option key={n} value={n}>{n}</option>))}
+              <select
+                className="h-9 rounded-md border bg-background px-2 text-sm"
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setPage(1);
+                }}
+              >
+                {[10, 20, 50, 100].map((n) => (
+                  <option key={n} value={n}>
+                    {n}
+                  </option>
+                ))}
               </select>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline"><Download className="h-4 w-4 ml-1" /> {t("common.export")}</Button>
+                <Button variant="outline">
+                  <Download className="h-4 w-4 ml-1" /> {t("common.export")}
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>{t("common.format")}</DropdownMenuLabel>
-                {(["csv","xlsx","pdf"] as const).map(fmt => (
-                  <DropdownMenuItem key={fmt} onClick={()=>{
-                    const cols: ColumnDef<User>[] = [
-                      { header: t("common.name") as string, accessor: r=>r.name },
-                      { header: t("common.email") as string, accessor: r=>r.email||"" },
-                      { header: t("common.departmentTitle") as string, accessor: r=>`${r.department||""} ${r.title?`• ${r.title}`:""}` },
-                    ];
-                    exportAll(filtered, cols, fmt, `employees_${fmt}`);
-                  }}>{t("common.filtered")} – {fmt.toUpperCase()}</DropdownMenuItem>
+                {(["csv", "xlsx", "pdf"] as const).map((fmt) => (
+                  <DropdownMenuItem
+                    key={fmt}
+                    onClick={() => {
+                      const cols: ColumnDef<User>[] = [
+                        {
+                          header: t("common.name") as string,
+                          accessor: (r) => r.name,
+                        },
+                        {
+                          header: t("common.email") as string,
+                          accessor: (r) => r.email || "",
+                        },
+                        {
+                          header: t("common.departmentTitle") as string,
+                          accessor: (r) =>
+                            `${r.department || ""} ${r.title ? `• ${r.title}` : ""}`,
+                        },
+                      ];
+                      exportAll(filtered, cols, fmt, `employees_${fmt}`);
+                    }}
+                  >
+                    {t("common.filtered")} – {fmt.toUpperCase()}
+                  </DropdownMenuItem>
                 ))}
                 <DropdownMenuSeparator />
-                {(["csv","xlsx","pdf"] as const).map(fmt => (
-                  <DropdownMenuItem key={fmt} onClick={()=>{
-                    const cols: ColumnDef<User>[] = [
-                      { header: t("common.name") as string, accessor: r=>r.name },
-                      { header: t("common.email") as string, accessor: r=>r.email||"" },
-                      { header: t("common.departmentTitle") as string, accessor: r=>`${r.department||""} ${r.title?`• ${r.title}`:""}` },
-                    ];
-                    exportAll(users, cols, fmt, `employees_${fmt}`);
-                  }}>{t("common.fullDataset")} – {fmt.toUpperCase()}</DropdownMenuItem>
+                {(["csv", "xlsx", "pdf"] as const).map((fmt) => (
+                  <DropdownMenuItem
+                    key={fmt}
+                    onClick={() => {
+                      const cols: ColumnDef<User>[] = [
+                        {
+                          header: t("common.name") as string,
+                          accessor: (r) => r.name,
+                        },
+                        {
+                          header: t("common.email") as string,
+                          accessor: (r) => r.email || "",
+                        },
+                        {
+                          header: t("common.departmentTitle") as string,
+                          accessor: (r) =>
+                            `${r.department || ""} ${r.title ? `• ${r.title}` : ""}`,
+                        },
+                      ];
+                      exportAll(users, cols, fmt, `employees_${fmt}`);
+                    }}
+                  >
+                    {t("common.fullDataset")} – {fmt.toUpperCase()}
+                  </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
@@ -239,111 +302,129 @@ export default function Employees() {
         </CardHeader>
         <CardContent>
           <div className="w-full overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t("common.name")}</TableHead>
-                <TableHead>{t("common.email")}</TableHead>
-                <TableHead>{t("common.departmentTitle")}</TableHead>
-                <TableHead className="hidden md:table-cell">{t("common.roles")}</TableHead>
-                <TableHead className="hidden md:table-cell">{t("common.privileges")}</TableHead>
-                {canManage && (
-                  <TableHead className="text-center">
-                    {t("common.actions")}
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t("common.name")}</TableHead>
+                  <TableHead>{t("common.email")}</TableHead>
+                  <TableHead>{t("common.departmentTitle")}</TableHead>
+                  <TableHead className="hidden md:table-cell">
+                    {t("common.roles")}
                   </TableHead>
-                )}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {pageItems.map((u) => (
-                <TableRow key={u.id}>
-                  <TableCell className="font-medium">{u.name}</TableCell>
-                  <TableCell>{u.email}</TableCell>
-                  <TableCell>
-                    <div className="text-sm">
-                      {(u.department || "").toString()}{" "}
-                      {u.title ? `• ${u.title}` : ""}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap gap-1">
-                      {u.roleIds.map((rid) => {
-                        const r = roles.find((x) => x.id === rid);
-                        return (
-                          <Badge key={rid} variant="secondary">
-                            {r ? r.name : rid}
-                          </Badge>
-                        );
-                      })}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap gap-1">
-                      {u.privilegeIds.map((pid) => {
-                        const p = privileges.find((x) => x.id === pid);
-                        return <Badge key={pid}>{p ? p.name : pid}</Badge>;
-                      })}
-                    </div>
-                  </TableCell>
+                  <TableHead className="hidden md:table-cell">
+                    {t("common.privileges")}
+                  </TableHead>
                   {canManage && (
-                    <TableCell className="text-center">
-                      <div className="flex items-center justify-center gap-2">
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          onClick={() => setEditing(u)}
-                        >
-                          {t("common.edit")}
-                        </Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button size="sm" variant="outline">
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                {t("pages.employees.confirmDeleteTitle")}
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                {t("pages.employees.confirmDeleteMsg")}
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>
-                                {t("common.cancel")}
-                              </AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => {
-                                  removeUser(u.id);
-                                  toast.success(t("pages.employees.deleted"));
-                                }}
-                              >
-                                {t("common.delete")}
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-                    </TableCell>
+                    <TableHead className="text-center">
+                      {t("common.actions")}
+                    </TableHead>
                   )}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {pageItems.map((u) => (
+                  <TableRow key={u.id}>
+                    <TableCell className="font-medium">{u.name}</TableCell>
+                    <TableCell>{u.email}</TableCell>
+                    <TableCell>
+                      <div className="text-sm">
+                        {(u.department || "").toString()}{" "}
+                        {u.title ? `• ${u.title}` : ""}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {u.roleIds.map((rid) => {
+                          const r = roles.find((x) => x.id === rid);
+                          return (
+                            <Badge key={rid} variant="secondary">
+                              {r ? r.name : rid}
+                            </Badge>
+                          );
+                        })}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {u.privilegeIds.map((pid) => {
+                          const p = privileges.find((x) => x.id === pid);
+                          return <Badge key={pid}>{p ? p.name : pid}</Badge>;
+                        })}
+                      </div>
+                    </TableCell>
+                    {canManage && (
+                      <TableCell className="text-center">
+                        <div className="flex items-center justify-center gap-2">
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => setEditing(u)}
+                          >
+                            {t("common.edit")}
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button size="sm" variant="outline">
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  {t("pages.employees.confirmDeleteTitle")}
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  {t("pages.employees.confirmDeleteMsg")}
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>
+                                  {t("common.cancel")}
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => {
+                                    removeUser(u.id);
+                                    toast.success(t("pages.employees.deleted"));
+                                  }}
+                                >
+                                  {t("common.delete")}
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
           <div className="mt-4">
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious href="#" onClick={(e)=>{ e.preventDefault(); setPage(p=>Math.max(1, p-1)); }} />
+                  <PaginationPrevious
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setPage((p) => Math.max(1, p - 1));
+                    }}
+                  />
                 </PaginationItem>
                 <PaginationItem>
-                  <span className="px-3 py-2 text-sm text-muted-foreground">{page} / {totalPages}</span>
+                  <span className="px-3 py-2 text-sm text-muted-foreground">
+                    {page} / {totalPages}
+                  </span>
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationNext href="#" onClick={(e)=>{ e.preventDefault(); setPage(p=>Math.min(totalPages, p+1)); }} />
+                  <PaginationNext
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setPage((p) => Math.min(totalPages, p + 1));
+                    }}
+                  />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>

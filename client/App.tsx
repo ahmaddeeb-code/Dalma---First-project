@@ -44,9 +44,18 @@ const App = () => (
               path="/admin/medical-settings"
               element={<MedicalSettings />}
             />
-            <Route path="/admin/beneficiary-settings" element={<BeneficiarySettings />} />
-            <Route path="/admin/organization-settings" element={<OrganizationSettings />} />
-            <Route path="/admin/security-settings" element={<SecuritySettings />} />
+            <Route
+              path="/admin/beneficiary-settings"
+              element={<BeneficiarySettings />}
+            />
+            <Route
+              path="/admin/organization-settings"
+              element={<OrganizationSettings />}
+            />
+            <Route
+              path="/admin/security-settings"
+              element={<SecuritySettings />}
+            />
             <Route path="/admin/families" element={<FamilyProfiles />} />
             <Route path="/admin/logistics" element={<Logistics />} />
             <Route path="/login/admin" element={<LoginAdmin />} />

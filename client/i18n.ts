@@ -1006,7 +1006,9 @@ export function listI18nKeys(): string[] {
     if (m) Object.keys(m as any).forEach((k) => ovKeys.add(k));
   });
   const disc = listDiscoveredKeys();
-  return Array.from(new Set<string>([...base, ...Array.from(ovKeys), ...disc])).sort();
+  return Array.from(
+    new Set<string>([...base, ...Array.from(ovKeys), ...disc]),
+  ).sort();
 }
 export function getBaseMessage(
   locale: Locale,
@@ -1049,7 +1051,9 @@ export function clearOverrides(locale?: Locale) {
 }
 
 export function t(key: MessageKey): string {
-  try { addDiscoveredKey(String(key)); } catch {}
+  try {
+    addDiscoveredKey(String(key));
+  } catch {}
   const loc = getLocale();
   const ov = getOverride(loc, key);
   if (typeof ov === "string" && ov.length) return ov;
