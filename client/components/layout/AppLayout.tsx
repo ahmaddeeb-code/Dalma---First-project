@@ -77,7 +77,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                     <SidebarMenuItem key={n.to}>
                       <SidebarMenuButton asChild isActive={active}>
                         <NavLink to={n.to} className="flex items-center gap-2">
-                          <span className="truncate">{n.label}</span>
+                          <span className="truncate">{t(n.key as any)}</span>
                           <Icon />
                         </NavLink>
                       </SidebarMenuButton>
