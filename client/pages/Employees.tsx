@@ -95,6 +95,12 @@ export default function Employees() {
       .sort((a, b) => a.name.localeCompare(b.name));
   }, [users, searchText, roleFilter]);
 
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const start = (page - 1) * pageSize;
+  const pageItems = filtered.slice(start, start + pageSize);
+
   const total = users.filter((u) => u.active !== false).length;
   const doctors = users.filter((u) => u.roleIds.includes("r_doctor")).length;
   const therapists = users.filter((u) =>
