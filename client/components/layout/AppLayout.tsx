@@ -55,7 +55,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
 
   return (
     <SidebarProvider>
-      <Sidebar side="right" className="border-l">
+      <Sidebar side={locale === "ar" ? "right" : "left"} className={cn(locale === "ar" ? "border-l" : "border-r")}>
         <SidebarHeader>
           <Link to="/" className="flex items-center justify-end gap-2 px-2">
             <span className="font-extrabold tracking-tight">{t("brand")}</span>
