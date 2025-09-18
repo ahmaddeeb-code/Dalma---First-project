@@ -379,7 +379,7 @@ export default function BeneficiaryProfile() {
                 ))}
                 <div className="text-sm">
                   <span className="text-muted-foreground">
-                    {ar ? "الحساسية" : "Allergies"}:
+                    {ar ? "الحساسي��" : "Allergies"}:
                   </span>{" "}
                   {b.medical.allergies?.join(", ") || (ar ? "لا يوجد" : "None")}
                 </div>
@@ -709,6 +709,27 @@ export default function BeneficiaryProfile() {
                 </div>
                 <p>{b.emergency.notes || (ar ? "لا يوجد" : "None")}</p>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="history" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>{ar ? "سجل التعديلات" : "Edit History"}</CardTitle>
+              <CardDescription>{ar ? "تعقب التعديلات للمراجعة" : "Audit trail for accountability"}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="text-sm space-y-2">
+                {(b.audit || []).slice().reverse().map((a) => (
+                  <li key={a.id} className="flex items-center justify-between">
+                    <span>{new Date(a.at).toLocaleString()} — {a.action}</span>
+                    <span className="text-muted-foreground">{a.userId}</span>
+                  </li>
+                ))}
+                {(b.audit || []).length === 0 && (
+                  <li className="text-muted-foreground">{ar ? "لا يوجد سجل" : "No history"}</li>
+                )}
+              </ul>
             </CardContent>
           </Card>
         </TabsContent>
