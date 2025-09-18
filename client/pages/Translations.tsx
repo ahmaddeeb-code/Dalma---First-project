@@ -401,6 +401,51 @@ export default function Translations() {
           </div>
         </CardContent>
       </Card>
+
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>{ar?"السجل":"Logs"}</CardTitle>
+          <CardDescription>{ar?"آخر العمليات على الترجمات":"Recent translation operations"}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ul className="text-sm space-y-1">
+            {log.length? log.map((l,idx)=> (
+              <li key={idx}><span className="font-mono text-xs">{new Date(l.at).toLocaleString()}</span> — <span className="font-medium">{l.action}</span> · {l.details}</li>
+            )) : <li className="text-muted-foreground">{ar?"لا يوجد":"No logs"}</li>}
+          </ul>
+        </CardContent>
+      </Card>
+
+      <AlertDialog open={confirmScan}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{ar?"تحديث المفاتيح؟":"Update keys?"}</AlertDialogTitle>
+            <AlertDialogDescription>{ar?"سيتم فحص الكود لاكتشاف المفاتيح الجديدة وإضافتها":"We will scan the source to find new keys and add them."}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={()=>setConfirmScan(false)}>{ar?"إلغاء":"Cancel"}</AlertDialogCancel>
+            <AlertDialogAction onClick={async ()=>{ setConfirmScan(false); await scanProjectKeys(); }}>{ar?"تأكيد":"Confirm"}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={!!confirmImport}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{ar?"استيراد من Excel؟":"Import from Excel?"}</AlertDialogTitle>
+            <AlertDialogDescription>{ar?"اختر وضع الاستيراد:":"Choose import mode:"}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="flex items-center gap-2 px-6">
+            <Button variant={confirmImport?.mode==="incremental"?"default":"outline"} onClick={()=>setConfirmImport({ mode: "incremental" })}>{ar?"تحديث جزئي":"Incremental"}</Button>
+            <Button variant={confirmImport?.mode==="overwrite"?"default":"outline"} onClick={()=>setConfirmImport({ mode: "overwrite" })}>{ar?"استبدال كامل":"Overwrite"}</Button>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={()=>setConfirmImport(null)}>{ar?"إلغاء":"Cancel"}</AlertDialogCancel>
+            <AlertDialogAction onClick={async ()=>{ const f = (window as any).__pendingExcel as File|undefined; if(!f){ setConfirmImport(null); return; } const mode = confirmImport!.mode; setConfirmImport(null); await importFromExcel(f, mode); (window as any).__pendingExcel = undefined; }}>{ar?"متابعة":"Proceed"}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
     </div>
   );
 }
