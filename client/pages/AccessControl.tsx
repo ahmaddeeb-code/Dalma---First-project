@@ -245,7 +245,7 @@ export default function AccessControl() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>الصلاحيات</CardTitle>
+                <CardTitle>{ar ? "الصلاحيات" : "Privileges"}</CardTitle>
                 <CardDescription>
                   Atomic permissions assigned to roles or directly to users.
                 </CardDescription>
