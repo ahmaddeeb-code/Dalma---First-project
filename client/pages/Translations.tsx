@@ -34,6 +34,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { exportAll, type ColumnDef } from "@/lib/export";
 import { toast } from "sonner";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { addDiscoveredKey, clearDiscovered, getBaseMessage, getOverridesForLocale, listDiscoveredKeys, listI18nKeys, listOverrideLocales, removeOverride, setOverride } from "@/i18n";
 
 function useTransTick() {
   return useSyncExternalStore(
