@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -26,6 +27,9 @@ import {
   setOverride,
   removeOverride,
   subscribeTranslations,
+  addDiscoveredKey,
+  listOverrideLocales,
+  getOverridesForLocale,
 } from "@/i18n";
 import { getCurrentUser } from "@/store/auth";
 import { effectivePrivileges, loadACL } from "@/store/acl";
@@ -35,7 +39,6 @@ import { Pagination, PaginationContent, PaginationItem, PaginationNext, Paginati
 import { exportAll, type ColumnDef } from "@/lib/export";
 import { toast } from "sonner";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { addDiscoveredKey, clearDiscovered, getBaseMessage, getOverridesForLocale, listDiscoveredKeys, listI18nKeys, listOverrideLocales, removeOverride, setOverride } from "@/i18n";
 
 function useTransTick() {
   return useSyncExternalStore(
@@ -142,7 +145,7 @@ export default function Translations() {
     }
     setKeysTick(x=>x+1);
     pushLog({ action: "import_excel", details: `added ${added}, updated ${updated}, skipped ${skipped}` });
-    toast.success(ar?`تم: مضافة ${added}، محدثة ${updated}`:`Done: added ${added}, updated ${updated}`);
+    toast.success(ar?`تم: ��ضافة ${added}، محدثة ${updated}`:`Done: added ${added}, updated ${updated}`);
   }
 
   const rows = useMemo(() => {
@@ -420,7 +423,7 @@ export default function Translations() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{ar?"تحديث المفاتيح؟":"Update keys?"}</AlertDialogTitle>
-            <AlertDialogDescription>{ar?"سيتم فحص الكود لاكتشاف المفاتيح الجديدة وإضافتها":"We will scan the source to find new keys and add them."}</AlertDialogDescription>
+            <AlertDialogDescription>{ar?"سيتم فحص الكود لاكتشاف ال��فاتيح الجديدة وإضافتها":"We will scan the source to find new keys and add them."}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={()=>setConfirmScan(false)}>{ar?"إلغاء":"Cancel"}</AlertDialogCancel>
