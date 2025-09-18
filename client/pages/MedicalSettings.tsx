@@ -68,9 +68,10 @@ import {
   upsertTherapyType,
   removeDosageUnit,
 } from "@/store/medical";
-import { getCurrentUser } from "@/store/auth";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { getCurrentUser, getCurrentUserId, subscribeAuth } from "@/store/auth";
+import { Plus, Pencil, Trash2, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 function useMedical() {
   return useSyncExternalStore(
@@ -82,13 +83,16 @@ function useMedical() {
 
 export default function MedicalSettings() {
   const state = useMedical();
-  const me = useMemo(() => getCurrentUser(), []);
+  const userId = useSyncExternalStore(
+    (cb) => subscribeAuth(cb),
+    () => getCurrentUserId(),
+    () => getCurrentUserId(),
+  );
+  const me = useMemo(() => getCurrentUser(), [userId]);
   const canManage = useMemo(() => {
     if (!me) return false;
     const acl = loadACL();
-    return effectivePrivileges(me, acl.roles, acl.privileges).some(
-      (p) => p.id === "p_manage_clinical",
-    );
+    return effectivePrivileges(me, acl.roles, acl.privileges).some((p) => p.id === "p_manage_clinical");
   }, [me]);
   const ar = getLocale() === "ar";
 
@@ -102,6 +106,14 @@ export default function MedicalSettings() {
           <p className="text-muted-foreground">{t("pages.medical.subtitle")}</p>
         </div>
       </header>
+
+      {!canManage && (
+        <Alert>
+          <ShieldAlert className="ml-2 h-4 w-4" />
+          <AlertTitle>{t("common.readOnly")}</AlertTitle>
+          <AlertDescription>{t("pages.medical.subtitle")}</AlertDescription>
+        </Alert>
+      )}
 
       <Tabs defaultValue="therapy">
         <TabsList>
