@@ -120,9 +120,7 @@ export default function AccessControl() {
                           ))}
                           {eff.length > 3 ? (
                             <span className="text-xs text-muted-foreground">
-                              {ar
-                                ? `+${eff.length - 3} المزيد`
-                                : `+${eff.length - 3} more`}
+                              {t("common.moreCount").replace("{{count}}", String(eff.length - 3))}
                             </span>
                           ) : null}
                         </TableCell>
