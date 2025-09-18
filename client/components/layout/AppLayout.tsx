@@ -137,11 +137,11 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                     <Button variant="secondary"><UserCircle2 className="ml-2" /> تسجيل الدخول</Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start">
-                    <DropdownMenuLabel>اختر الدور</DropdownMenuLabel>
-                    <DropdownMenuItem asChild><Link to="/login/admin">مدير النظام</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link to="/login/staff">موظف</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link to="/login/family">عائلة</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link to="/login/beneficiary">مستفيد</Link></DropdownMenuItem>
+                    <DropdownMenuLabel>{t("header.chooseRole")}</DropdownMenuLabel>
+                    <DropdownMenuItem asChild><Link to="/login/admin">{t("header.administrator")}</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/login/staff">{t("header.staff")}</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/login/family">{t("header.family")}</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/login/beneficiary">{t("header.beneficiary")}</Link></DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               )}
