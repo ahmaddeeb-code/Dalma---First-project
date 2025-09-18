@@ -163,10 +163,8 @@ export default function AccessControl() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>الأدوار</CardTitle>
-                <CardDescription>
-                  Roles bundle privileges for easier assignment.
-                </CardDescription>
+                <CardTitle>{t("pages.accessControl.roles.title")}</CardTitle>
+                <CardDescription>{t("pages.accessControl.roles.desc")}</CardDescription>
               </div>
               <RoleDialog
                 onSubmit={(r) =>
@@ -241,7 +239,7 @@ export default function AccessControl() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>{ar ? "��لصلاحيات" : "Privileges"}</CardTitle>
+                <CardTitle>{ar ? "الصلاحيات" : "Privileges"}</CardTitle>
                 <CardDescription>
                   {ar
                     ? "صلاحيات أساسية تُسند إلى الأدوار أو مباشرة للمستخدمين."
