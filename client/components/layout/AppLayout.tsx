@@ -24,16 +24,17 @@ const navItems = [
   { to: "/donations", label: "Donations" },
 ];
 
-function useAuthUser() {
+function useAuthUserId() {
   return useSyncExternalStore(
     (cb) => subscribeAuth(cb),
-    () => getCurrentUser(),
-    () => getCurrentUser(),
+    () => getCurrentUserId(),
+    () => getCurrentUserId(),
   );
 }
 
 export default function AppLayout({ children }: { children: ReactNode }) {
-  const user = useAuthUser();
+  const userId = useAuthUserId();
+  const user = useMemo(() => getCurrentUser(), [userId]);
   const roles = useMemo(() => {
     if (!user) return [] as string[];
     const acl = loadACL();
