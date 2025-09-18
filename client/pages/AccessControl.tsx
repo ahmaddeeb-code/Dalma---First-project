@@ -147,7 +147,7 @@ export default function AccessControl() {
                             }
                           >
                             <Trash2 className="ml-1 h-4 w-4" />
-                            حذف
+                            {t("common.delete")}
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -241,7 +241,7 @@ export default function AccessControl() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>{ar ? "الصلاحيات" : "Privileges"}</CardTitle>
+                <CardTitle>{ar ? "��لصلاحيات" : "Privileges"}</CardTitle>
                 <CardDescription>
                   {ar
                     ? "صلاحيات أساسية تُسند إلى الأدوار أو مباشرة للمستخدمين."
