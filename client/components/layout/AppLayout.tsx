@@ -99,7 +99,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           <div className="container flex h-14 items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <SidebarTrigger />
-              <span className="text-sm text-muted-foreground">مرحبا {user ? user.name : "بالضيف"}</span>
+              <span className="text-sm text-muted-foreground">{t("header.welcome")} {user ? user.name : t("header.guest")}</span>
             </div>
             <div className="flex items-center gap-2">
               <DropdownMenu>
