@@ -177,10 +177,10 @@ export default function AccessControl() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>الاسم</TableHead>
-                    <TableHead>الصلاحيات</TableHead>
-                    <TableHead>المستخدمون</TableHead>
-                    <TableHead className="w-[120px]">إجراءات</TableHead>
+                    <TableHead>{t("pages.accessControl.roles.headers.name")}</TableHead>
+                    <TableHead>{t("pages.accessControl.roles.headers.privs")}</TableHead>
+                    <TableHead>{t("pages.accessControl.roles.headers.users")}</TableHead>
+                    <TableHead className="w-[120px]">{t("pages.accessControl.roles.headers.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
