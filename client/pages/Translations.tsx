@@ -291,26 +291,31 @@ export default function Translations() {
       </div>
 
       <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>
+        <Card className="rounded-xl shadow-sm bg-gradient-to-br from-primary/15 to-secondary/15">
+          <CardHeader className="pb-2 p-4">
+            <CardDescription className="flex items-center gap-2">
+              <svg viewBox="0 0 24 24" className="h-4 w-4 text-primary" fill="currentColor"><path d="M7 6v12l10-6-10-6z"/></svg>
               {ar ? "إجمالي المفاتيح" : "Total keys"}
             </CardDescription>
-            <CardTitle className="text-2xl">{total}</CardTitle>
+            <CardTitle className="text-xl">{total}</CardTitle>
           </CardHeader>
         </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>{ar ? "مفقود" : "Missing"}</CardDescription>
-            <CardTitle className="text-2xl">{missingCount}</CardTitle>
+        <Card className="rounded-xl shadow-sm bg-gradient-to-br from-warning/20 to-primary/10">
+          <CardHeader className="pb-2 p-4">
+            <CardDescription className="flex items-center gap-2">
+              <svg viewBox="0 0 24 24" className="h-4 w-4 text-amber-500" fill="currentColor"><path d="M12 2 1 21h22L12 2zm1 16h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+              {ar ? "مفقود" : "Missing"}
+            </CardDescription>
+            <CardTitle className="text-xl">{missingCount}</CardTitle>
           </CardHeader>
         </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>
+        <Card className="rounded-xl shadow-sm bg-gradient-to-br from-info/15 to-success/15">
+          <CardHeader className="pb-2 p-4">
+            <CardDescription className="flex items-center gap-2">
+              <svg viewBox="0 0 24 24" className="h-4 w-4 text-sky-600" fill="currentColor"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-6 7-7-1.414-1.414L11 13.172 8.414 10.586 7 12l4 4z"/></svg>
               {ar ? "بحاجة لمراجعة" : "Needs review"}
             </CardDescription>
-            <CardTitle className="text-2xl">{reviewCount}</CardTitle>
+            <CardTitle className="text-xl">{reviewCount}</CardTitle>
           </CardHeader>
         </Card>
       </div>
