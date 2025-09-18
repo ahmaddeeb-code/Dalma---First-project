@@ -304,11 +304,11 @@ export default function BeneficiaryProfile() {
                     <Input className="h-8" defaultValue={b.contact.email} onChange={(e)=> (b.contact.email = e.target.value)} />
                   ) : (b.contact.email || (ar ? "غير متوفر" : "Not provided"))}
                 </div>
-                <div className="text-sm">
-                  <span className="text-muted-foreground">
-                    {ar ? "العنوان" : "Address"}:
-                  </span>{" "}
-                  {b.contact.address || (ar ? "غير متوف��" : "Not provided")}
+                <div className="text-sm flex items-center gap-2">
+                  <span className="text-muted-foreground">{ar ? "العنوان" : "Address"}:</span>
+                  {edit ? (
+                    <Input className="h-8" defaultValue={b.contact.address} onChange={(e)=> (b.contact.address = e.target.value)} />
+                  ) : (b.contact.address || (ar ? "غير متوفر" : "Not provided"))}
                 </div>
               </div>
               <div>
