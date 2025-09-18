@@ -102,6 +102,17 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               <span className="text-sm text-muted-foreground">مرحبا {user ? user.name : "بالضيف"}</span>
             </div>
             <div className="flex items-center gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" aria-label="Language">
+                    <Languages />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem onClick={() => setLocale("ar")}>العربية</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocale("en")}>English</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button variant="ghost" size="icon" aria-label="الإشعارات">
                 <Bell />
               </Button>
