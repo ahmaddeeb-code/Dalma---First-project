@@ -1,4 +1,3 @@
-import { Link, useParams } from "react-router-dom";
 import { useMemo, useSyncExternalStore, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -149,7 +148,7 @@ export default function BeneficiaryProfile() {
         </Button>
         <Separator orientation="vertical" className="h-6" />
         <h1 className="text-2xl font-bold tracking-tight">
-          {ar ? "ملف المستفيد" : "Beneficiary Profile"}
+          {ar ? "مل�� المستفيد" : "Beneficiary Profile"}
         </h1>
       </div>
 
@@ -458,7 +457,7 @@ export default function BeneficiaryProfile() {
                       onChange={(e) => (b.contact.address = e.target.value)}
                     />
                   ) : (
-                    b.contact.address || (ar ? "غير متوفر" : "Not provided")
+                    b.contact.address || (ar ? "غير متو��ر" : "Not provided")
                   )}
                 </div>
               </div>
@@ -607,7 +606,7 @@ export default function BeneficiaryProfile() {
               </CardTitle>
               <CardDescription>
                 {ar
-                  ? "أهداف مخصصة، تقدم، وجدول الجلسات"
+                  ? "أهداف مخصصة، تقدم، وجدول الج��سات"
                   : "Personalized goals, progress, session schedule"}
               </CardDescription>
             </CardHeader>
