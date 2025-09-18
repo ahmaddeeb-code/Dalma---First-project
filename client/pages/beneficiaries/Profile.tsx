@@ -112,6 +112,7 @@ export default function BeneficiaryProfile() {
   const { id } = useParams();
   const b = useBeneficiary(id);
   const ar = getLocale() === "ar";
+  const settings = useBeneficiarySettings();
   const user = useMemo(() => getCurrentUser(), []);
   const canEdit = useMemo(() => {
     if (!user) return false;
@@ -406,7 +407,7 @@ export default function BeneficiaryProfile() {
               </CardTitle>
               <CardDescription>
                 {ar
-                  ? "معلومات الاتصال وولي الأمر"
+                  ? "معلومات الات��ال وولي الأمر"
                   : "Contact and guardian details"}
               </CardDescription>
             </CardHeader>
@@ -563,7 +564,7 @@ export default function BeneficiaryProfile() {
           <Card>
             <CardHeader>
               <CardTitle>
-                {ar ? "خطة الرعاية والخدمات" : "Care & Service Plan"}
+                {ar ? "خطة ��لرعاية والخدمات" : "Care & Service Plan"}
               </CardTitle>
               <CardDescription>
                 {ar
@@ -945,7 +946,7 @@ export default function BeneficiaryProfile() {
                 <ul className="list-disc pl-5 space-y-1">
                   {b.emergency.contacts.map((c, i) => (
                     <li key={i}>
-                      {c.name} ({c.relation}) — {c.phone}
+                      {c.name} ({c.relation}) �� {c.phone}
                     </li>
                   ))}
                 </ul>
