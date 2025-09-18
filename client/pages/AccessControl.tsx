@@ -63,7 +63,7 @@ export default function AccessControl() {
       <Tabs defaultValue="users">
         <TabsList>
           <TabsTrigger value="users">المستخدمون</TabsTrigger>
-          <TabsTrigger value="roles">الأدوار</TabsTrigger>
+          <TabsTrigger value="roles">ا��أدوار</TabsTrigger>
           <TabsTrigger value="privileges">الصلاحيات</TabsTrigger>
         </TabsList>
 
@@ -124,7 +124,7 @@ export default function AccessControl() {
                           ))}
                           {eff.length > 3 ? (
                             <span className="text-xs text-muted-foreground">
-                              +{eff.length - 3} more
+                              {ar ? `+${eff.length - 3} المزيد` : `+${eff.length - 3} more`}
                             </span>
                           ) : null}
                         </TableCell>
@@ -247,7 +247,7 @@ export default function AccessControl() {
               <div>
                 <CardTitle>{ar ? "الصلاحيات" : "Privileges"}</CardTitle>
                 <CardDescription>
-                  {ar ? "صلاحيات أساس��ة تُسند إلى الأدوار أو مباشرة للمستخدمين." : "Atomic permissions assigned to roles or directly to users."}
+                  {ar ? "صلاحيات أساسية تُسند إلى الأدوار أو مباشرة للمستخدمين." : "Atomic permissions assigned to roles or directly to users."}
                 </CardDescription>
               </div>
               <PrivilegeDialog
