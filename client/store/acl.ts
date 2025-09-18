@@ -67,6 +67,12 @@ const seed: ACLState = {
       category: "Administration",
     },
     {
+      id: "p_manage_beneficiary_settings",
+      name: "Manage Beneficiary Settings",
+      description: "Configure beneficiary registration and profiles",
+      category: "Administration",
+    },
+    {
       id: "p_view_reports",
       name: "View Reports",
       description: "See KPI dashboards",
