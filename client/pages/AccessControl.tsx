@@ -262,11 +262,11 @@ export default function AccessControl() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>Used by Roles</TableHead>
-                    <TableHead>Used by Users</TableHead>
-                    <TableHead className="w-[120px]">Actions</TableHead>
+                    <TableHead>الاسم</TableHead>
+                    <TableHead>الفئة</TableHead>
+                    <TableHead>مستخدمة في الأدوار</TableHead>
+                    <TableHead>مستخدمة في المستخدمين</TableHead>
+                    <TableHead className="w-[120px]">إجراءات</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
