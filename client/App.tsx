@@ -11,6 +11,8 @@ import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/AdminDashboard";
 import AccessControl from "./pages/AccessControl";
 import Placeholder from "./pages/_Placeholder";
+import Beneficiaries from "@/pages/Beneficiaries";
+import BeneficiaryProfile from "@/pages/beneficiaries/Profile";
 import LoginAdmin from "./pages/auth/LoginAdmin";
 import LoginStaff from "./pages/auth/LoginStaff";
 import LoginFamily from "./pages/auth/LoginFamily";
@@ -33,15 +35,8 @@ const App = () => (
             <Route path="/login/staff" element={<LoginStaff />} />
             <Route path="/login/family" element={<LoginFamily />} />
             <Route path="/login/beneficiary" element={<LoginBeneficiary />} />
-            <Route
-              path="/beneficiaries"
-              element={
-                <Placeholder
-                  title="Beneficiary Portal"
-                  description="Register, manage profiles, appointments, therapy plans, and status tracking."
-                />
-              }
-            />
+            <Route path="/beneficiaries" element={<Beneficiaries />} />
+            <Route path="/beneficiaries/:id" element={<BeneficiaryProfile />} />
             <Route
               path="/employees"
               element={
