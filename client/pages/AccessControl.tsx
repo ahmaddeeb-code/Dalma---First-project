@@ -149,8 +149,8 @@ export default function AccessControl() {
                               }))
                             }
                           >
-                            <Trash2 className="mr-1 h-4 w-4" />
-                            Delete
+                            <Trash2 className="ml-1 h-4 w-4" />
+                            حذف
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -228,8 +228,8 @@ export default function AccessControl() {
                             }))
                           }
                         >
-                          <Trash2 className="mr-1 h-4 w-4" />
-                          Delete
+                          <Trash2 className="ml-1 h-4 w-4" />
+                            حذف
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -310,8 +310,8 @@ export default function AccessControl() {
                             }))
                           }
                         >
-                          <Trash2 className="mr-1 h-4 w-4" />
-                          Delete
+                          <Trash2 className="ml-1 h-4 w-4" />
+                            حذف
                         </Button>
                       </TableCell>
                     </TableRow>
