@@ -331,6 +331,21 @@ export default function Employees() {
               ))}
             </TableBody>
           </Table>
+          <div className="mt-4">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious href="#" onClick={(e)=>{ e.preventDefault(); setPage(p=>Math.max(1, p-1)); }} />
+                </PaginationItem>
+                <PaginationItem>
+                  <span className="px-3 py-2 text-sm text-muted-foreground">{page} / {totalPages}</span>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext href="#" onClick={(e)=>{ e.preventDefault(); setPage(p=>Math.min(totalPages, p+1)); }} />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
         </CardContent>
       </Card>
 
