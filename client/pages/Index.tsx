@@ -29,7 +29,7 @@ export default function Index() {
             End-to-end care for people with disabilities
           </div>
           <h1 className="mt-4 text-4xl md:text-5xl font-extrabold tracking-tight">
-            DALMA Smart Platform
+منصة دلما الذكية
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">
             A unified, cloud-based system connecting beneficiaries, employees,
