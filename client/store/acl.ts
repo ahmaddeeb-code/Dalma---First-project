@@ -49,6 +49,12 @@ const seed: ACLState = {
       category: "Records",
     },
     {
+      id: "p_manage_clinical",
+      name: "Manage Clinical",
+      description: "Configure therapy types, plans, meds, and scheduling",
+      category: "Administration",
+    },
+    {
       id: "p_edit_records",
       name: "Edit Records",
       description: "Create & update records",
@@ -82,6 +88,7 @@ const seed: ACLState = {
         "p_view_records",
         "p_edit_records",
         "p_manage_users",
+        "p_manage_clinical",
         "p_view_reports",
         "p_export_reports",
       ],
