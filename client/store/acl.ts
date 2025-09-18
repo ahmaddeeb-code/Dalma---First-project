@@ -30,6 +30,7 @@ export type ACLState = {
 
 const STORAGE_KEY = "acl_data_v1";
 
+let cache: ACLState | null = null;
 const subs = new Set<() => void>();
 function notify() {
   subs.forEach((cb) => cb());
