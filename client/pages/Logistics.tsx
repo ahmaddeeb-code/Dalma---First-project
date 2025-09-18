@@ -12,7 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { t, getLocale, subscribeLocale } from "@/i18n";
 import { effectivePrivileges, loadACL } from "@/store/acl";
 import { getCurrentUser, getCurrentUserId, subscribeAuth } from "@/store/auth";
-import { Building, Room, RoomSchedule, Equipment, RoomType, subscribeLogistics, getLogistics, uid, upsertBuilding, removeBuilding, upsertRoom, removeRoom, upsertSchedule, removeSchedule, upsertEquipment, removeEquipment, hasScheduleConflict } from "@/store/logistics";
+import { Building, Room, RoomSchedule, Equipment, RoomType, subscribeLogistics, getLogistics, uid, upsertBuilding, removeBuilding, upsertRoom, removeRoom, upsertSchedule, removeSchedule, upsertEquipment, removeEquipment, hasScheduleConflict, type Localized } from "@/store/logistics";
 import { Pencil, Plus, ShieldAlert, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
