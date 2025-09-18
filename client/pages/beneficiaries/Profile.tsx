@@ -537,6 +537,16 @@ export default function BeneficiaryProfile() {
               </CardDescription>
             </CardHeader>
             <CardContent>
+              {canEdit && (
+                <div className="mb-3 flex items-center gap-2">
+                  <label className="cursor-pointer">
+                    <Input type="file" accept="image/*,application/pdf" multiple onChange={async (e) => {
+                      const files = e.target.files; if (!files || !b) return; for (const f of Array.from(files)) { const reader = new FileReader(); reader.onload = () => { addDocument(b.id, { id: `${Date.now()}_${f.name}`.replace(/\s+/g, "_"), type: f.type || "Attachment", title: f.name, url: reader.result as string, issuedAt: new Date().toISOString() }, getCurrentUserId() || undefined); }; reader.readAsDataURL(f); }
+                      toast.success(ar?"تمت إضافة المرفقات":"Attachments added");
+                    }} />
+                  </label>
+                </div>
+              )}
               <Table>
                 <TableHeader>
                   <TableRow>
