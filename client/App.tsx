@@ -17,6 +17,7 @@ import Employees from "@/pages/Employees";
 import Translations from "@/pages/Translations";
 import MedicalSettings from "@/pages/MedicalSettings";
 import BeneficiarySettings from "@/pages/BeneficiarySettings";
+import OrganizationSettings from "@/pages/OrganizationSettings";
 import Logistics from "@/pages/Logistics";
 import LoginAdmin from "./pages/auth/LoginAdmin";
 import LoginStaff from "./pages/auth/LoginStaff";
@@ -42,6 +43,7 @@ const App = () => (
               element={<MedicalSettings />}
             />
             <Route path="/admin/beneficiary-settings" element={<BeneficiarySettings />} />
+            <Route path="/admin/organization-settings" element={<OrganizationSettings />} />
             <Route path="/admin/logistics" element={<Logistics />} />
             <Route path="/login/admin" element={<LoginAdmin />} />
             <Route path="/login/staff" element={<LoginStaff />} />

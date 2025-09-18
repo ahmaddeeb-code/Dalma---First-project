@@ -90,6 +90,12 @@ const seed: ACLState = {
       description: "Manage buildings, rooms, schedules, resources",
       category: "Administration",
     },
+    {
+      id: "p_manage_org_settings",
+      name: "Manage Organization Settings",
+      description: "Update organization profile, branches, and preferences",
+      category: "Administration",
+    },
   ],
   roles: [
     {
@@ -103,6 +109,7 @@ const seed: ACLState = {
         "p_manage_clinical",
         "p_manage_logistics",
         "p_manage_beneficiary_settings",
+        "p_manage_org_settings",
         "p_view_reports",
         "p_export_reports",
       ],

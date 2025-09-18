@@ -42,6 +42,7 @@ const messages = {
       medicalSettings: "Medical Settings",
       beneficiarySettings: "Beneficiary Settings",
       logistics: "Logistics",
+      organizationSettings: "Organization Settings",
       translations: "Translations",
     },
     header: {
@@ -470,8 +471,8 @@ const messages = {
     brand: "منصة دلما الذكية",
     nav: {
       home: "الرئيسية",
-      admin: "لوحة ��لتحكم",
-      beneficiaries: "المستفيدون",
+      admin: "لوحة التحكم",
+      beneficiaries: "ال��ستفيدون",
       employees: "الموظفون",
       family: "العائلة",
       reports: "التقارير",
@@ -480,6 +481,7 @@ const messages = {
       medicalSettings: "إعدادات طبية",
       beneficiarySettings: "إعدادات المستفيد",
       logistics: "الخدمات اللوجستية",
+      organizationSettings: "إعدادات المؤسسة",
       translations: "الترجمات",
     },
     header: {
@@ -600,7 +602,7 @@ const messages = {
           form: {
             name: "الاسم",
             description: "الوصف",
-            category: "��لفئة",
+            category: "الفئة",
             placeholder: "مثل: السجلات، الإدارة، التقارير",
           },
         },
@@ -664,7 +666,7 @@ const messages = {
         },
         emergency: {
           title: "الطوارئ والملاحظات الخاصة",
-          desc: "تهيئة بروتوكولات الطوارئ وربطها.",
+          desc: "تهيئة بروتوكولات الط��ارئ وربطها.",
           steps: "خطوات البروتوكول",
           addStep: "إضافة خطوة",
         },
@@ -782,12 +784,12 @@ const messages = {
           summary: "٩٢٪ تسجيل حضور في الوقت · ١٨ زيارة ميدانية",
         },
         reviews: {
-          title: "مرا��عات قادمة",
+          title: "مراجعات قادمة",
           desc: "تقييمات طبية ونفسية لهذا الأسبوع.",
           summary: "٥٤ تقييمات مجدولة",
         },
         notifSummary: {
-          title: "ملخص الإشعارات",
+          title: "ملخص الإشع��رات",
           desc: "تنبيهات ورسائل تلقائية.",
           summary: "١٢ عاجلة · ٣٦ عادية · ١٢٨ معلومات",
         },
@@ -813,7 +815,7 @@ const messages = {
         beneficiary: {
           title: "بوابة المستفيد",
           bullets: [
-            "التسجيل والملفات الشخصية",
+            "ا��تسجيل والملفات الشخصية",
             "رفع المستندات",
             "المواعيد والعلاجات",
             "تتبع الحالة",
@@ -872,7 +874,7 @@ const messages = {
         features: {
           advanced: {
             title: "أمان متقدم",
-            text: "تشفي�� أثناء السكون والنقل، مصادقة ثنائية، وصلاحيات حسب الأدوار.",
+            text: "تشفير أثناء السكون والنقل، مصادقة ثنائية، وصلاحيات حسب الأدوار.",
           },
           comms: {
             title: "اتصال موحد",

@@ -64,6 +64,7 @@ const navItems = [
   },
   { to: "/admin/beneficiary-settings", key: "nav.beneficiarySettings", icon: ShieldCheck },
   { to: "/admin/logistics", key: "nav.logistics", icon: Building2 },
+  { to: "/admin/organization-settings", key: "nav.organizationSettings", icon: ShieldCheck },
   { to: "/admin/translations", key: "nav.translations", icon: Languages },
 ] as const;
 
