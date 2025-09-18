@@ -128,7 +128,7 @@ function seed(): Beneficiary[] {
   };
 
   const b1: Beneficiary = {
-    id: uuidv4(),
+    id: uid(),
     name: "Ahmed Khalid",
     gender: "male",
     dob: "2010-06-12",
@@ -150,32 +150,32 @@ function seed(): Beneficiary[] {
       assignedTherapist: "Sara Al Qahtani",
       progress: 62,
       appointments: [
-        { id: uuidv4(), type: "ABA", date: daysAgo(2), therapist: "Sara Al Qahtani", attended: false },
-        { id: uuidv4(), type: "Speech", date: daysFromNow(1), therapist: "Khaled Al Mutairi", attended: undefined },
+        { id: uid(), type: "ABA", date: daysAgo(2), therapist: "Sara Al Qahtani", attended: false },
+        { id: uid(), type: "Speech", date: daysFromNow(1), therapist: "Khaled Al Mutairi", attended: undefined },
       ],
       nextReview: daysFromNow(6),
     },
     education: { programs: ["Daycare"], activities: ["Art", "Music"] },
     documents: [
-      { id: uuidv4(), type: "Disability Certificate", title: "Disability Certificate 2024", issuedAt: daysAgo(120), expiresAt: daysFromNow(25) },
-      { id: uuidv4(), type: "Medical Report", title: "ASD Evaluation Report", issuedAt: daysAgo(40) },
+      { id: uid(), type: "Disability Certificate", title: "Disability Certificate 2024", issuedAt: daysAgo(120), expiresAt: daysFromNow(25) },
+      { id: uid(), type: "Medical Report", title: "ASD Evaluation Report", issuedAt: daysAgo(40) },
     ],
     financial: {
       sponsorship: "Charity A",
       supportPrograms: ["Gov Support 12"],
       paymentHistory: [
-        { id: uuidv4(), date: daysAgo(20), amount: 1200, method: "Bank Transfer", note: "Monthly fee" },
-        { id: uuidv4(), date: daysAgo(50), amount: 1200, method: "Bank Transfer" },
+        { id: uid(), date: daysAgo(20), amount: 1200, method: "Bank Transfer", note: "Monthly fee" },
+        { id: uid(), date: daysAgo(50), amount: 1200, method: "Bank Transfer" },
       ],
     },
     communication: {
       messages: [
-        { id: uuidv4(), from: "staff", content: "Reminder: ABA session tomorrow at 10 AM.", date: iso(today) },
-        { id: uuidv4(), from: "guardian", content: "Noted, thank you.", date: iso(today) },
+        { id: uid(), from: "staff", content: "Reminder: ABA session tomorrow at 10 AM.", date: iso(today) },
+        { id: uid(), from: "guardian", content: "Noted, thank you.", date: iso(today) },
       ],
       notifications: [
-        { id: uuidv4(), text: "Missed session on Monday.", level: "medium" },
-        { id: uuidv4(), text: "Certificate expiring soon.", level: "high" },
+        { id: uid(), text: "Missed session on Monday.", level: "medium" },
+        { id: uid(), text: "Certificate expiring soon.", level: "high" },
       ],
     },
     emergency: { contacts: [{ name: "Khalid Al Saud", relation: "Father", phone: "+966500000010" }], notes: "Carry EpiPen due to peanut allergy." },
@@ -183,7 +183,7 @@ function seed(): Beneficiary[] {
   };
 
   const b2: Beneficiary = {
-    id: uuidv4(),
+    id: uid(),
     name: "Mona Saleh",
     gender: "female",
     dob: "2006-11-02",
@@ -205,30 +205,30 @@ function seed(): Beneficiary[] {
       assignedTherapist: "Latifa Al Dossary",
       progress: 78,
       appointments: [
-        { id: uuidv4(), type: "Physiotherapy", date: daysFromNow(2), therapist: "Latifa Al Dossary" },
-        { id: uuidv4(), type: "Occupational", date: daysFromNow(10), therapist: "Noura Al Yamani" },
+        { id: uid(), type: "Physiotherapy", date: daysFromNow(2), therapist: "Latifa Al Dossary" },
+        { id: uid(), type: "Occupational", date: daysFromNow(10), therapist: "Noura Al Yamani" },
       ],
       nextReview: daysFromNow(14),
     },
     education: { programs: ["Workshops", "Recreation"], activities: ["Swimming"] },
     documents: [
-      { id: uuidv4(), type: "Medical Report", title: "Physio Progress", issuedAt: daysAgo(10) },
+      { id: uid(), type: "Medical Report", title: "Physio Progress", issuedAt: daysAgo(10) },
     ],
     financial: {
       sponsorship: "Self-funded",
       supportPrograms: ["NGO-Assist"],
-      paymentHistory: [{ id: uuidv4(), date: daysAgo(5), amount: 1500, method: "Card" }],
+      paymentHistory: [{ id: uid(), date: daysAgo(5), amount: 1500, method: "Card" }],
     },
     communication: {
-      messages: [{ id: uuidv4(), from: "system", content: "Therapy schedule updated.", date: iso(today) }],
-      notifications: [{ id: uuidv4(), text: "Upcoming review in 2 weeks.", level: "low" }],
+      messages: [{ id: uid(), from: "system", content: "Therapy schedule updated.", date: iso(today) }],
+      notifications: [{ id: uid(), text: "Upcoming review in 2 weeks.", level: "low" }],
     },
     emergency: { contacts: [{ name: "Huda Al Naim", relation: "Mother", phone: "+966500000012" }], notes: "Wheelchair accessible transport needed." },
     status: "active",
   };
 
   const b3: Beneficiary = {
-    id: uuidv4(),
+    id: uid(),
     name: "Yousef Ali",
     gender: "male",
     dob: "1999-03-22",
@@ -250,14 +250,14 @@ function seed(): Beneficiary[] {
       assignedTherapist: "Omar Al Essa",
       progress: 54,
       appointments: [
-        { id: uuidv4(), type: "Audiology", date: daysAgo(1), therapist: "Omar Al Essa", attended: true },
-        { id: uuidv4(), type: "Speech", date: daysFromNow(7), therapist: "Amal Al Yamani" },
+        { id: uid(), type: "Audiology", date: daysAgo(1), therapist: "Omar Al Essa", attended: true },
+        { id: uid(), type: "Speech", date: daysFromNow(7), therapist: "Amal Al Yamani" },
       ],
       nextReview: daysFromNow(30),
     },
     education: { programs: ["Daycare"], activities: ["Sign Language Club"] },
     documents: [
-      { id: uuidv4(), type: "Disability Certificate", title: "Certificate 2023", issuedAt: daysAgo(320), expiresAt: daysFromNow(40) },
+      { id: uid(), type: "Disability Certificate", title: "Certificate 2023", issuedAt: daysAgo(320), expiresAt: daysFromNow(40) },
     ],
     financial: {
       sponsorship: "Gov Support 8",
@@ -266,7 +266,7 @@ function seed(): Beneficiary[] {
     },
     communication: {
       messages: [],
-      notifications: [{ id: uuidv4(), text: "Document nearing expiry in 40 days.", level: "medium" }],
+      notifications: [{ id: uid(), text: "Document nearing expiry in 40 days.", level: "medium" }],
     },
     emergency: { contacts: [{ name: "Ali Mohammed", relation: "Father", phone: "+966500000013" }], notes: "Avoid penicillin." },
     status: "graduated",
@@ -324,7 +324,7 @@ export function removeBeneficiary(id: string) {
 
 export function newBeneficiary(partial: Partial<Beneficiary>): Beneficiary {
   const b: Beneficiary = {
-    id: uuidv4(),
+    id: uid(),
     name: partial.name || "",
     gender: partial.gender || "male",
     dob: partial.dob || "2010-01-01",
