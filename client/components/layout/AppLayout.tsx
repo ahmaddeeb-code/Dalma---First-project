@@ -118,11 +118,17 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     if (el.getAttribute("lang") !== wantLang) el.setAttribute("lang", wantLang);
   }, [locale]);
 
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+  const toggleGroup = (k: string) => setOpenGroups((s) => ({ ...s, [k]: !s[k] }));
+
   return (
     <SidebarProvider>
       <Sidebar
         side={locale === "ar" ? "right" : "left"}
-        className={cn(locale === "ar" ? "border-l" : "border-r")}
+        className={cn(
+          locale === "ar" ? "border-l" : "border-r",
+          "bg-gradient-to-b from-[hsl(var(--sidebar-background))] to-[hsl(var(--sidebar-background))]/60"
+        )}
       >
         <SidebarHeader>
           <Link to="/" className="flex items-center justify-end gap-2 px-2">
