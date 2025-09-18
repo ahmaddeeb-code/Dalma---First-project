@@ -102,6 +102,12 @@ const seed: ACLState = {
       description: "Configure security, permissions, compliance",
       category: "Administration",
     },
+    {
+      id: "p_manage_families",
+      name: "Manage Families",
+      description: "Create families, guardians, and link beneficiaries",
+      category: "Records",
+    },
   ],
   roles: [
     {
@@ -117,6 +123,7 @@ const seed: ACLState = {
         "p_manage_beneficiary_settings",
         "p_manage_org_settings",
         "p_manage_security",
+        "p_manage_families",
         "p_view_reports",
         "p_export_reports",
       ],
