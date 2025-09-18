@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { getLocale, listI18nKeys, getBaseMessage, getOverride, setOverride, removeOverride, subscribeTranslations } from "@/i18n";
 import { getCurrentUser } from "@/store/auth";
 import { effectivePrivileges, loadACL } from "@/store/acl";
-import { Download, FileUp, Save } from "lucide-react";
+import { Download, FileUp } from "lucide-react";
 import { toast } from "sonner";
 
 function useTransTick() {
@@ -155,7 +155,6 @@ export default function Translations() {
                 <TableHead>English</TableHead>
                 <TableHead>{ar ? "العربية" : "Arabic"}</TableHead>
                 <TableHead>{ar ? "الحالة" : "Status"}</TableHead>
-                <TableHead className="text-center">{ar ? "إجراءات" : "Actions"}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -184,16 +183,6 @@ export default function Translations() {
                     ) : (
                       <Badge variant="outline">OK</Badge>
                     )}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <Button size="sm" variant="secondary" onClick={() => {
-                      const input = document.createElement('input');
-                      input.type = 'text';
-                      input.value = r.currentAr;
-                      input.onchange = () => {};
-                    }}>
-                      <Save className="h-4 w-4" />
-                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
