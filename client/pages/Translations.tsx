@@ -83,6 +83,12 @@ export default function Translations() {
   const missingCount = rows.filter((r) => r.missing).length;
   const reviewCount = rows.filter((r) => r.needsReview).length;
 
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(50);
+  const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+  const start = (page - 1) * pageSize;
+  const pageItems = rows.slice(start, start + pageSize);
+
   function exportOverrides() {
     const data = {
       ar: rows.reduce((acc: any, r) => {
