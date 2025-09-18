@@ -39,6 +39,7 @@ const messages = {
       reports: "Reports",
       donations: "Donations",
       accessControl: "Access Control",
+      medicalSettings: "Medical Settings",
       translations: "Translations",
     },
     header: {
@@ -383,7 +384,7 @@ const messages = {
       export: "تصدير",
       import: "استيراد",
       readOnly: "صلاحية القراءة فقط",
-      moreCount: "+{{count}} المزيد",
+      moreCount: "+{{count}} ال��زيد",
       all: "الكل",
     },
     pages: {
@@ -503,7 +504,7 @@ const messages = {
         chart: {
           title: "المستفيدون حسب الفئة",
           desc: "توزيع الخدمات السكنية والنهارية والمنزلية.",
-          labels: { residential: "سكنية", daycare: "نهارية", home: "منزلية" },
+          labels: { residential: "سكنية", daycare: "��هارية", home: "منزلية" },
         },
         alerts: {
           title: "تنبيهات عاجلة",
@@ -524,7 +525,7 @@ const messages = {
       hero: {
         badge: "رعاية شاملة للأشخاص ذوي الإعاقة",
         title: "منصة دلما الذكية",
-        desc: "نظام موحد قائم على السحابة يربط المستفيدين والموظفين والإداريين والعائلات — يقدم خدمات شفافة وفعالة ومستدامة.",
+        desc: "نظ��م موحد قائم على السحابة يربط المستفيدين والموظفين والإداريين والعائلات — يقدم خدمات شفافة وفعالة ومستدامة.",
         ctaAdmin: "فتح لوحة التحكم",
         ctaDonate: "ادعمنا بالتبرع",
       },
