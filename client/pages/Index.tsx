@@ -27,35 +27,33 @@ export default function Index() {
       <section className="relative overflow-hidden rounded-2xl border bg-gradient-to-br from-primary/10 via-background to-secondary/10 p-10 md:p-16">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs text-primary ring-1 ring-primary/20">
-            End-to-end care for people with disabilities
+            {t("home.hero.badge")}
           </div>
           <h1 className="mt-4 text-4xl md:text-5xl font-extrabold tracking-tight">
-منصة دلما الذكية
+{t("home.hero.title")}
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            A unified, cloud-based system connecting beneficiaries, employees,
-            administrators, and families—delivering transparent, efficient, and
-            sustainable services.
+            {t("home.hero.desc")}
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Button asChild size="lg">
-              <Link to="/admin">Explore Admin Dashboard</Link>
+              <Link to="/admin">{t("home.hero.ctaAdmin")}</Link>
             </Button>
             <Button asChild variant="secondary" size="lg">
-              <Link to="/donations">Support with a Donation</Link>
+              <Link to="/donations">{t("home.hero.ctaDonate")}</Link>
             </Button>
           </div>
           <div className="mt-10 grid grid-cols-3 gap-6 text-sm">
             <div>
-              <p className="text-muted-foreground">Active Beneficiaries</p>
+              <p className="text-muted-foreground">{t("home.metrics.active")}</p>
               <p className="text-2xl font-semibold">1,248</p>
             </div>
             <div>
-              <p className="text-muted-foreground">Monthly Appointments</p>
+              <p className="text-muted-foreground">{t("home.metrics.monthly")}</p>
               <p className="text-2xl font-semibold">8,532</p>
             </div>
             <div>
-              <p className="text-muted-foreground">Avg. Satisfaction</p>
+              <p className="text-muted-foreground">{t("home.metrics.satisfaction")}</p>
               <p className="text-2xl font-semibold">96%</p>
             </div>
           </div>
@@ -67,55 +65,53 @@ export default function Index() {
       {/* Portals */}
       <section>
         <h2 className="text-2xl font-bold tracking-tight">
-          Portals for every stakeholder
+          {t("home.portals.title")}
         </h2>
         <p className="mt-2 text-muted-foreground max-w-3xl">
-          Beneficiary, Employee, Admin, and Family portals streamline daily
-          operations—registration, records, therapies, attendance, and secure
-          communication.
+          {t("home.portals.desc")}
         </p>
         <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <PortalCard
             icon={<Stethoscope className="h-5 w-5" />}
-            title="Beneficiary Portal"
+            title={t("home.portals.beneficiary.title")}
             bullets={[
-              "Registration & profiles",
-              "Upload documents",
-              "Appointments & therapies",
-              "Status tracking",
+              t("home.portals.beneficiary.bullets.0"),
+              t("home.portals.beneficiary.bullets.1"),
+              t("home.portals.beneficiary.bullets.2"),
+              t("home.portals.beneficiary.bullets.3"),
             ]}
             to="/beneficiaries"
           />
           <PortalCard
             icon={<Users className="h-5 w-5" />}
-            title="Employee Portal"
+            title={t("home.portals.employee.title")}
             bullets={[
-              "Tasks & notes",
-              "Clock in/out & field",
-              "Access records",
-              "Incident reports",
+              t("home.portals.employee.bullets.0"),
+              t("home.portals.employee.bullets.1"),
+              t("home.portals.employee.bullets.2"),
+              t("home.portals.employee.bullets.3"),
             ]}
             to="/employees"
           />
           <PortalCard
             icon={<Activity className="h-5 w-5" />}
-            title="Admin Dashboard"
+            title={t("home.portals.admin.title")}
             bullets={[
-              "KPI analytics",
-              "Roles & permissions",
-              "Budgets & finance",
-              "Audit logs",
+              t("home.portals.admin.bullets.0"),
+              t("home.portals.admin.bullets.1"),
+              t("home.portals.admin.bullets.2"),
+              t("home.portals.admin.bullets.3"),
             ]}
             to="/admin"
           />
           <PortalCard
             icon={<HandHeart className="h-5 w-5" />}
-            title="Family System"
+            title={t("home.portals.family.title")}
             bullets={[
-              "Health status",
-              "Attendance & progress",
-              "Alerts & schedules",
-              "Direct messaging",
+              t("home.portals.family.bullets.0"),
+              t("home.portals.family.bullets.1"),
+              t("home.portals.family.bullets.2"),
+              t("home.portals.family.bullets.3"),
             ]}
             to="/family"
           />
@@ -126,21 +122,20 @@ export default function Index() {
       <section className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Real-time Monitoring</CardTitle>
+            <CardTitle>{t("home.monitor.title")}</CardTitle>
             <CardDescription>
-              Visual indicators for medical, psychological, and functional
-              status.
+              {t("home.monitor.desc")}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid gap-6 md:grid-cols-3">
-              <StatusBar label="Medical" value={86} color="bg-primary" />
+              <StatusBar label={t("home.monitor.medical")} value={86} color="bg-primary" />
               <StatusBar
-                label="Psychological"
+                label={t("home.monitor.psychological")}
                 value={91}
                 color="bg-secondary"
               />
-              <StatusBar label="Functional" value={78} color="bg-success" />
+              <StatusBar label={t("home.monitor.functional")} value={78} color="bg-success" />
             </div>
             <p className="mt-4 text-xs text-muted-foreground">
               Updated live from check-ins, therapy completion, and device
@@ -151,31 +146,30 @@ export default function Index() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <AlertTriangle className="text-warning" /> Smart Notifications
+              <AlertTriangle className="text-warning" /> {t("home.notifications.title")}
             </CardTitle>
             <CardDescription>
-              Priority-based alerts for emergencies, absences, and schedule
-              changes.
+              {t("home.notifications.desc")}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <ul className="space-y-3 text-sm">
               <li className="flex items-center justify-between">
-                <span>Emergency flag raised (Ward B)</span>
+                <span>{t("home.notifications.urgentFlag")}</span>
                 <span className="rounded bg-destructive/15 text-destructive px-2 py-0.5">
-                  Urgent
+                  {t("home.notifications.urgent")}
                 </span>
               </li>
               <li className="flex items-center justify-between">
-                <span>3 absences detected</span>
+                <span>{t("home.notifications.absences")}</span>
                 <span className="rounded bg-warning/15 text-warning px-2 py-0.5">
-                  Medium
+                  {t("home.notifications.medium")}
                 </span>
               </li>
               <li className="flex items-center justify-between">
-                <span>Schedule updated for therapies</span>
+                <span>{t("home.notifications.schedule")}</span>
                 <span className="rounded bg-info/15 text-info px-2 py-0.5">
-                  Low
+                  {t("home.notifications.low")}
                 </span>
               </li>
             </ul>
@@ -186,47 +180,45 @@ export default function Index() {
       {/* Security & Compliance */}
       <section>
         <h2 className="text-2xl font-bold tracking-tight">
-          Security, accessibility, and trust
+          {t("home.security.title")}
         </h2>
         <p className="mt-2 text-muted-foreground max-w-3xl">
-          Advanced security with data encryption, 2FA, audit logs, and full
-          accessibility. Cloud ready and scalable with integrations into
-          national systems and medical devices.
+          {t("home.security.desc")}
         </p>
         <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <Feature
             icon={<Lock className="h-4 w-4" />}
-            title="Advanced Security"
-            text="Encryption at rest & in transit, 2FA, and role-based access."
+            title={t("home.security.features.advanced.title")}
+            text={t("home.security.features.advanced.text")}
           />
           <Feature
             icon={<MessagesSquare className="h-4 w-4" />}
-            title="Unified Communication"
-            text="Internal messaging, file sharing, and family updates."
+            title={t("home.security.features.comms.title")}
+            text={t("home.security.features.comms.text")}
           />
           <Feature
             icon={<CalendarClock className="h-4 w-4" />}
-            title="Scheduling & Reminders"
-            text="Therapies, health checks, and appointment reminders."
+            title={t("home.security.features.schedule.title")}
+            text={t("home.security.features.schedule.text")}
           />
           <Feature
             icon={<FileText className="h-4 w-4" />}
-            title="Reports & Exports"
-            text="KPI tracking with export to Excel & PDF."
+            title={t("home.security.features.reports.title")}
+            text={t("home.security.features.reports.text")}
           />
         </div>
       </section>
 
       <section className="rounded-xl border p-8 text-center">
         <h3 className="text-xl font-semibold">
-          Ready to modernize your center?
+          {t("home.cta.title")}
         </h3>
         <p className="mt-2 text-muted-foreground">
-          Let’s digitize operations and elevate quality of care—together.
+          {t("home.cta.desc")}
         </p>
         <div className="mt-4">
           <Button asChild size="lg">
-            <Link to="/admin">Launch the Dashboard</Link>
+            <Link to="/admin">{t("home.cta.button")}</Link>
           </Button>
         </div>
       </section>
@@ -264,7 +256,7 @@ function PortalCard({
         </ul>
         <div className="mt-4">
           <Button asChild variant="secondary" size="sm">
-            <Link to={to}>Open</Link>
+            <Link to={to}>{t("home.portals.open")}</Link>
           </Button>
         </div>
       </CardContent>
