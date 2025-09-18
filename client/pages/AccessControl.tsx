@@ -384,7 +384,7 @@ function UserDialog({
         ) : (
           <Button>
             <Plus className="ml-1 h-4 w-4" />
-            مستخدم جديد
+            {t("pages.accessControl.users.new")}
           </Button>
         )}
       </DialogTrigger>
