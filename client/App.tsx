@@ -37,15 +37,7 @@ const App = () => (
             <Route path="/login/beneficiary" element={<LoginBeneficiary />} />
             <Route path="/beneficiaries" element={<Beneficiaries />} />
             <Route path="/beneficiaries/:id" element={<BeneficiaryProfile />} />
-            <Route
-              path="/employees"
-              element={
-                <Placeholder
-                  title="Employee Portal"
-                  description="Tasks, progress notes, attendance, and incident reporting."
-                />
-              }
-            />
+            <Route path="/employees" element={<Employees />} />
             <Route
               path="/family"
               element={
