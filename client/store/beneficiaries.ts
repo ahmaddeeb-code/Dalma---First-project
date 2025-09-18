@@ -51,6 +51,7 @@ export type Message = {
   content: string;
   date: string;
 };
+export type AuditEntry = { id: string; at: string; userId: string; action: string; note?: string; patch?: any };
 
 export type Beneficiary = {
   id: string;
@@ -101,6 +102,8 @@ export type Beneficiary = {
     notes?: string;
   };
   status: BeneficiaryStatus;
+  archived?: boolean;
+  audit?: AuditEntry[];
 };
 
 const KEY = "dalma_beneficiaries_v1";
@@ -253,6 +256,8 @@ function seed(): Beneficiary[] {
       notes: "Carry EpiPen due to peanut allergy.",
     },
     status: "under_treatment",
+    archived: false,
+    audit: [],
   };
 
   const b2: Beneficiary = {
@@ -343,6 +348,8 @@ function seed(): Beneficiary[] {
       notes: "Wheelchair accessible transport needed.",
     },
     status: "active",
+    archived: false,
+    audit: [],
   };
 
   const b3: Beneficiary = {
@@ -424,6 +431,8 @@ function seed(): Beneficiary[] {
       notes: "Avoid penicillin.",
     },
     status: "graduated",
+    archived: false,
+    audit: [],
   };
 
   return [b1, b2, b3];
@@ -495,6 +504,8 @@ export function newBeneficiary(partial: Partial<Beneficiary>): Beneficiary {
     communication: partial.communication || { messages: [], notifications: [] },
     emergency: partial.emergency || { contacts: [] },
     status: partial.status || "active",
+    archived: false,
+    audit: [],
   };
   return b;
 }
@@ -510,7 +521,7 @@ export type BeneficiaryQuery = {
 };
 
 export function queryBeneficiaries(q: BeneficiaryQuery): Beneficiary[] {
-  const data = load();
+  const data = load().filter((b) => !b.archived);
   const search = (q.search || "").toLowerCase().trim();
   return data.filter((b) => {
     if (search) {
@@ -613,6 +624,37 @@ export function computeAlerts() {
     }
   }
   return { missed, expiring, reviews };
+}
+
+export function updateBeneficiary(id: string, patch: Partial<Beneficiary>, editorUserId?: string, action: string = "update") {
+  const cur = getBeneficiary(id);
+  if (!cur) return;
+  const next: Beneficiary = { ...cur, ...patch, medical: { ...cur.medical, ...patch.medical }, care: { ...cur.care, ...patch.care }, education: { ...cur.education, ...patch.education }, financial: { ...cur.financial, ...patch.financial }, communication: { ...cur.communication, ...patch.communication }, emergency: { ...cur.emergency, ...patch.emergency } };
+  const entry: AuditEntry = { id: uid(), at: new Date().toISOString(), userId: editorUserId || "system", action, patch };
+  next.audit = [...(cur.audit || []), entry];
+  upsertBeneficiary(next);
+}
+
+export function addDocument(id: string, doc: DocumentItem, editorUserId?: string) {
+  const b = getBeneficiary(id);
+  if (!b) return;
+  const next = { ...b, documents: [doc, ...b.documents] } as Beneficiary;
+  next.audit = [...(b.audit || []), { id: uid(), at: new Date().toISOString(), userId: editorUserId || "system", action: "add_document", patch: { doc } }];
+  upsertBeneficiary(next);
+}
+
+export function removeDocument(id: string, docId: string, editorUserId?: string) {
+  const b = getBeneficiary(id);
+  if (!b) return;
+  const next = { ...b, documents: b.documents.filter((d) => d.id !== docId) } as Beneficiary;
+  next.audit = [...(b.audit || []), { id: uid(), at: new Date().toISOString(), userId: editorUserId || "system", action: "remove_document", patch: { docId } }];
+  upsertBeneficiary(next);
+}
+
+export function archiveBeneficiaries(ids: string[], archived: boolean = true, editorUserId?: string) {
+  const arr = load();
+  const next = arr.map((b) => ids.includes(b.id) ? { ...b, archived, audit: [...(b.audit || []), { id: uid(), at: new Date().toISOString(), userId: editorUserId || "system", action: archived ? "archive" : "unarchive" }] } : b) as Beneficiary[];
+  save(next);
 }
 
 export { subscribeBeneficiaries as subscribe };
