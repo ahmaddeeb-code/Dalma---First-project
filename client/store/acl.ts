@@ -78,6 +78,12 @@ const seed: ACLState = {
       description: "Export to PDF/Excel",
       category: "Reporting",
     },
+    {
+      id: "p_manage_logistics",
+      name: "Manage Logistics",
+      description: "Manage buildings, rooms, schedules, resources",
+      category: "Administration",
+    },
   ],
   roles: [
     {
@@ -89,6 +95,7 @@ const seed: ACLState = {
         "p_edit_records",
         "p_manage_users",
         "p_manage_clinical",
+        "p_manage_logistics",
         "p_view_reports",
         "p_export_reports",
       ],

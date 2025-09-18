@@ -40,6 +40,7 @@ const messages = {
       donations: "Donations",
       accessControl: "Access Control",
       medicalSettings: "Medical Settings",
+      logistics: "Logistics",
       translations: "Translations",
     },
     header: {
@@ -476,6 +477,7 @@ const messages = {
       donations: "التبرعات",
       accessControl: "التحكم بالصلاحيات",
       medicalSettings: "إعدادات طبية",
+      logistics: "الخدمات اللوجستية",
       translations: "الترجمات",
     },
     header: {
@@ -503,7 +505,7 @@ const messages = {
       role: "الدور",
       roles: "الأدوار",
       privilege: "الصلاحية",
-      privileges: "الصلاحيات",
+      privileges: "ا��صلاحيات",
       actions: "إجراءات",
       name: "الاسم",
       email: "البريد",
@@ -625,7 +627,7 @@ const messages = {
         },
         plans: {
           title: "قوالب خطط العلاج",
-          desc: "أهداف وتدخلات قياسية.",
+          desc: "أهداف وتدخلات قياسي��.",
           assigned: "مخصص لـ",
           doctor: "طبيب",
           therapist: "معالج",
@@ -683,7 +685,7 @@ const messages = {
       },
       beneficiaries: {
         title: "إدارة المستفيدين",
-        desc: "قائمة المستفيدين مع البحث والفلاتر والوصول السريع للملفات",
+        desc: "قائمة المستفيدين مع البحث والفلاتر وال��صول السريع للملفات",
         stats: {
           total: "إجمالي",
           active: "نشطون",
@@ -804,7 +806,7 @@ const messages = {
       },
       portals: {
         title: "بوابات لجميع الأطراف",
-        desc: "بوابات المستفيد والموظف والإدارة والعائلة لتبسيط العمليات اليومية — التسجيل والسجلات والعلاجات والحضور والتواصل الآمن.",
+        desc: "بوابات المستفيد والموظف والإدارة والعائلة لتبسيط العمليات اليومية — التسجي�� والسجلات والعلاجات والحضور والتواصل الآمن.",
         open: "فتح",
         beneficiary: {
           title: "بوابة المستفيد",

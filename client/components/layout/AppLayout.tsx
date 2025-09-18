@@ -13,6 +13,7 @@ import {
   HandHeart,
   Users,
   Languages,
+  Building2,
 } from "lucide-react";
 import { ReactNode, useEffect, useMemo, useSyncExternalStore } from "react";
 import {
