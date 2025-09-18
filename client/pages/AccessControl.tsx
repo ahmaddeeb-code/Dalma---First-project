@@ -304,7 +304,7 @@ export default function AccessControl() {
                           }
                         >
                           <Trash2 className="ml-1 h-4 w-4" />
-                          حذف
+                          {t("common.delete")}
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -582,7 +582,7 @@ function PrivilegeDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {existing ? "تعديل صلاحية" : "صلاحي�� جديدة"}
+            {existing ? "تعديل صلاحية" : "صلاحية جديدة"}
           </DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-2">
