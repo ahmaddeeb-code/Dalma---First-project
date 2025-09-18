@@ -154,12 +154,49 @@ export default function Employees() {
             </CardTitle>
             <CardDescription>{t("common.search")}</CardDescription>
           </div>
-          {!canManage && (
-            <Badge variant="secondary" className="text-xs">
-              <ShieldCheck className="h-3 w-3 ml-1" />
-              {t("common.readOnly")}
-            </Badge>
-          )}
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2">
+              <Label className="text-xs">{t("common.pageSize")}</Label>
+              <select className="h-9 rounded-md border bg-background px-2 text-sm" value={pageSize} onChange={(e)=>{ setPageSize(Number(e.target.value)); setPage(1); }}>
+                {[10,20,50,100].map(n=> (<option key={n} value={n}>{n}</option>))}
+              </select>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline"><Download className="h-4 w-4 ml-1" /> {t("common.export")}</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>{t("common.format")}</DropdownMenuLabel>
+                {(["csv","xlsx","pdf"] as const).map(fmt => (
+                  <DropdownMenuItem key={fmt} onClick={()=>{
+                    const cols: ColumnDef<User>[] = [
+                      { header: t("common.name") as string, accessor: r=>r.name },
+                      { header: t("common.email") as string, accessor: r=>r.email||"" },
+                      { header: t("common.departmentTitle") as string, accessor: r=>`${r.department||""} ${r.title?`• ${r.title}`:""}` },
+                    ];
+                    exportAll(filtered, cols, fmt, `employees_${fmt}`);
+                  }}>{t("common.filtered")} – {fmt.toUpperCase()}</DropdownMenuItem>
+                ))}
+                <DropdownMenuSeparator />
+                {(["csv","xlsx","pdf"] as const).map(fmt => (
+                  <DropdownMenuItem key={fmt} onClick={()=>{
+                    const cols: ColumnDef<User>[] = [
+                      { header: t("common.name") as string, accessor: r=>r.name },
+                      { header: t("common.email") as string, accessor: r=>r.email||"" },
+                      { header: t("common.departmentTitle") as string, accessor: r=>`${r.department||""} ${r.title?`• ${r.title}`:""}` },
+                    ];
+                    exportAll(users, cols, fmt, `employees_${fmt}`);
+                  }}>{t("common.fullDataset")} – {fmt.toUpperCase()}</DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            {!canManage && (
+              <Badge variant="secondary" className="text-xs">
+                <ShieldCheck className="h-3 w-3 ml-1" />
+                {t("common.readOnly")}
+              </Badge>
+            )}
+          </div>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="md:col-span-2">
