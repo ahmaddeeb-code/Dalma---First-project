@@ -1,22 +1,23 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Bell, HeartHandshake, LayoutDashboard, LogOut, ShieldCheck, UserCircle2, Users2, FileBarChart2, HandHeart, Users } from "lucide-react";
-import { ReactNode, useMemo, useSyncExternalStore } from "react";
+import { Bell, HeartHandshake, LayoutDashboard, LogOut, ShieldCheck, UserCircle2, Users2, FileBarChart2, HandHeart, Users, Languages } from "lucide-react";
+import { ReactNode, useEffect, useMemo, useSyncExternalStore } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { getCurrentUser, getCurrentUserId, logout, subscribeAuth } from "@/store/auth";
 import { loadACL } from "@/store/acl";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarSeparator, SidebarTrigger } from "@/components/ui/sidebar";
+import { getLocale, setLocale, subscribeLocale, t } from "@/i18n";
 
 const navItems = [
-  { to: "/admin", label: "لوحة التحكم", icon: LayoutDashboard },
-  { to: "/beneficiaries", label: "المستفيدون", icon: Users2 },
-  { to: "/employees", label: "الموظفون", icon: Users },
-  { to: "/family", label: "العائلة", icon: UserCircle2 },
-  { to: "/reports", label: "التقارير", icon: FileBarChart2 },
-  { to: "/donations", label: "التبرعات", icon: HandHeart },
-  { to: "/admin/access-control", label: "التحكم بالصلاحيات", icon: ShieldCheck },
-];
+  { to: "/admin", key: "nav.admin", icon: LayoutDashboard },
+  { to: "/beneficiaries", key: "nav.beneficiaries", icon: Users2 },
+  { to: "/employees", key: "nav.employees", icon: Users },
+  { to: "/family", key: "nav.family", icon: UserCircle2 },
+  { to: "/reports", key: "nav.reports", icon: FileBarChart2 },
+  { to: "/donations", key: "nav.donations", icon: HandHeart },
+  { to: "/admin/access-control", key: "nav.accessControl", icon: ShieldCheck },
+] as const;
 
 function useAuthUserId() {
   return useSyncExternalStore(
