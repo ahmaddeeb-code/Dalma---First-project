@@ -238,6 +238,7 @@ export default function Employees() {
           <CardDescription>{t("pages.employees.table.desc")}</CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="w-full overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -331,6 +332,7 @@ export default function Employees() {
               ))}
             </TableBody>
           </Table>
+          </div>
           <div className="mt-4">
             <Pagination>
               <PaginationContent>
