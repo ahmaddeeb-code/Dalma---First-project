@@ -244,8 +244,8 @@ export default function Employees() {
                 <TableHead>{t("common.name")}</TableHead>
                 <TableHead>{t("common.email")}</TableHead>
                 <TableHead>{t("common.departmentTitle")}</TableHead>
-                <TableHead>{t("common.roles")}</TableHead>
-                <TableHead>{t("common.privileges")}</TableHead>
+                <TableHead className="hidden md:table-cell">{t("common.roles")}</TableHead>
+                <TableHead className="hidden md:table-cell">{t("common.privileges")}</TableHead>
                 {canManage && (
                   <TableHead className="text-center">
                     {t("common.actions")}
