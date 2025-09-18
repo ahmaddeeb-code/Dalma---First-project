@@ -167,7 +167,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button variant="ghost" size="icon" aria-label="الإشعارات">
+              <Button variant="ghost" size="icon" aria-label={t("home.notifications.title")}>
                 <Bell />
               </Button>
               {user ? (
