@@ -69,10 +69,8 @@ export default function AccessControl() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>المستخدمون</CardTitle>
-                <CardDescription>
-                  Create accounts and assign roles/privileges.
-                </CardDescription>
+                <CardTitle>{t("pages.accessControl.users.title")}</CardTitle>
+                <CardDescription>{t("pages.accessControl.users.desc")}</CardDescription>
               </div>
               <UserDialog
                 onSubmit={(u) =>
