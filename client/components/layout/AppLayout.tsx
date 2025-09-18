@@ -44,6 +44,14 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     return user.roleIds.map((id) => acl.roles.find((r) => r.id === id)?.name || id);
   }, [user]);
   const { pathname } = useLocation();
+  const locale = useLocale();
+  useEffect(() => {
+    const el = document.documentElement;
+    const wantDir = locale === "ar" ? "rtl" : "ltr";
+    const wantLang = locale === "ar" ? "ar" : "en";
+    if (el.getAttribute("dir") !== wantDir) el.setAttribute("dir", wantDir);
+    if (el.getAttribute("lang") !== wantLang) el.setAttribute("lang", wantLang);
+  }, [locale]);
 
   return (
     <SidebarProvider>
