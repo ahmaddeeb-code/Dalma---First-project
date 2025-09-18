@@ -18,6 +18,7 @@ import {
   Stethoscope,
   Users,
 } from "lucide-react";
+import { t } from "@/i18n";
 
 export default function Index() {
   return (
