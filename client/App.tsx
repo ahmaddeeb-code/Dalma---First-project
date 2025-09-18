@@ -35,7 +35,10 @@ const App = () => (
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/access-control" element={<AccessControl />} />
             <Route path="/admin/translations" element={<Translations />} />
-            <Route path="/admin/medical-settings" element={<MedicalSettings />} />
+            <Route
+              path="/admin/medical-settings"
+              element={<MedicalSettings />}
+            />
             <Route path="/login/admin" element={<LoginAdmin />} />
             <Route path="/login/staff" element={<LoginStaff />} />
             <Route path="/login/family" element={<LoginFamily />} />

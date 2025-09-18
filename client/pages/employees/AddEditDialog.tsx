@@ -112,7 +112,11 @@ export default function AddEditEmployeeDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>{user ? t("common.edit") + " " + t("pages.employees.addEmployee") : t("pages.employees.addEmployee")}</DialogTitle>
+          <DialogTitle>
+            {user
+              ? t("common.edit") + " " + t("pages.employees.addEmployee")
+              : t("pages.employees.addEmployee")}
+          </DialogTitle>
         </DialogHeader>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -143,7 +147,10 @@ export default function AddEditEmployeeDialog({
             <Input value={title} onChange={(e) => setTitle(e.target.value)} />
           </div>
           <div className="flex items-center gap-2 mt-6">
-            <Checkbox checked={active} onCheckedChange={(v) => setActive(v === true)} />
+            <Checkbox
+              checked={active}
+              onCheckedChange={(v) => setActive(v === true)}
+            />
             <Label>{t("common.active")}</Label>
           </div>
         </div>
@@ -163,7 +170,9 @@ export default function AddEditEmployeeDialog({
             </div>
           </div>
           <div>
-            <Label className="mb-2 inline-block">{t("pages.accessControl.users.form.directPrivs")}</Label>
+            <Label className="mb-2 inline-block">
+              {t("pages.accessControl.users.form.directPrivs")}
+            </Label>
             <div className="border rounded-md p-2 max-h-48 overflow-auto space-y-2">
               {privileges.map((p) => (
                 <label key={p.id} className="flex items-center gap-2 text-sm">

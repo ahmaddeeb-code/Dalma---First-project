@@ -1,11 +1,32 @@
 import { useMemo, useState, useSyncExternalStore } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { getLocale, listI18nKeys, getBaseMessage, getOverride, setOverride, removeOverride, subscribeTranslations } from "@/i18n";
+import {
+  getLocale,
+  listI18nKeys,
+  getBaseMessage,
+  getOverride,
+  setOverride,
+  removeOverride,
+  subscribeTranslations,
+} from "@/i18n";
 import { getCurrentUser } from "@/store/auth";
 import { effectivePrivileges, loadACL } from "@/store/acl";
 import { Download, FileUp } from "lucide-react";
@@ -26,7 +47,9 @@ export default function Translations() {
   const canManage = useMemo(() => {
     if (!me) return false;
     const acl = loadACL();
-    return effectivePrivileges(me, acl.roles, acl.privileges).some((p) => p.id === "p_manage_users");
+    return effectivePrivileges(me, acl.roles, acl.privileges).some(
+      (p) => p.id === "p_manage_users",
+    );
   }, [me]);
 
   const keys = useMemo(() => listI18nKeys(), []);
@@ -58,8 +81,15 @@ export default function Translations() {
   const reviewCount = rows.filter((r) => r.needsReview).length;
 
   function exportOverrides() {
-    const data = { ar: rows.reduce((acc: any, r) => { if (r.ovAr) acc[r.key] = r.ovAr; return acc; }, {}) };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const data = {
+      ar: rows.reduce((acc: any, r) => {
+        if (r.ovAr) acc[r.key] = r.ovAr;
+        return acc;
+      }, {}),
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -94,9 +124,13 @@ export default function Translations() {
     <div className="space-y-6">
       <div className="flex items-end justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">{ar ? "إدارة الترجمات" : "Translations Management"}</h1>
+          <h1 className="text-2xl font-bold tracking-tight">
+            {ar ? "إدارة الترجمات" : "Translations Management"}
+          </h1>
           <p className="text-muted-foreground mt-1">
-            {ar ? "تحكم في الترجمات بناءً على المفاتيح الإنجليزية وفحص جميع الترجمات" : "Manage translations by English keys and check completeness"}
+            {ar
+              ? "تحكم في الترجمات بناءً على المفاتيح الإنجليزية وفحص جميع الترجمات"
+              : "Manage translations by English keys and check completeness"}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -104,9 +138,20 @@ export default function Translations() {
             <Download className="h-4 w-4 ml-1" /> {ar ? "تصدير" : "Export"}
           </Button>
           <label className="inline-flex items-center gap-2">
-            <input type="file" accept="application/json" className="hidden" onChange={(e) => e.target.files && e.target.files[0] && importOverrides(e.target.files[0])} />
+            <input
+              type="file"
+              accept="application/json"
+              className="hidden"
+              onChange={(e) =>
+                e.target.files &&
+                e.target.files[0] &&
+                importOverrides(e.target.files[0])
+              }
+            />
             <Button variant="secondary" asChild>
-              <span><FileUp className="h-4 w-4 ml-1" /> {ar ? "استيراد" : "Import"}</span>
+              <span>
+                <FileUp className="h-4 w-4 ml-1" /> {ar ? "استيراد" : "Import"}
+              </span>
             </Button>
           </label>
         </div>
@@ -115,7 +160,9 @@ export default function Translations() {
       <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{ar ? "إجمالي المفاتيح" : "Total keys"}</CardDescription>
+            <CardDescription>
+              {ar ? "إجمالي المفاتيح" : "Total keys"}
+            </CardDescription>
             <CardTitle className="text-2xl">{total}</CardTitle>
           </CardHeader>
         </Card>
@@ -127,7 +174,9 @@ export default function Translations() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{ar ? "بحاجة لمراجعة" : "Needs review"}</CardDescription>
+            <CardDescription>
+              {ar ? "بحاجة لمراجعة" : "Needs review"}
+            </CardDescription>
             <CardTitle className="text-2xl">{reviewCount}</CardTitle>
           </CardHeader>
         </Card>
@@ -137,14 +186,28 @@ export default function Translations() {
         <CardHeader className="flex items-center justify-between gap-4">
           <div>
             <CardTitle>{ar ? "الترجمات" : "Translations"}</CardTitle>
-            <CardDescription>{ar ? "ابحث وحرّر العربية" : "Search and edit Arabic"}</CardDescription>
+            <CardDescription>
+              {ar ? "ابحث وحرّر العربية" : "Search and edit Arabic"}
+            </CardDescription>
           </div>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <Checkbox checked={onlyMissing} onCheckedChange={(v) => setOnlyMissing(v === true)} />
-              <span className="text-sm text-muted-foreground">{ar ? "إظهار الناقصة فقط" : "Only missing/review"}</span>
+              <Checkbox
+                checked={onlyMissing}
+                onCheckedChange={(v) => setOnlyMissing(v === true)}
+              />
+              <span className="text-sm text-muted-foreground">
+                {ar ? "إظهار الناقصة فقط" : "Only missing/review"}
+              </span>
             </div>
-            <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={ar ? "بحث بالمفتاح أو النص" : "Search by key or text"} className="w-64" />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={
+                ar ? "بحث بالمفتاح أو النص" : "Search by key or text"
+              }
+              className="w-64"
+            />
           </div>
         </CardHeader>
         <CardContent>
@@ -177,9 +240,13 @@ export default function Translations() {
                   </TableCell>
                   <TableCell>
                     {r.missing ? (
-                      <Badge className="bg-amber-500 text-white hover:bg-amber-500">{ar ? "مفقود" : "Missing"}</Badge>
+                      <Badge className="bg-amber-500 text-white hover:bg-amber-500">
+                        {ar ? "مفقود" : "Missing"}
+                      </Badge>
                     ) : r.needsReview ? (
-                      <Badge variant="secondary">{ar ? "بحاجة لمراجعة" : "Needs review"}</Badge>
+                      <Badge variant="secondary">
+                        {ar ? "بحاجة لمراجعة" : "Needs review"}
+                      </Badge>
                     ) : (
                       <Badge variant="outline">OK</Badge>
                     )}

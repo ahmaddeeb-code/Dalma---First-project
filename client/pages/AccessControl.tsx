@@ -54,16 +54,26 @@ export default function AccessControl() {
     <div className="space-y-8">
       <header className="flex items-end justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t("pages.accessControl.title")}</h1>
-          <p className="text-muted-foreground">{t("pages.accessControl.subtitle")}</p>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {t("pages.accessControl.title")}
+          </h1>
+          <p className="text-muted-foreground">
+            {t("pages.accessControl.subtitle")}
+          </p>
         </div>
       </header>
 
       <Tabs defaultValue="users">
         <TabsList>
-          <TabsTrigger value="users">{t("pages.accessControl.tabs.users")}</TabsTrigger>
-          <TabsTrigger value="roles">{t("pages.accessControl.tabs.roles")}</TabsTrigger>
-          <TabsTrigger value="privileges">{t("pages.accessControl.tabs.privs")}</TabsTrigger>
+          <TabsTrigger value="users">
+            {t("pages.accessControl.tabs.users")}
+          </TabsTrigger>
+          <TabsTrigger value="roles">
+            {t("pages.accessControl.tabs.roles")}
+          </TabsTrigger>
+          <TabsTrigger value="privileges">
+            {t("pages.accessControl.tabs.privs")}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="users" className="mt-6">
@@ -71,7 +81,9 @@ export default function AccessControl() {
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle>{t("pages.accessControl.users.title")}</CardTitle>
-                <CardDescription>{t("pages.accessControl.users.desc")}</CardDescription>
+                <CardDescription>
+                  {t("pages.accessControl.users.desc")}
+                </CardDescription>
               </div>
               <UserDialog
                 onSubmit={(u) =>
@@ -85,11 +97,21 @@ export default function AccessControl() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{t("pages.accessControl.users.headers.name")}</TableHead>
-                    <TableHead>{t("pages.accessControl.users.headers.email")}</TableHead>
-                    <TableHead>{t("pages.accessControl.users.headers.roles")}</TableHead>
-                    <TableHead>{t("pages.accessControl.users.headers.effectivePrivs")}</TableHead>
-                    <TableHead className="w-[120px]">{t("pages.accessControl.users.headers.actions")}</TableHead>
+                    <TableHead>
+                      {t("pages.accessControl.users.headers.name")}
+                    </TableHead>
+                    <TableHead>
+                      {t("pages.accessControl.users.headers.email")}
+                    </TableHead>
+                    <TableHead>
+                      {t("pages.accessControl.users.headers.roles")}
+                    </TableHead>
+                    <TableHead>
+                      {t("pages.accessControl.users.headers.effectivePrivs")}
+                    </TableHead>
+                    <TableHead className="w-[120px]">
+                      {t("pages.accessControl.users.headers.actions")}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -121,7 +143,10 @@ export default function AccessControl() {
                           ))}
                           {eff.length > 3 ? (
                             <span className="text-xs text-muted-foreground">
-                              {t("common.moreCount").replace("{{count}}", String(eff.length - 3))}
+                              {t("common.moreCount").replace(
+                                "{{count}}",
+                                String(eff.length - 3),
+                              )}
                             </span>
                           ) : null}
                         </TableCell>
@@ -165,7 +190,9 @@ export default function AccessControl() {
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle>{t("pages.accessControl.roles.title")}</CardTitle>
-                <CardDescription>{t("pages.accessControl.roles.desc")}</CardDescription>
+                <CardDescription>
+                  {t("pages.accessControl.roles.desc")}
+                </CardDescription>
               </div>
               <RoleDialog
                 onSubmit={(r) =>
@@ -178,10 +205,18 @@ export default function AccessControl() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{t("pages.accessControl.roles.headers.name")}</TableHead>
-                    <TableHead>{t("pages.accessControl.roles.headers.privs")}</TableHead>
-                    <TableHead>{t("pages.accessControl.roles.headers.users")}</TableHead>
-                    <TableHead className="w-[120px]">{t("pages.accessControl.roles.headers.actions")}</TableHead>
+                    <TableHead>
+                      {t("pages.accessControl.roles.headers.name")}
+                    </TableHead>
+                    <TableHead>
+                      {t("pages.accessControl.roles.headers.privs")}
+                    </TableHead>
+                    <TableHead>
+                      {t("pages.accessControl.roles.headers.users")}
+                    </TableHead>
+                    <TableHead className="w-[120px]">
+                      {t("pages.accessControl.roles.headers.actions")}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -240,8 +275,12 @@ export default function AccessControl() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>{t("pages.accessControl.privileges.title")}</CardTitle>
-                <CardDescription>{t("pages.accessControl.privileges.desc")}</CardDescription>
+                <CardTitle>
+                  {t("pages.accessControl.privileges.title")}
+                </CardTitle>
+                <CardDescription>
+                  {t("pages.accessControl.privileges.desc")}
+                </CardDescription>
               </div>
               <PrivilegeDialog
                 onSubmit={(p) =>
@@ -256,11 +295,21 @@ export default function AccessControl() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{t("pages.accessControl.privileges.headers.name")}</TableHead>
-                    <TableHead>{t("pages.accessControl.privileges.headers.category")}</TableHead>
-                    <TableHead>{t("pages.accessControl.privileges.headers.usedInRoles")}</TableHead>
-                    <TableHead>{t("pages.accessControl.privileges.headers.usedInUsers")}</TableHead>
-                    <TableHead className="w-[120px]">{t("pages.accessControl.privileges.headers.actions")}</TableHead>
+                    <TableHead>
+                      {t("pages.accessControl.privileges.headers.name")}
+                    </TableHead>
+                    <TableHead>
+                      {t("pages.accessControl.privileges.headers.category")}
+                    </TableHead>
+                    <TableHead>
+                      {t("pages.accessControl.privileges.headers.usedInRoles")}
+                    </TableHead>
+                    <TableHead>
+                      {t("pages.accessControl.privileges.headers.usedInUsers")}
+                    </TableHead>
+                    <TableHead className="w-[120px]">
+                      {t("pages.accessControl.privileges.headers.actions")}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -390,11 +439,17 @@ function UserDialog({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{existing ? t("pages.accessControl.users.edit") : t("pages.accessControl.users.new")}</DialogTitle>
+          <DialogTitle>
+            {existing
+              ? t("pages.accessControl.users.edit")
+              : t("pages.accessControl.users.new")}
+          </DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-2">
           <div className="grid gap-2">
-            <Label htmlFor="name">{t("pages.accessControl.users.form.name")}</Label>
+            <Label htmlFor="name">
+              {t("pages.accessControl.users.form.name")}
+            </Label>
             <Input
               id="name"
               value={name}
@@ -402,7 +457,9 @@ function UserDialog({
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="email">{t("pages.accessControl.users.form.email")}</Label>
+            <Label htmlFor="email">
+              {t("pages.accessControl.users.form.email")}
+            </Label>
             <Input
               id="email"
               type="email"
@@ -496,11 +553,17 @@ function RoleDialog({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{existing ? t("pages.accessControl.roles.edit") : t("pages.accessControl.roles.new")}</DialogTitle>
+          <DialogTitle>
+            {existing
+              ? t("pages.accessControl.roles.edit")
+              : t("pages.accessControl.roles.new")}
+          </DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-2">
           <div className="grid gap-2">
-            <Label htmlFor="rname">{t("pages.accessControl.roles.form.name")}</Label>
+            <Label htmlFor="rname">
+              {t("pages.accessControl.roles.form.name")}
+            </Label>
             <Input
               id="rname"
               value={name}
@@ -508,7 +571,9 @@ function RoleDialog({
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="rdesc">{t("pages.accessControl.roles.form.description")}</Label>
+            <Label htmlFor="rdesc">
+              {t("pages.accessControl.roles.form.description")}
+            </Label>
             <Input
               id="rdesc"
               value={description}
@@ -582,11 +647,17 @@ function PrivilegeDialog({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{existing ? t("pages.accessControl.privileges.edit") : t("pages.accessControl.privileges.new")}</DialogTitle>
+          <DialogTitle>
+            {existing
+              ? t("pages.accessControl.privileges.edit")
+              : t("pages.accessControl.privileges.new")}
+          </DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-2">
           <div className="grid gap-2">
-            <Label htmlFor="pname">{t("pages.accessControl.privileges.form.name")}</Label>
+            <Label htmlFor="pname">
+              {t("pages.accessControl.privileges.form.name")}
+            </Label>
             <Input
               id="pname"
               value={name}
@@ -594,7 +665,9 @@ function PrivilegeDialog({
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="pdesc">{t("pages.accessControl.privileges.form.description")}</Label>
+            <Label htmlFor="pdesc">
+              {t("pages.accessControl.privileges.form.description")}
+            </Label>
             <Input
               id="pdesc"
               value={description}
@@ -602,7 +675,9 @@ function PrivilegeDialog({
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="pcat">{t("pages.accessControl.privileges.form.category")}</Label>
+            <Label htmlFor="pcat">
+              {t("pages.accessControl.privileges.form.category")}
+            </Label>
             <Input
               id="pcat"
               value={category}

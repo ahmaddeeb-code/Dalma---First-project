@@ -96,7 +96,10 @@ const messages = {
         desc: "Add employees and assign roles & privileges (e.g., Doctors, Therapists)",
         addEmployee: "Add Employee",
         cards: { total: "Total", doctors: "Doctors", therapists: "Therapists" },
-        table: { title: "Employees", desc: "Click edit to update roles and privileges" },
+        table: {
+          title: "Employees",
+          desc: "Click edit to update roles and privileges",
+        },
         filters: { searchPlaceholder: "Name, email, department..." },
         confirmDeleteTitle: "Delete employee?",
         confirmDeleteMsg: "This user will be removed from the system.",
@@ -109,44 +112,126 @@ const messages = {
         users: {
           title: "Users",
           desc: "Create accounts and assign roles/privileges.",
-          headers: { name: "Name", email: "Email", roles: "Roles", effectivePrivs: "Effective Privileges", actions: "Actions" },
+          headers: {
+            name: "Name",
+            email: "Email",
+            roles: "Roles",
+            effectivePrivs: "Effective Privileges",
+            actions: "Actions",
+          },
           new: "New User",
           edit: "Edit User",
           delete: "Delete",
           deleted: "Deleted",
-          form: { name: "Name", email: "Email", roles: "Roles", directPrivs: "Direct Privileges" },
+          form: {
+            name: "Name",
+            email: "Email",
+            roles: "Roles",
+            directPrivs: "Direct Privileges",
+          },
         },
         roles: {
           title: "Roles",
           desc: "Roles bundle privileges for easier assignment.",
-          headers: { name: "Name", privs: "Privileges", users: "Users", actions: "Actions" },
+          headers: {
+            name: "Name",
+            privs: "Privileges",
+            users: "Users",
+            actions: "Actions",
+          },
           new: "New Role",
           edit: "Edit Role",
           delete: "Delete",
-          form: { name: "Name", description: "Description", privs: "Privileges" },
+          form: {
+            name: "Name",
+            description: "Description",
+            privs: "Privileges",
+          },
         },
         privileges: {
           title: "Privileges",
           desc: "Atomic permissions assigned to roles or directly to users.",
-          headers: { name: "Name", category: "Category", usedInRoles: "Used in roles", usedInUsers: "Used in users", actions: "Actions" },
+          headers: {
+            name: "Name",
+            category: "Category",
+            usedInRoles: "Used in roles",
+            usedInUsers: "Used in users",
+            actions: "Actions",
+          },
           new: "New Privilege",
           edit: "Edit Privilege",
           delete: "Delete",
-          form: { name: "Name", description: "Description", category: "Category", placeholder: "e.g., Records, Administration, Reporting" },
+          form: {
+            name: "Name",
+            description: "Description",
+            category: "Category",
+            placeholder: "e.g., Records, Administration, Reporting",
+          },
         },
       },
       medical: {
         title: "Medical & Treatment Settings",
-        subtitle: "Configure therapy types, templates, meds, scheduling, progress, and emergency protocols.",
+        subtitle:
+          "Configure therapy types, templates, meds, scheduling, progress, and emergency protocols.",
         saved: "Saved",
-        tabs: { therapy: "Therapy Types", plans: "Treatment Plans", medication: "Medication", scheduling: "Scheduling", progress: "Progress Tracking", emergency: "Emergency & Notes" },
+        tabs: {
+          therapy: "Therapy Types",
+          plans: "Treatment Plans",
+          medication: "Medication",
+          scheduling: "Scheduling",
+          progress: "Progress Tracking",
+          emergency: "Emergency & Notes",
+        },
         common: { description: "Description", addNew: "Add new" },
-        therapy: { title: "Therapy Session Types", desc: "Manage categories, durations, and default frequency.", duration: "Duration", frequency: "Default Frequency", min: "min", freq: { daily: "Daily", weekly: "Weekly", monthly: "Monthly" } },
-        plans: { title: "Treatment Plan Templates", desc: "Standardized goals and interventions.", assigned: "Assigned to", doctor: "Doctor", therapist: "Therapist", goals: "Goals:", interventions: "Interventions:", addGoal: "Add goal", addIntervention: "Add intervention" },
-        medication: { title: "Medication Settings", desc: "Categories, dosage units, and standard schedules.", categories: "Categories", units: "Dosage Units", schedules: "Schedules" },
-        scheduling: { title: "Appointment Scheduling", desc: "Working hours and booking rules.", sessionLength: "Session length (min)", maxPerDay: "Max sessions/day", bufferMin: "Buffer (min)", allowRecurring: "Enable recurring appointments", workingHours: "Working hours (by day)", day: "Day", start: "Start", end: "End" },
-        progress: { title: "Progress Tracking", desc: "Evaluation criteria and report frequency.", reportFreq: "Report frequencies" },
-        emergency: { title: "Emergency & Special Notes", desc: "Configure emergency protocols and notes.", steps: "Protocol steps", addStep: "Add step" },
+        therapy: {
+          title: "Therapy Session Types",
+          desc: "Manage categories, durations, and default frequency.",
+          duration: "Duration",
+          frequency: "Default Frequency",
+          min: "min",
+          freq: { daily: "Daily", weekly: "Weekly", monthly: "Monthly" },
+        },
+        plans: {
+          title: "Treatment Plan Templates",
+          desc: "Standardized goals and interventions.",
+          assigned: "Assigned to",
+          doctor: "Doctor",
+          therapist: "Therapist",
+          goals: "Goals:",
+          interventions: "Interventions:",
+          addGoal: "Add goal",
+          addIntervention: "Add intervention",
+        },
+        medication: {
+          title: "Medication Settings",
+          desc: "Categories, dosage units, and standard schedules.",
+          categories: "Categories",
+          units: "Dosage Units",
+          schedules: "Schedules",
+        },
+        scheduling: {
+          title: "Appointment Scheduling",
+          desc: "Working hours and booking rules.",
+          sessionLength: "Session length (min)",
+          maxPerDay: "Max sessions/day",
+          bufferMin: "Buffer (min)",
+          allowRecurring: "Enable recurring appointments",
+          workingHours: "Working hours (by day)",
+          day: "Day",
+          start: "Start",
+          end: "End",
+        },
+        progress: {
+          title: "Progress Tracking",
+          desc: "Evaluation criteria and report frequency.",
+          reportFreq: "Report frequencies",
+        },
+        emergency: {
+          title: "Emergency & Special Notes",
+          desc: "Configure emergency protocols and notes.",
+          steps: "Protocol steps",
+          addStep: "Add step",
+        },
       },
       translations: {
         title: "Translations Management",
@@ -167,7 +252,12 @@ const messages = {
       beneficiaries: {
         title: "Beneficiary Management",
         desc: "List of beneficiaries with search, filters, and quick access to profiles",
-        stats: { total: "Total", active: "Active", under: "Under Treatment", graduated: "Graduated" },
+        stats: {
+          total: "Total",
+          active: "Active",
+          under: "Under Treatment",
+          graduated: "Graduated",
+        },
         filters: {
           search: "Search",
           disability: "Disability",
@@ -183,7 +273,14 @@ const messages = {
           desc: "Desc",
           all: "All",
         },
-        actions: { add: "Add Beneficiary", notify: "Send Notification", export: "Export", archive: "Archive", clear: "Clear", open: "Open" },
+        actions: {
+          add: "Add Beneficiary",
+          notify: "Send Notification",
+          export: "Export",
+          archive: "Archive",
+          clear: "Clear",
+          open: "Open",
+        },
         table: {
           beneficiary: "Beneficiary",
           age: "Age",
@@ -193,7 +290,12 @@ const messages = {
           status: "Status",
           profile: "Profile",
         },
-        badges: { active: "Active", underTreatment: "Under treatment", graduated: "Graduated", inactive: "Inactive" },
+        badges: {
+          active: "Active",
+          underTreatment: "Under treatment",
+          graduated: "Graduated",
+          inactive: "Inactive",
+        },
         alerts: {
           title: "Alerts",
           desc: "Missed sessions, upcoming reviews, expiring documents",
@@ -205,7 +307,8 @@ const messages = {
       },
       admin: {
         title: "Admin Dashboard",
-        subtitle: "Real-time view over beneficiaries, staff, services and alerts.",
+        subtitle:
+          "Real-time view over beneficiaries, staff, services and alerts.",
         buttons: {
           accessControl: "Access Control",
           exportReport: "Export Report",
@@ -214,13 +317,23 @@ const messages = {
         tiles: {
           beneficiaries: { title: "Beneficiaries", deltaToday: "+24 today" },
           appointments: { title: "Appointments Today" },
-          staffUtil: { title: "Staff Utilization", note: "Target 75% · Overtime 6%" },
-          quality: { title: "Quality KPI", desc: "Based on therapy completion, incident rate, and satisfaction surveys." },
+          staffUtil: {
+            title: "Staff Utilization",
+            note: "Target 75% · Overtime 6%",
+          },
+          quality: {
+            title: "Quality KPI",
+            desc: "Based on therapy completion, incident rate, and satisfaction surveys.",
+          },
         },
         chart: {
           title: "Beneficiaries by Category",
           desc: "Distribution across Residential, Daycare, and Home-based services.",
-          labels: { residential: "Residential", daycare: "Daycare", home: "Home-based" },
+          labels: {
+            residential: "Residential",
+            daycare: "Daycare",
+            home: "Home-based",
+          },
         },
         alerts: {
           title: "Urgent Alerts",
@@ -232,9 +345,21 @@ const messages = {
           },
           levels: { high: "High", medium: "Medium", info: "Info" },
         },
-        team: { title: "Team Performance", desc: "Attendance, notes, and incident reporting.", summary: "92% on-time clock-ins · 18 field visits" },
-        reviews: { title: "Upcoming Reviews", desc: "Medical and psychological assessments this week.", summary: "54 scheduled reviews" },
-        notifSummary: { title: "Notifications Summary", desc: "Automated alerts and messages.", summary: "12 urgent · 36 normal · 128 info" },
+        team: {
+          title: "Team Performance",
+          desc: "Attendance, notes, and incident reporting.",
+          summary: "92% on-time clock-ins · 18 field visits",
+        },
+        reviews: {
+          title: "Upcoming Reviews",
+          desc: "Medical and psychological assessments this week.",
+          summary: "54 scheduled reviews",
+        },
+        notifSummary: {
+          title: "Notifications Summary",
+          desc: "Automated alerts and messages.",
+          summary: "12 urgent · 36 normal · 128 info",
+        },
       },
     },
     home: {
@@ -407,7 +532,10 @@ const messages = {
         desc: "إضافة الموظفين وتعيين الأدوار والصلاحيات (مثل الأطباء والمعالجين)",
         addEmployee: "إضافة موظف",
         cards: { total: "إجمالي", doctors: "الأطباء", therapists: "المعالجون" },
-        table: { title: "الموظفون", desc: "انقر تعديل لتحديث الأدوار والصلاحيات" },
+        table: {
+          title: "الموظفون",
+          desc: "انقر تعديل لتحديث الأدوار والصلاحيات",
+        },
         filters: { searchPlaceholder: "اسم، بريد، قسم..." },
         confirmDeleteTitle: "حذف الموظف؟",
         confirmDeleteMsg: "سيتم حذف هذا المستخدم من النظام.",
@@ -420,17 +548,33 @@ const messages = {
         users: {
           title: "المستخدمون",
           desc: "إنشاء الحسابات وتعيين الأدوار/الصلاحيات.",
-          headers: { name: "الاسم", email: "البريد الإلكتروني", roles: "الأدوار", effectivePrivs: "الصلاحيات الفعلية", actions: "إجراءات" },
+          headers: {
+            name: "الاسم",
+            email: "البريد الإلكتروني",
+            roles: "الأدوار",
+            effectivePrivs: "الصلاحيات الفعلية",
+            actions: "إجراءات",
+          },
           new: "مستخدم جديد",
           edit: "تعديل مستخدم",
           delete: "حذف",
           deleted: "تم الحذف",
-          form: { name: "الاسم", email: "البريد الإلكتروني", roles: "الأدوار", directPrivs: "الصلاحيات المباشرة" },
+          form: {
+            name: "الاسم",
+            email: "البريد الإلكتروني",
+            roles: "الأدوار",
+            directPrivs: "الصلاحيات المباشرة",
+          },
         },
         roles: {
           title: "الأدوار",
           desc: "حزم تسهّل إسناد الصلاحيات.",
-          headers: { name: "الاسم", privs: "الصلاحيات", users: "المستخدمون", actions: "إجراءات" },
+          headers: {
+            name: "الاسم",
+            privs: "الصلاحيات",
+            users: "المستخدمون",
+            actions: "إجراءات",
+          },
           new: "دور جديد",
           edit: "تعديل دور",
           delete: "حذف",
@@ -439,25 +583,87 @@ const messages = {
         privileges: {
           title: "الصلاحيات",
           desc: "صلاحيات أساسية تُسند إلى الأدوار أو مباشرة للمستخدمين.",
-          headers: { name: "الاسم", category: "الفئة", usedInRoles: "مستخدمة في الأدوار", usedInUsers: "مستخدمة في المستخدمين", actions: "إجراءات" },
+          headers: {
+            name: "الاسم",
+            category: "الفئة",
+            usedInRoles: "مستخدمة في الأدوار",
+            usedInUsers: "مستخدمة في المستخدمين",
+            actions: "إجراءات",
+          },
           new: "صلاحية جديدة",
           edit: "تعديل صلاحية",
           delete: "حذف",
-          form: { name: "الاسم", description: "الوصف", category: "الفئة", placeholder: "مثل: السجلات، الإدارة، التقارير" },
+          form: {
+            name: "الاسم",
+            description: "الوصف",
+            category: "الفئة",
+            placeholder: "مثل: السجلات، الإدارة، التقارير",
+          },
         },
       },
       medical: {
         title: "إعدادات العلاج والرعاية",
-        subtitle: "تهيئة أنواع الجلسات، القوالب، الأدوية، الجدولة، التقدم والبروتوكولات.",
+        subtitle:
+          "تهيئة أنواع الجلسات، القوالب، الأدوية، الجدولة، التقدم والبروتوكولات.",
         saved: "تم الحفظ",
-        tabs: { therapy: "أنواع الجلسات", plans: "خطط العلاج", medication: "الأدوية", scheduling: "الجدولة", progress: "متابعة التقدم", emergency: "الطوارئ والملاحظات" },
+        tabs: {
+          therapy: "أنواع الجلسات",
+          plans: "خطط العلاج",
+          medication: "الأدوية",
+          scheduling: "الجدولة",
+          progress: "متابعة التقدم",
+          emergency: "الطوارئ والملاحظات",
+        },
         common: { description: "الوصف", addNew: "إضافة جديد" },
-        therapy: { title: "أنواع جلسات العلاج", desc: "إدارة الفئات، المدد والتكرار الافتراضي.", duration: "المدة", frequency: "التكرار الافتراضي", min: "د", freq: { daily: "يومي", weekly: "أسبوعي", monthly: "شهري" } },
-        plans: { title: "قوالب خطط العلاج", desc: "أهداف وتدخلات قياسية.", assigned: "مخصص لـ", doctor: "طبيب", therapist: "معالج", goals: "الأهداف:", interventions: "التدخلات:", addGoal: "إضافة هدف", addIntervention: "إضافة تدخل" },
-        medication: { title: "إعدادات الأدوية", desc: "الفئات، وحدات ا��جرعات، والجداول القياسية.", categories: "الفئات", units: "وحدات الجرعة", schedules: "الجداول" },
-        scheduling: { title: "جدولة المواعيد", desc: "ساعات العمل وقواعد الحجز.", sessionLength: "مدة الجلسة (د)", maxPerDay: "الحد الأقصى/اليوم", bufferMin: "فاصل (د)", allowRecurring: "تمكين المواعيد المتكررة", workingHours: "ساعات العمل (حسب اليوم)", day: "اليوم", start: "البداية", end: "النهاية" },
-        progress: { title: "متابعة التقدم", desc: "معايير التقييم وتكرار التقارير.", reportFreq: "تكرار التقارير" },
-        emergency: { title: "الطوارئ والملاحظات الخاصة", desc: "تهيئة بروتوكولات الطوارئ وربطها.", steps: "خطوات البروتوكول", addStep: "إضافة خطوة" },
+        therapy: {
+          title: "أنواع جلسات العلاج",
+          desc: "إدارة الفئات، المدد والتكرار الافتراضي.",
+          duration: "المدة",
+          frequency: "التكرار الافتراضي",
+          min: "د",
+          freq: { daily: "يومي", weekly: "أسبوعي", monthly: "شهري" },
+        },
+        plans: {
+          title: "قوالب خطط العلاج",
+          desc: "أهداف وتدخلات قياسية.",
+          assigned: "مخصص لـ",
+          doctor: "طبيب",
+          therapist: "معالج",
+          goals: "الأهداف:",
+          interventions: "التدخلات:",
+          addGoal: "إضافة هدف",
+          addIntervention: "إضافة تدخل",
+        },
+        medication: {
+          title: "إعدادات الأدوية",
+          desc: "الفئات، وحدات ا��جرعات، والجداول القياسية.",
+          categories: "الفئات",
+          units: "وحدات الجرعة",
+          schedules: "الجداول",
+        },
+        scheduling: {
+          title: "جدولة المواعيد",
+          desc: "ساعات العمل وقواعد الحجز.",
+          sessionLength: "مدة الجلسة (د)",
+          maxPerDay: "الحد الأقصى/اليوم",
+          bufferMin: "فاصل (د)",
+          allowRecurring: "تمكين المواعيد المتكررة",
+          workingHours: "ساعات العمل (حسب اليوم)",
+          day: "اليوم",
+          start: "البداية",
+          end: "النهاية",
+        },
+        progress: {
+          title: "متابعة التقدم",
+          desc: "معايير التقييم وتكرار التقارير.",
+          reportFreq: "تكرار التقارير",
+        },
+        emergency: {
+          title: "الطوارئ والملاحظات الخاصة",
+          desc: "تهيئة بروتوكولات الطوارئ وربطها.",
+          steps: "خطوات البروتوكول",
+          addStep: "إضافة خطوة",
+        },
       },
       translations: {
         title: "إدارة الترجمات",
@@ -478,7 +684,12 @@ const messages = {
       beneficiaries: {
         title: "إدارة المستفيدين",
         desc: "قائمة المستفيدين مع البحث والفلاتر والوصول السريع للملفات",
-        stats: { total: "إجمالي", active: "نشطون", under: "تحت العلاج", graduated: "متخرجون" },
+        stats: {
+          total: "إجمالي",
+          active: "نشطون",
+          under: "تحت العلاج",
+          graduated: "متخرجون",
+        },
         filters: {
           search: "بحث",
           disability: "نوع الإعاقة",
@@ -494,7 +705,14 @@ const messages = {
           desc: "تنازلي",
           all: "الكل",
         },
-        actions: { add: "إضافة مستفيد", notify: "إرسال إشعار", export: "تصدير", archive: "أرشفة", clear: "مسح", open: "فتح" },
+        actions: {
+          add: "إضافة مستفيد",
+          notify: "إرسال إشعار",
+          export: "تصدير",
+          archive: "أرشفة",
+          clear: "مسح",
+          open: "فتح",
+        },
         table: {
           beneficiary: "المستفيد",
           age: "العمر",
@@ -504,7 +722,12 @@ const messages = {
           status: "الحالة",
           profile: "الملف",
         },
-        badges: { active: "نشط", underTreatment: "تحت العلاج", graduated: "متخرج", inactive: "غير نشط" },
+        badges: {
+          active: "نشط",
+          underTreatment: "تحت العلاج",
+          graduated: "متخرج",
+          inactive: "غير نشط",
+        },
         alerts: {
           title: "تنبيهات",
           desc: "جلسات فائتة، مراجعات قادمة، مستندات على وشك الانتهاء",
@@ -525,8 +748,14 @@ const messages = {
         tiles: {
           beneficiaries: { title: "المستفيدون", deltaToday: "+٢٤ اليوم" },
           appointments: { title: "مواعيد اليوم" },
-          staffUtil: { title: "استغلال الموظفين", note: "الهدف ٧٥٪ · وقت إضافي ٦٪" },
-          quality: { title: "مؤشر الجودة", desc: "استناداً إلى إكمال العلاج، معدل الحوادث، واستبيانات الرضا." },
+          staffUtil: {
+            title: "استغلال الموظفين",
+            note: "الهدف ٧٥٪ · وقت إضافي ٦٪",
+          },
+          quality: {
+            title: "مؤشر الجودة",
+            desc: "استناداً إلى إكمال العلاج، معدل الحوادث، واستبيانات الرضا.",
+          },
         },
         chart: {
           title: "المستفيدون حسب الفئة",
@@ -543,9 +772,21 @@ const messages = {
           },
           levels: { high: "عالي", medium: "متوسط", info: "معلومة" },
         },
-        team: { title: "أداء الفريق", desc: "الحضور والملاحظات وتقرير الحوادث.", summary: "٩٢٪ تسجيل حضور في الوقت · ١٨ زيارة ميدانية" },
-        reviews: { title: "مراجعات قادمة", desc: "تقييمات طبية ونفسية لهذا الأسبوع.", summary: "٥٤ تقييمات مجدولة" },
-        notifSummary: { title: "ملخص الإشعارات", desc: "تنبيهات ورسائل تلقائية.", summary: "١٢ عاجلة · ٣٦ عادية · ١٢٨ معلومات" },
+        team: {
+          title: "أداء الفريق",
+          desc: "الحضور والملاحظات وتقرير الحوادث.",
+          summary: "٩٢٪ تسجيل حضور في الوقت · ١٨ زيارة ميدانية",
+        },
+        reviews: {
+          title: "مراجعات قادمة",
+          desc: "تقييمات طبية ونفسية لهذا الأسبوع.",
+          summary: "٥٤ تقييمات مجدولة",
+        },
+        notifSummary: {
+          title: "ملخص الإشعارات",
+          desc: "تنبيهات ورسائل تلقائية.",
+          summary: "١٢ عاجلة · ٣٦ عادية · ١٢٨ معلومات",
+        },
       },
     },
     home: {
@@ -694,7 +935,8 @@ function flatten(obj: any, prefix = ""): Record<string, string> {
     const val = (obj as any)[k];
     const key = prefix ? `${prefix}.${k}` : k;
     if (typeof val === "string") out[key] = val;
-    else if (val && typeof val === "object") Object.assign(out, flatten(val, key));
+    else if (val && typeof val === "object")
+      Object.assign(out, flatten(val, key));
   }
   return out;
 }
@@ -702,7 +944,10 @@ function flatten(obj: any, prefix = ""): Record<string, string> {
 export function listI18nKeys(): string[] {
   return Object.keys(flatten(messages.en));
 }
-export function getBaseMessage(locale: Locale, key: string): string | undefined {
+export function getBaseMessage(
+  locale: Locale,
+  key: string,
+): string | undefined {
   const parts = key.split(".");
   let obj: any = messages[locale as keyof typeof messages];
   for (const p of parts) {

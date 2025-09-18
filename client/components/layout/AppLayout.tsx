@@ -56,7 +56,11 @@ const navItems = [
   { to: "/reports", key: "nav.reports", icon: FileBarChart2 },
   { to: "/donations", key: "nav.donations", icon: HandHeart },
   { to: "/admin/access-control", key: "nav.accessControl", icon: ShieldCheck },
-  { to: "/admin/medical-settings", key: "nav.medicalSettings", icon: ShieldCheck },
+  {
+    to: "/admin/medical-settings",
+    key: "nav.medicalSettings",
+    icon: ShieldCheck,
+  },
   { to: "/admin/translations", key: "nav.translations", icon: Languages },
 ] as const;
 
@@ -168,7 +172,11 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button variant="ghost" size="icon" aria-label={t("home.notifications.title")}>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={t("home.notifications.title")}
+              >
                 <Bell />
               </Button>
               {user ? (
@@ -231,7 +239,12 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         <main className="container py-6">{children}</main>
         <footer className="mt-8 border-t">
           <div className="container py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-            <p>{t("footer.copyright").replace("{{year}}", String(new Date().getFullYear()))}</p>
+            <p>
+              {t("footer.copyright").replace(
+                "{{year}}",
+                String(new Date().getFullYear()),
+              )}
+            </p>
             <div className="flex items-center gap-4">
               <Link to="/privacy" className="hover:text-foreground">
                 {t("footer.privacy")}

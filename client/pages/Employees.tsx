@@ -94,14 +94,20 @@ export default function Employees() {
 
   const total = users.filter((u) => u.active !== false).length;
   const doctors = users.filter((u) => u.roleIds.includes("r_doctor")).length;
-  const therapists = users.filter((u) => u.roleIds.includes("r_therapist")).length;
+  const therapists = users.filter((u) =>
+    u.roleIds.includes("r_therapist"),
+  ).length;
 
   return (
     <div className="space-y-6">
       <div className="flex items-end justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("pages.employees.title")}</h1>
-          <p className="text-muted-foreground mt-1">{t("pages.employees.desc")}</p>
+          <h1 className="text-2xl font-bold tracking-tight">
+            {t("pages.employees.title")}
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            {t("pages.employees.desc")}
+          </p>
         </div>
         {canManage && (
           <Button onClick={() => setAddOpen(true)}>
@@ -137,9 +143,7 @@ export default function Employees() {
             <CardTitle className="flex items-center gap-2">
               <Filter className="h-5 w-5" /> {t("common.filters")}
             </CardTitle>
-            <CardDescription>
-              {t("common.search")}
-            </CardDescription>
+            <CardDescription>{t("common.search")}</CardDescription>
           </div>
           {!canManage && (
             <Badge variant="secondary" className="text-xs">
@@ -185,9 +189,7 @@ export default function Employees() {
       <Card>
         <CardHeader>
           <CardTitle>{t("pages.employees.table.title")}</CardTitle>
-          <CardDescription>
-            {t("pages.employees.table.desc")}
-          </CardDescription>
+          <CardDescription>{t("pages.employees.table.desc")}</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -198,7 +200,11 @@ export default function Employees() {
                 <TableHead>{t("common.departmentTitle")}</TableHead>
                 <TableHead>{t("common.roles")}</TableHead>
                 <TableHead>{t("common.privileges")}</TableHead>
-                {canManage && <TableHead className="text-center">{t("common.actions")}</TableHead>}
+                {canManage && (
+                  <TableHead className="text-center">
+                    {t("common.actions")}
+                  </TableHead>
+                )}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -208,7 +214,8 @@ export default function Employees() {
                   <TableCell>{u.email}</TableCell>
                   <TableCell>
                     <div className="text-sm">
-                      {(u.department || "").toString()} {u.title ? `• ${u.title}` : ""}
+                      {(u.department || "").toString()}{" "}
+                      {u.title ? `• ${u.title}` : ""}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -234,7 +241,11 @@ export default function Employees() {
                   {canManage && (
                     <TableCell className="text-center">
                       <div className="flex items-center justify-center gap-2">
-                        <Button size="sm" variant="secondary" onClick={() => setEditing(u)}>
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => setEditing(u)}
+                        >
                           {t("common.edit")}
                         </Button>
                         <AlertDialog>
@@ -245,13 +256,17 @@ export default function Employees() {
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>{t("pages.employees.confirmDeleteTitle")}</AlertDialogTitle>
+                              <AlertDialogTitle>
+                                {t("pages.employees.confirmDeleteTitle")}
+                              </AlertDialogTitle>
                               <AlertDialogDescription>
                                 {t("pages.employees.confirmDeleteMsg")}
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                              <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                              <AlertDialogCancel>
+                                {t("common.cancel")}
+                              </AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={() => {
                                   removeUser(u.id);

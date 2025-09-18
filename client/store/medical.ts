@@ -32,7 +32,11 @@ export type SchedulingSettings = {
   allowRecurring: boolean;
 };
 
-export type ProgressCriterion = { id: string; name: string; description?: string };
+export type ProgressCriterion = {
+  id: string;
+  name: string;
+  description?: string;
+};
 export type ProgressSettings = {
   criteria: ProgressCriterion[];
   reportFrequencies: ("weekly" | "monthly" | "quarterly")[];
@@ -74,11 +78,41 @@ function uid(prefix: string) {
 function seed(): MedicalSettingsState {
   return {
     therapyTypes: [
-      { id: uid("th"), name: "Physiotherapy", description: "Physical rehab", durationMin: 60, defaultFrequency: "weekly" },
-      { id: uid("th"), name: "Occupational Therapy", description: "Daily living skills", durationMin: 45, defaultFrequency: "weekly" },
-      { id: uid("th"), name: "Speech Therapy", description: "Communication skills", durationMin: 45, defaultFrequency: "weekly" },
-      { id: uid("th"), name: "Psychotherapy", description: "Mental health support", durationMin: 60, defaultFrequency: "weekly" },
-      { id: uid("th"), name: "Medical Consultation", description: "Doctor visit", durationMin: 30, defaultFrequency: "monthly" },
+      {
+        id: uid("th"),
+        name: "Physiotherapy",
+        description: "Physical rehab",
+        durationMin: 60,
+        defaultFrequency: "weekly",
+      },
+      {
+        id: uid("th"),
+        name: "Occupational Therapy",
+        description: "Daily living skills",
+        durationMin: 45,
+        defaultFrequency: "weekly",
+      },
+      {
+        id: uid("th"),
+        name: "Speech Therapy",
+        description: "Communication skills",
+        durationMin: 45,
+        defaultFrequency: "weekly",
+      },
+      {
+        id: uid("th"),
+        name: "Psychotherapy",
+        description: "Mental health support",
+        durationMin: 60,
+        defaultFrequency: "weekly",
+      },
+      {
+        id: uid("th"),
+        name: "Medical Consultation",
+        description: "Doctor visit",
+        durationMin: 30,
+        defaultFrequency: "monthly",
+      },
     ],
     templates: [
       {
@@ -122,7 +156,12 @@ function seed(): MedicalSettingsState {
         id: uid("ep"),
         name: "Epilepsy Response",
         description: "Seizure first-aid steps",
-        steps: ["Keep airway clear", "Turn on side", "Do not restrain", "Time the seizure"],
+        steps: [
+          "Keep airway clear",
+          "Turn on side",
+          "Do not restrain",
+          "Time the seizure",
+        ],
         tags: ["epilepsy", "urgent"],
       },
       {
@@ -202,29 +241,65 @@ export function removeTemplate(id: string) {
 export function addMedicationCategory(name: string) {
   const s = load();
   if (!s.medication.categories.includes(name))
-    save({ ...s, medication: { ...s.medication, categories: [name, ...s.medication.categories] } });
+    save({
+      ...s,
+      medication: {
+        ...s.medication,
+        categories: [name, ...s.medication.categories],
+      },
+    });
 }
 export function removeMedicationCategory(name: string) {
   const s = load();
-  save({ ...s, medication: { ...s.medication, categories: s.medication.categories.filter((c) => c !== name) } });
+  save({
+    ...s,
+    medication: {
+      ...s.medication,
+      categories: s.medication.categories.filter((c) => c !== name),
+    },
+  });
 }
 export function addDosageUnit(u: string) {
   const s = load();
   if (!s.medication.dosageUnits.includes(u))
-    save({ ...s, medication: { ...s.medication, dosageUnits: [u, ...s.medication.dosageUnits] } });
+    save({
+      ...s,
+      medication: {
+        ...s.medication,
+        dosageUnits: [u, ...s.medication.dosageUnits],
+      },
+    });
 }
 export function removeDosageUnit(u: string) {
   const s = load();
-  save({ ...s, medication: { ...s.medication, dosageUnits: s.medication.dosageUnits.filter((x) => x !== u) } });
+  save({
+    ...s,
+    medication: {
+      ...s.medication,
+      dosageUnits: s.medication.dosageUnits.filter((x) => x !== u),
+    },
+  });
 }
 export function addSchedule(v: string) {
   const s = load();
   if (!s.medication.schedules.includes(v))
-    save({ ...s, medication: { ...s.medication, schedules: [v, ...s.medication.schedules] } });
+    save({
+      ...s,
+      medication: {
+        ...s.medication,
+        schedules: [v, ...s.medication.schedules],
+      },
+    });
 }
 export function removeSchedule(v: string) {
   const s = load();
-  save({ ...s, medication: { ...s.medication, schedules: s.medication.schedules.filter((x) => x !== v) } });
+  save({
+    ...s,
+    medication: {
+      ...s.medication,
+      schedules: s.medication.schedules.filter((x) => x !== v),
+    },
+  });
 }
 
 export function setWorkingHours(hours: WorkingHours[]) {
@@ -243,9 +318,17 @@ export function upsertCriterion(c: ProgressCriterion) {
 }
 export function removeCriterion(id: string) {
   const s = load();
-  save({ ...s, progress: { ...s.progress, criteria: s.progress.criteria.filter((x) => x.id !== id) } });
+  save({
+    ...s,
+    progress: {
+      ...s.progress,
+      criteria: s.progress.criteria.filter((x) => x.id !== id),
+    },
+  });
 }
-export function setReportFrequencies(freqs: ProgressSettings["reportFrequencies"]) {
+export function setReportFrequencies(
+  freqs: ProgressSettings["reportFrequencies"],
+) {
   const s = load();
   save({ ...s, progress: { ...s.progress, reportFrequencies: freqs } });
 }
