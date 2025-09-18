@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useMemo, useSyncExternalStore, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -179,7 +180,7 @@ export default function BeneficiaryProfile() {
                     {
                       physical: ar ? "حركية" : "Physical",
                       intellectual: ar ? "ذهنية" : "Intellectual",
-                      sensory: ar ? "حسية" : "Sensory",
+                      sensory: ar ? "حس��ة" : "Sensory",
                       autism: ar ? "توحد" : "Autism",
                       multiple: ar ? "متعددة" : "Multiple",
                     }[b.medical.disabilityType]
@@ -277,7 +278,7 @@ export default function BeneficiaryProfile() {
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>
-                    {ar ? "تأكيد" : "Confirm"}
+                    {ar ? "تأك��د" : "Confirm"}
                   </AlertDialogTitle>
                   <AlertDialogDescription>
                     {b.archived
