@@ -2,6 +2,15 @@ import { loadACL, saveACL, type User } from "./acl";
 
 const AUTH_KEY = "auth_user_id_v1";
 
+const subscribers = new Set<() => void>();
+function emit() {
+  subscribers.forEach((cb) => cb());
+}
+export function subscribeAuth(cb: () => void) {
+  subscribers.add(cb);
+  return () => subscribers.delete(cb);
+}
+
 export function getCurrentUser(): User | null {
   const id = localStorage.getItem(AUTH_KEY);
   if (!id) return null;
@@ -18,8 +27,10 @@ export function login(user: User) {
     saveACL(acl);
   }
   localStorage.setItem(AUTH_KEY, user.id);
+  emit();
 }
 
 export function logout() {
   localStorage.removeItem(AUTH_KEY);
+  emit();
 }
