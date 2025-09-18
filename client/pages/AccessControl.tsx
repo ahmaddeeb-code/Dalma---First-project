@@ -54,7 +54,7 @@ export default function AccessControl() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">التحكم بالصلاحيات</h1>
           <p className="text-muted-foreground">
-            إدارة المستخدمين والأدوار والصلاحيات؛ وتعيينها بأمان.
+            إدار�� المستخدمين والأدوار والصلاحيات؛ وتعيينها بأمان.
           </p>
         </div>
       </header>
@@ -182,10 +182,10 @@ export default function AccessControl() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Privileges</TableHead>
-                    <TableHead>Users</TableHead>
-                    <TableHead className="w-[120px]">Actions</TableHead>
+                    <TableHead>الاسم</TableHead>
+                    <TableHead>الصلاحيات</TableHead>
+                    <TableHead>المستخدمون</TableHead>
+                    <TableHead className="w-[120px]">إجراءات</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
