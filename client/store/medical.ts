@@ -87,26 +87,73 @@ function L(en: string, ar = ""): Localized {
 function seed(): MedicalSettingsState {
   return {
     therapyTypes: [
-      { id: uid("th"), name: L("Physiotherapy", "العلاج الطبيعي"), description: L("Physical rehab", "تأهيل بدني"), durationMin: 60, defaultFrequency: "weekly" },
-      { id: uid("th"), name: L("Occupational Therapy", "العلاج الوظيفي"), description: L("Daily living skills", "مهارات الحياة اليومية"), durationMin: 45, defaultFrequency: "weekly" },
-      { id: uid("th"), name: L("Speech Therapy", "علاج النطق"), description: L("Communication skills", "مهارات التواصل"), durationMin: 45, defaultFrequency: "weekly" },
-      { id: uid("th"), name: L("Psychotherapy", "العلاج النفسي"), description: L("Mental health support", "دعم الصحة النفسية"), durationMin: 60, defaultFrequency: "weekly" },
-      { id: uid("th"), name: L("Medical Consultation", "استشارة طبية"), description: L("Doctor visit", "زيارة الطبيب"), durationMin: 30, defaultFrequency: "monthly" },
+      {
+        id: uid("th"),
+        name: L("Physiotherapy", "العلاج الطبيعي"),
+        description: L("Physical rehab", "تأهيل بدني"),
+        durationMin: 60,
+        defaultFrequency: "weekly",
+      },
+      {
+        id: uid("th"),
+        name: L("Occupational Therapy", "العلاج الوظيفي"),
+        description: L("Daily living skills", "مهارات الحياة اليومية"),
+        durationMin: 45,
+        defaultFrequency: "weekly",
+      },
+      {
+        id: uid("th"),
+        name: L("Speech Therapy", "علاج النطق"),
+        description: L("Communication skills", "مهارات التواصل"),
+        durationMin: 45,
+        defaultFrequency: "weekly",
+      },
+      {
+        id: uid("th"),
+        name: L("Psychotherapy", "العلاج النفسي"),
+        description: L("Mental health support", "دعم الصحة النفسية"),
+        durationMin: 60,
+        defaultFrequency: "weekly",
+      },
+      {
+        id: uid("th"),
+        name: L("Medical Consultation", "استشارة طبية"),
+        description: L("Doctor visit", "زيارة الطبيب"),
+        durationMin: 30,
+        defaultFrequency: "monthly",
+      },
     ],
     templates: [
       {
         id: uid("tpl"),
         name: L("Autism - Communication Focus", "التوحّد — تركيز على التواصل"),
-        description: L("Improve receptive/expressive language", "تحسين اللغة الاستقبالية/التعبيرية"),
-        goals: { en: ["Increase vocabulary by 20%", "Improve turn-taking"], ar: ["زيادة المفردات ٢٠٪", "تحسين تبادل الأدوار"] },
-        interventions: { en: ["ABA sessions", "Speech articulation drills"], ar: ["جلسات تحليل السلوك", "تمارين النطق"] },
+        description: L(
+          "Improve receptive/expressive language",
+          "تحسين اللغة الاستقبالية/التعبيرية",
+        ),
+        goals: {
+          en: ["Increase vocabulary by 20%", "Improve turn-taking"],
+          ar: ["زيادة المفردات ٢٠٪", "تحسين تبادل الأدوار"],
+        },
+        interventions: {
+          en: ["ABA sessions", "Speech articulation drills"],
+          ar: ["جلسات تحليل السلوك", "تمارين النطق"],
+        },
         assignedRole: "therapist",
       },
     ],
     medication: {
-      categories: ["Tablet", "Injection", "Syrup", "Drops", "Capsule"].map((x) => ({ id: uid("mc"), label: L(x) })),
-      dosageUnits: ["mg", "ml", "drops", "capsules"].map((x) => ({ id: uid("du"), label: L(x) })),
-      schedules: ["Before meal", "After meal", "Morning", "Night"].map((x) => ({ id: uid("ms"), label: L(x) })),
+      categories: ["Tablet", "Injection", "Syrup", "Drops", "Capsule"].map(
+        (x) => ({ id: uid("mc"), label: L(x) }),
+      ),
+      dosageUnits: ["mg", "ml", "drops", "capsules"].map((x) => ({
+        id: uid("du"),
+        label: L(x),
+      })),
+      schedules: ["Before meal", "After meal", "Morning", "Night"].map((x) => ({
+        id: uid("ms"),
+        label: L(x),
+      })),
     },
     scheduling: {
       workingHours: [
@@ -131,8 +178,31 @@ function seed(): MedicalSettingsState {
       reportFrequencies: ["weekly", "monthly", "quarterly"],
     },
     emergencyProtocols: [
-      { id: uid("ep"), name: L("Epilepsy Response", "استجابة نوبات الصرع"), description: L("Seizure first-aid steps", "خطوات الإسعاف الأولي"), steps: { en: ["Keep airway clear", "Turn on side", "Do not restrain", "Time the seizure"], ar: [] }, tags: ["epilepsy", "urgent"] },
-      { id: uid("ep"), name: L("Allergy Alert", "إنذار الحساسية"), description: L("Anaphylaxis response", "استجابة التأق"), steps: { en: ["EpiPen if prescribed", "Call emergency", "Monitor breathing"], ar: [] }, tags: ["allergy", "urgent"] },
+      {
+        id: uid("ep"),
+        name: L("Epilepsy Response", "استجابة نوبات الصرع"),
+        description: L("Seizure first-aid steps", "خطوات الإسعاف الأولي"),
+        steps: {
+          en: [
+            "Keep airway clear",
+            "Turn on side",
+            "Do not restrain",
+            "Time the seizure",
+          ],
+          ar: [],
+        },
+        tags: ["epilepsy", "urgent"],
+      },
+      {
+        id: uid("ep"),
+        name: L("Allergy Alert", "إنذار الحساسية"),
+        description: L("Anaphylaxis response", "استجابة التأق"),
+        steps: {
+          en: ["EpiPen if prescribed", "Call emergency", "Monitor breathing"],
+          ar: [],
+        },
+        tags: ["allergy", "urgent"],
+      },
     ],
   };
 }
@@ -147,13 +217,18 @@ function ensureLocalized(v: any): Localized {
 
 function migrate(raw: any): MedicalSettingsState {
   const s = raw || {};
-  const therapyTypes: TherapySessionType[] = (s.therapyTypes || []).map((t: any) => ({
-    id: t.id || uid("th"),
-    name: ensureLocalized(t.name),
-    description: t.description !== undefined ? ensureLocalized(t.description) : undefined,
-    durationMin: Number(t.durationMin || 45),
-    defaultFrequency: (t.defaultFrequency || "weekly") as Frequency,
-  }));
+  const therapyTypes: TherapySessionType[] = (s.therapyTypes || []).map(
+    (t: any) => ({
+      id: t.id || uid("th"),
+      name: ensureLocalized(t.name),
+      description:
+        t.description !== undefined
+          ? ensureLocalized(t.description)
+          : undefined,
+      durationMin: Number(t.durationMin || 45),
+      defaultFrequency: (t.defaultFrequency || "weekly") as Frequency,
+    }),
+  );
 
   const toLabeled = (arr: any[], pfx: string): Labeled[] =>
     (arr || []).map((x: any) =>
@@ -176,20 +251,28 @@ function migrate(raw: any): MedicalSettingsState {
     };
   };
 
-  const templates: TreatmentPlanTemplate[] = (s.templates || []).map((t: any) => ({
-    id: t.id || uid("tpl"),
-    name: ensureLocalized(t.name),
-    description: t.description !== undefined ? ensureLocalized(t.description) : undefined,
-    goals: toLocaleArray(t.goals),
-    interventions: toLocaleArray(t.interventions),
-    assignedRole: (t.assignedRole || "therapist") as "doctor" | "therapist",
-  }));
+  const templates: TreatmentPlanTemplate[] = (s.templates || []).map(
+    (t: any) => ({
+      id: t.id || uid("tpl"),
+      name: ensureLocalized(t.name),
+      description:
+        t.description !== undefined
+          ? ensureLocalized(t.description)
+          : undefined,
+      goals: toLocaleArray(t.goals),
+      interventions: toLocaleArray(t.interventions),
+      assignedRole: (t.assignedRole || "therapist") as "doctor" | "therapist",
+    }),
+  );
 
   const progress: ProgressSettings = {
     criteria: (s.progress?.criteria || []).map((c: any) => ({
       id: c.id || uid("cr"),
       name: ensureLocalized(c.name),
-      description: c.description !== undefined ? ensureLocalized(c.description) : undefined,
+      description:
+        c.description !== undefined
+          ? ensureLocalized(c.description)
+          : undefined,
     })),
     reportFrequencies: Array.isArray(s.progress?.reportFrequencies)
       ? s.progress.reportFrequencies
@@ -204,17 +287,24 @@ function migrate(raw: any): MedicalSettingsState {
     };
   };
 
-  const emergencyProtocols: EmergencyProtocol[] = (s.emergencyProtocols || []).map((p: any) => ({
+  const emergencyProtocols: EmergencyProtocol[] = (
+    s.emergencyProtocols || []
+  ).map((p: any) => ({
     id: p.id || uid("ep"),
     name: ensureLocalized(p.name),
-    description: p.description !== undefined ? ensureLocalized(p.description) : undefined,
+    description:
+      p.description !== undefined ? ensureLocalized(p.description) : undefined,
     steps: toSteps(p.steps),
     tags: Array.isArray(p.tags) ? p.tags.map(String) : [],
   }));
 
   const scheduling: SchedulingSettings = {
     workingHours: Array.isArray(s.scheduling?.workingHours)
-      ? s.scheduling.workingHours.map((h: any) => ({ day: Number(h.day || 0), start: String(h.start || "09:00"), end: String(h.end || "17:00") }))
+      ? s.scheduling.workingHours.map((h: any) => ({
+          day: Number(h.day || 0),
+          start: String(h.start || "09:00"),
+          end: String(h.end || "17:00"),
+        }))
       : seed().scheduling.workingHours,
     sessionLength: Number(s.scheduling?.sessionLength ?? 45),
     maxPerDay: Number(s.scheduling?.maxPerDay ?? 6),
@@ -222,7 +312,14 @@ function migrate(raw: any): MedicalSettingsState {
     allowRecurring: Boolean(s.scheduling?.allowRecurring ?? true),
   };
 
-  return { therapyTypes, templates, medication, scheduling, progress, emergencyProtocols };
+  return {
+    therapyTypes,
+    templates,
+    medication,
+    scheduling,
+    progress,
+    emergencyProtocols,
+  };
 }
 
 function load(): MedicalSettingsState {
@@ -302,7 +399,13 @@ export function addMedicationCategory(label: Localized) {
 }
 export function removeMedicationCategory(id: string) {
   const s = load();
-  save({ ...s, medication: { ...s.medication, categories: s.medication.categories.filter((c) => c.id !== id) } });
+  save({
+    ...s,
+    medication: {
+      ...s.medication,
+      categories: s.medication.categories.filter((c) => c.id !== id),
+    },
+  });
 }
 export function addDosageUnit(label: Localized) {
   const s = load();
@@ -314,7 +417,13 @@ export function addDosageUnit(label: Localized) {
 }
 export function removeDosageUnit(id: string) {
   const s = load();
-  save({ ...s, medication: { ...s.medication, dosageUnits: s.medication.dosageUnits.filter((x) => x.id !== id) } });
+  save({
+    ...s,
+    medication: {
+      ...s.medication,
+      dosageUnits: s.medication.dosageUnits.filter((x) => x.id !== id),
+    },
+  });
 }
 export function addSchedule(label: Localized) {
   const s = load();
@@ -326,7 +435,13 @@ export function addSchedule(label: Localized) {
 }
 export function removeSchedule(id: string) {
   const s = load();
-  save({ ...s, medication: { ...s.medication, schedules: s.medication.schedules.filter((x) => x.id !== id) } });
+  save({
+    ...s,
+    medication: {
+      ...s.medication,
+      schedules: s.medication.schedules.filter((x) => x.id !== id),
+    },
+  });
 }
 
 export function setWorkingHours(hours: WorkingHours[]) {
@@ -345,9 +460,17 @@ export function upsertCriterion(c: ProgressCriterion) {
 }
 export function removeCriterion(id: string) {
   const s = load();
-  save({ ...s, progress: { ...s.progress, criteria: s.progress.criteria.filter((x) => x.id !== id) } });
+  save({
+    ...s,
+    progress: {
+      ...s.progress,
+      criteria: s.progress.criteria.filter((x) => x.id !== id),
+    },
+  });
 }
-export function setReportFrequencies(freqs: ProgressSettings["reportFrequencies"]) {
+export function setReportFrequencies(
+  freqs: ProgressSettings["reportFrequencies"],
+) {
   const s = load();
   save({ ...s, progress: { ...s.progress, reportFrequencies: freqs } });
 }
