@@ -522,7 +522,7 @@ function RoleDialog({
             />
           </div>
           <div className="grid gap-2">
-            <Label>Privileges</Label>
+            <Label>الصلاحيات</Label>
             <div className="grid grid-cols-2 gap-2 max-h-48 overflow-auto">
               {privileges.map((p) => (
                 <label key={p.id} className="flex items-center gap-2 text-sm">
