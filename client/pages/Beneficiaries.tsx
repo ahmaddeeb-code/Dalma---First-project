@@ -27,7 +27,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Checkbox } from "@/components/ui/checkbox";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { getLocale } from "@/i18n";
+import { getCurrentUser, getCurrentUserId } from "@/store/auth";
+import { effectivePrivileges, loadACL } from "@/store/acl";
+import AddEditBeneficiaryDialog from "@/pages/beneficiaries/AddEditDialog";
+import { archiveBeneficiaries, removeBeneficiary } from "@/store/beneficiaries";
+import { toast } from "sonner";
 import {
   BadgeCheck,
   Bell,
@@ -103,6 +110,17 @@ function disabilityLabel(d: DisabilityType, ar: boolean) {
 
 export default function Beneficiaries() {
   const data = useBeneficiaries();
+  const user = useMemo(() => getCurrentUser(), []);
+  const canEdit = useMemo(() => {
+    if (!user) return false;
+    const acl = loadACL();
+    const privs = effectivePrivileges(user, acl.roles, acl.privileges);
+    return privs.some((p) => p.id === "p_edit_records");
+  }, [user]);
+  const [addOpen, setAddOpen] = useState(false);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState<"name" | "age" | "status">("name");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [searchText, setSearchText] = useState("");
   const [disability, setDisability] = useState<DisabilityType | "all">("all");
   const [status, setStatus] = useState<BeneficiaryStatus | "all">("all");
@@ -127,19 +145,25 @@ export default function Beneficiaries() {
     [data],
   );
 
-  const filtered = useMemo(
-    () =>
-      queryBeneficiaries({
-        search: searchText,
-        disability,
-        status,
-        program,
-        therapist,
-        ageMin: ageMin ? Number(ageMin) : undefined,
-        ageMax: ageMax ? Number(ageMax) : undefined,
-      }),
-    [searchText, disability, status, program, therapist, ageMin, ageMax],
-  );
+  const filtered = useMemo(() => {
+    const base = queryBeneficiaries({
+      search: searchText,
+      disability,
+      status,
+      program,
+      therapist,
+      ageMin: ageMin ? Number(ageMin) : undefined,
+      ageMax: ageMax ? Number(ageMax) : undefined,
+    });
+    const sorted = [...base].sort((a, b) => {
+      let cmp = 0;
+      if (sortBy === "name") cmp = a.name.localeCompare(b.name);
+      else if (sortBy === "age") cmp = getAge(a) - getAge(b);
+      else if (sortBy === "status") cmp = a.status.localeCompare(b.status);
+      return sortDir === "asc" ? cmp : -cmp;
+    });
+    return sorted;
+  }, [searchText, disability, status, program, therapist, ageMin, ageMax, sortBy, sortDir]);
 
   const total = data.length;
   const active = data.filter((b) => b.status === "active").length;
@@ -198,17 +222,22 @@ export default function Beneficiaries() {
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Filter className="h-5 w-5" /> {ar ? "الفلاتر" : "Filters"}
-          </CardTitle>
-          <CardDescription>
-            {ar
-              ? "تصفية حسب النوع، الحالة، البرنامج والمعالج"
-              : "Filter by disability, status, program and therapist"}
-          </CardDescription>
+        <CardHeader className="flex items-center justify-between gap-4">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <Filter className="h-5 w-5" /> {ar ? "الفلاتر" : "Filters"}
+            </CardTitle>
+            <CardDescription>
+              {ar
+                ? "تصفية حسب النوع، الحالة، البرنامج والمعالج"
+                : "Filter by disability, status, program and therapist"}
+            </CardDescription>
+          </div>
+          {canEdit && (
+            <Button onClick={() => setAddOpen(true)}>{ar ? "إضافة مستفيد" : "Add Beneficiary"}</Button>
+          )}
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-6 gap-3">
+        <CardContent className="grid grid-cols-1 md:grid-cols-7 gap-3">
           <div className="md:col-span-2">
             <Label>{ar ? "بحث" : "Search"}</Label>
             <div className="relative">
@@ -311,6 +340,27 @@ export default function Beneficiaries() {
               </SelectContent>
             </Select>
           </div>
+          <div>
+            <Label>{ar ? "ترتيب حسب" : "Sort by"}</Label>
+            <Select value={sortBy} onValueChange={(v) => setSortBy(v as any)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="name">{ar ? "الاسم" : "Name"}</SelectItem>
+                <SelectItem value="age">{ar ? "العمر" : "Age"}</SelectItem>
+                <SelectItem value="status">{ar ? "الحالة" : "Status"}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>{ar ? "الاتجاه" : "Direction"}</Label>
+            <Select value={sortDir} onValueChange={(v) => setSortDir(v as any)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="asc">{ar ? "تصاعدي" : "Asc"}</SelectItem>
+                <SelectItem value="desc">{ar ? "تنازلي" : "Desc"}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
               <Label>{ar ? "العمر الأدنى" : "Min Age"}</Label>
@@ -334,6 +384,23 @@ export default function Beneficiaries() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2">
+          {selected.length > 0 && canEdit && (
+            <div className="px-6 pt-4 flex items-center justify-between gap-2">
+              <div className="text-sm">{ar ? "المحدد:" : "Selected:"} {selected.length}</div>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={() => { toast.success(ar?"تم إرسال إشعار":"Notification sent"); }}>
+                  {ar ? "إرسال إشعار" : "Send Notification"}
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => { const payload = JSON.stringify(filtered.filter(b=>selected.includes(b.id)), null, 2); const blob = new Blob([payload], { type: "application/json" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "beneficiaries.json"; a.click(); URL.revokeObjectURL(url); }}>
+                  {ar ? "تصدير" : "Export"}
+                </Button>
+                <Button variant="secondary" size="sm" onClick={() => { archiveBeneficiaries(selected, true); setSelected([]); toast.success(ar?"تمت الأرشفة":"Archived"); }}>
+                  {ar ? "أرشفة" : "Archive"}
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => setSelected([])}>{ar ? "مسح" : "Clear"}</Button>
+              </div>
+            </div>
+          )}
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <UserSquare2 className="h-5 w-5" />{" "}
@@ -349,6 +416,11 @@ export default function Beneficiaries() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  {canEdit && (
+                    <TableHead>
+                      <Checkbox checked={selected.length>0 && selected.length===filtered.length} onCheckedChange={(v) => setSelected(v ? filtered.map((b)=>b.id) : [])} />
+                    </TableHead>
+                  )}
                   <TableHead>{ar ? "المستفيد" : "Beneficiary"}</TableHead>
                   <TableHead>{ar ? "العمر" : "Age"}</TableHead>
                   <TableHead>{ar ? "الإعاقة" : "Disability"}</TableHead>
@@ -363,6 +435,11 @@ export default function Beneficiaries() {
               <TableBody>
                 {filtered.map((b) => (
                   <TableRow key={b.id}>
+                    {canEdit && (
+                      <TableCell>
+                        <Checkbox checked={selected.includes(b.id)} onCheckedChange={(v) => setSelected((prev)=> v ? [...prev, b.id] : prev.filter((x)=>x!==b.id))} />
+                      </TableCell>
+                    )}
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Avatar>
@@ -471,6 +548,7 @@ export default function Beneficiaries() {
           </Card>
         </div>
       </div>
+      <AddEditBeneficiaryDialog open={addOpen} onOpenChange={setAddOpen} />
     </div>
   );
 }
