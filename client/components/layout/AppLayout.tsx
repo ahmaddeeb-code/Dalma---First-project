@@ -230,16 +230,16 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         <main className="container py-6">{children}</main>
         <footer className="mt-8 border-t">
           <div className="container py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-            <p>© {new Date().getFullYear()} مركز دلما. جميع الحقوق محفوظة.</p>
+            <p>{t("footer.copyright").replace("{{year}}", String(new Date().getFullYear()))}</p>
             <div className="flex items-center gap-4">
               <Link to="/privacy" className="hover:text-foreground">
-                الخصوصية
+                {t("footer.privacy")}
               </Link>
               <Link to="/security" className="hover:text-foreground">
-                الأمان
+                {t("footer.security")}
               </Link>
               <Link to="/contact" className="hover:text-foreground">
-                تواصل
+                {t("footer.contact")}
               </Link>
             </div>
           </div>
