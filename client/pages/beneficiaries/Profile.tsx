@@ -176,15 +176,20 @@ export default function BeneficiaryProfile() {
                 <span>
                   {ar ? "العمر" : "Age"}: {age}
                 </span>
-                <span>
-                  {ar ? "الجنس" : "Gender"}:{" "}
-                  {b.gender === "male"
-                    ? ar
-                      ? "ذكر"
-                      : "Male"
-                    : ar
-                      ? "أنثى"
-                      : "Female"}
+                <span className="flex items-center gap-2">
+                  <span>{ar ? "الجنس" : "Gender"}:</span>
+                  {edit ? (
+                    <Select defaultValue={b.gender} onValueChange={(v)=> (b.gender = v as any)}>
+                      <SelectTrigger className="h-8 w-28"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {(settings.lists.gender || ["male","female"]).map((g)=> (
+                          <SelectItem key={g} value={g}>{g}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    b.gender === "male" ? (ar?"ذكر":"Male") : (ar?"أنثى":"Female")
+                  )}
                 </span>
                 <span>
                   {ar ? "الإعاقة" : "Disability"}:{" "}
@@ -407,7 +412,7 @@ export default function BeneficiaryProfile() {
               </CardTitle>
               <CardDescription>
                 {ar
-                  ? "معلومات الات��ال وولي الأمر"
+                  ? "معلومات الاتصال وولي الأمر"
                   : "Contact and guardian details"}
               </CardDescription>
             </CardHeader>
@@ -564,7 +569,7 @@ export default function BeneficiaryProfile() {
           <Card>
             <CardHeader>
               <CardTitle>
-                {ar ? "خطة ��لرعاية والخدمات" : "Care & Service Plan"}
+                {ar ? "خطة الرعاية والخدمات" : "Care & Service Plan"}
               </CardTitle>
               <CardDescription>
                 {ar
@@ -946,7 +951,7 @@ export default function BeneficiaryProfile() {
                 <ul className="list-disc pl-5 space-y-1">
                   {b.emergency.contacts.map((c, i) => (
                     <li key={i}>
-                      {c.name} ({c.relation}) �� {c.phone}
+                      {c.name} ({c.relation}) — {c.phone}
                     </li>
                   ))}
                 </ul>
