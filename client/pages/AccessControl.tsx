@@ -54,7 +54,7 @@ export default function AccessControl() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">التحكم بالصلاحيات</h1>
           <p className="text-muted-foreground">
-            Manage users, roles, and privileges; assign access securely.
+            إدارة المستخدمين والأدوار والصلاحيات؛ وتعيينها بأمان.
           </p>
         </div>
       </header>
