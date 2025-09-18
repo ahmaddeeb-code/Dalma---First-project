@@ -534,7 +534,7 @@ function RoleDialog({
         </div>
         <DialogFooter>
           <Button onClick={save} disabled={!name.trim()}>
-            حفظ
+            {t("common.save")}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -615,7 +615,7 @@ function PrivilegeDialog({
         </div>
         <DialogFooter>
           <Button onClick={save} disabled={!name.trim()}>
-            حفظ
+            {t("common.save")}
           </Button>
         </DialogFooter>
       </DialogContent>
