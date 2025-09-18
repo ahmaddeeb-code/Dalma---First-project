@@ -384,8 +384,8 @@ function UserDialog({
       <DialogTrigger asChild>
         {existing ? (
           <Button variant="secondary" size="sm">
-            <Pencil className="mr-1 h-4 w-4" />
-            Edit
+            <Pencil className="ml-1 h-4 w-4" />
+            تعديل
           </Button>
         ) : (
           <Button>
@@ -490,8 +490,8 @@ function RoleDialog({
       <DialogTrigger asChild>
         {existing ? (
           <Button variant="secondary" size="sm">
-            <Pencil className="mr-1 h-4 w-4" />
-            Edit
+            <Pencil className="ml-1 h-4 w-4" />
+            تعديل
           </Button>
         ) : (
           <Button>
@@ -576,8 +576,8 @@ function PrivilegeDialog({
       <DialogTrigger asChild>
         {existing ? (
           <Button variant="secondary" size="sm">
-            <Pencil className="mr-1 h-4 w-4" />
-            Edit
+            <Pencil className="ml-1 h-4 w-4" />
+            تعديل
           </Button>
         ) : (
           <Button>
