@@ -87,11 +87,11 @@ export default function AccessControl() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Roles</TableHead>
-                    <TableHead>Effective Privileges</TableHead>
-                    <TableHead className="w-[120px]">Actions</TableHead>
+                    <TableHead>الاسم</TableHead>
+                    <TableHead>البريد الإلكتروني</TableHead>
+                    <TableHead>الأدوار</TableHead>
+                    <TableHead>الصلاحيات الفعلية</TableHead>
+                    <TableHead className="w-[120px]">إجراءات</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
