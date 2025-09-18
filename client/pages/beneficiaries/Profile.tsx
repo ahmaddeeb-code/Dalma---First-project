@@ -550,7 +550,7 @@ export default function BeneficiaryProfile() {
                   {b.documents.map((d) => (
                     <TableRow key={d.id}>
                       <TableCell>{d.type}</TableCell>
-                      <TableCell>{d.title}</TableCell>
+                      <TableCell><a className="underline" href={d.url} target="_blank" rel="noreferrer">{d.title}</a></TableCell>
                       <TableCell>
                         {d.issuedAt
                           ? new Date(d.issuedAt).toLocaleDateString()
