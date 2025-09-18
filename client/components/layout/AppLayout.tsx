@@ -56,6 +56,7 @@ const navItems = [
   { to: "/reports", key: "nav.reports", icon: FileBarChart2 },
   { to: "/donations", key: "nav.donations", icon: HandHeart },
   { to: "/admin/access-control", key: "nav.accessControl", icon: ShieldCheck },
+  { to: "/admin/translations", key: "nav.translations", icon: Languages },
 ] as const;
 
 function useAuthUserId() {
