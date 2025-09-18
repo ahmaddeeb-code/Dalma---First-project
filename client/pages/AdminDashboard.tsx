@@ -101,7 +101,7 @@ export default function AdminDashboard() {
           <CardHeader>
             <CardTitle>المستفيدون حسب الفئة</CardTitle>
             <CardDescription>
-              توزيع الخدمات السكني�� والنهارية والمنزلية.
+              توزيع الخدمات السكنية والنهارية والمنزلية.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -165,9 +165,9 @@ export default function AdminDashboard() {
       <section className="grid gap-6 lg:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle>أداء الفريق</CardTitle>
+            <CardTitle>{ar ? "أداء الفريق" : "Team Performance"}</CardTitle>
             <CardDescription>
-              الحضور والملاحظات وتقرير الحوادث.
+              {ar ? "الحضور والملاحظات وتقرير الحوادث." : "Attendance, notes, and incident reporting."}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -177,9 +177,9 @@ export default function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>مراجعات قادمة</CardTitle>
+            <CardTitle>{ar ? "مراجعات قادمة" : "Upcoming Reviews"}</CardTitle>
             <CardDescription>
-              تقييمات طبية ونفسية لهذا الأسبوع.
+              {ar ? "تقييمات طبية ونفسية لهذا الأسبوع." : "Medical and psychological assessments this week."}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -188,8 +188,8 @@ export default function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>ملخص الإشعارات</CardTitle>
-            <CardDescription>تنبيهات ورسائل تلقائية.</CardDescription>
+            <CardTitle>{ar ? "ملخص الإشعارات" : "Notifications Summary"}</CardTitle>
+            <CardDescription>{ar ? "تنبيهات ورسائل تلقائية." : "Automated alerts and messages."}</CardDescription>
           </CardHeader>
           <CardContent className="flex items-center gap-3 text-sm text-muted-foreground">
             <Bell className="h-4 w-4" /> ١٢ عاجلة · ٣٦ عادية · ١٢٨ معلومات
