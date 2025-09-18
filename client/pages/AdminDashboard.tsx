@@ -29,14 +29,14 @@ export default function AdminDashboard() {
         <div className="flex gap-2">
           <Button asChild>
             <a href="/admin/access-control">
-              <Users className="mr-2" /> Access Control
+              <Users className="ml-2" /> التحكم بالصلاحيات
             </a>
           </Button>
           <Button>
-            <FileChartColumn className="mr-2" /> Export Report
+            <FileChartColumn className="ml-2" /> تصدير تقرير
           </Button>
           <Button variant="secondary">
-            <Bell className="mr-2" /> Notification Center
+            <Bell className="ml-2" /> مركز التنبيهات
           </Button>
         </div>
       </div>
@@ -44,9 +44,9 @@ export default function AdminDashboard() {
       <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader>
-            <CardDescription>Beneficiaries</CardDescription>
+            <CardDescription>المستفيدون</CardDescription>
             <CardTitle className="flex items-baseline gap-2">
-              1,248 <Badge variant="secondary">+24 today</Badge>
+              1,248 <Badge variant="secondary">+٢٤ اليوم</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -54,22 +54,22 @@ export default function AdminDashboard() {
               <div className="h-full w-3/4 rounded bg-primary" />
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              Residential 45% · Daycare 40% · Home-based 15%
+              سكنية ٤٥٪ · نهارية ٤٠٪ · منزلية ١٥٪
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardDescription>Appointments Today</CardDescription>
+            <CardDescription>مواعيد اليوم</CardDescription>
             <CardTitle className="flex items-baseline gap-2">342</CardTitle>
           </CardHeader>
           <CardContent className="flex items-center gap-3 text-sm text-muted-foreground">
-            <CalendarCheck className="h-4 w-4" /> 89% attendance rate
+            <CalendarCheck className="h-4 w-4" /> 89% نسبة الحضور
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardDescription>Staff Utilization</CardDescription>
+            <CardDescription>استغلال الموظفين</CardDescription>
             <CardTitle>72%</CardTitle>
           </CardHeader>
           <CardContent>
@@ -83,7 +83,7 @@ export default function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader>
-            <CardDescription>Quality KPI</CardDescription>
+            <CardDescription>مؤشر الجودة</CardDescription>
             <CardTitle className="flex items-center gap-2">
               96% <Activity className="h-5 w-5 text-success" />
             </CardTitle>
@@ -98,29 +98,29 @@ export default function AdminDashboard() {
       <section className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Beneficiaries by Category</CardTitle>
+            <CardTitle>المستفيدون حسب الفئة</CardTitle>
             <CardDescription>
-              Distribution across Residential, Daycare, and Home-based services.
+              توزيع الخدمات السكنية والنهارية والمنزلية.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-3 gap-6">
               <div>
-                <p className="text-sm text-muted-foreground">Residential</p>
+                <p className="text-sm text-muted-foreground">سكنية</p>
                 <p className="text-2xl font-semibold">560</p>
                 <div className="mt-2 h-2 rounded bg-muted">
                   <div className="h-full w-[45%] rounded bg-primary" />
                 </div>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Daycare</p>
+                <p className="text-sm text-muted-foreground">نهارية</p>
                 <p className="text-2xl font-semibold">499</p>
                 <div className="mt-2 h-2 rounded bg-muted">
                   <div className="h-full w-[40%] rounded bg-secondary" />
                 </div>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Home-based</p>
+                <p className="text-sm text-muted-foreground">منزلية</p>
                 <p className="text-2xl font-semibold">189</p>
                 <div className="mt-2 h-2 rounded bg-muted">
                   <div className="h-full w-[15%] rounded bg-info" />
@@ -132,28 +132,28 @@ export default function AdminDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <AlertTriangle className="text-warning" /> Urgent Alerts
+              <AlertTriangle className="text-warning" /> تنبيهات عاجلة
             </CardTitle>
-            <CardDescription>Real-time critical notifications.</CardDescription>
+            <CardDescription>تنبيهات حرجة بالوقت الحقيقي.</CardDescription>
           </CardHeader>
           <CardContent>
             <ul className="space-y-3 text-sm">
               <li className="flex items-center justify-between">
-                <span>Missed medication (Room 203)</span>
+                <span>دواء فائت (غرفة ٢٠٣)</span>
                 <span className="rounded bg-warning/15 text-warning px-2 py-0.5">
-                  High
+                  عالي
                 </span>
               </li>
               <li className="flex items-center justify-between">
-                <span>Transport delay (5 beneficiaries)</span>
+                <span>��أخير النقل (٥ مستفيدين)</span>
                 <span className="rounded bg-warning/15 text-warning px-2 py-0.5">
-                  Medium
+                  متوسط
                 </span>
               </li>
               <li className="flex items-center justify-between">
-                <span>Therapy rescheduled</span>
+                <span>إعادة جدولة علاج</span>
                 <span className="rounded bg-info/15 text-info px-2 py-0.5">
-                  Info
+                  معلومة
                 </span>
               </li>
             </ul>
@@ -164,9 +164,9 @@ export default function AdminDashboard() {
       <section className="grid gap-6 lg:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle>Team Performance</CardTitle>
+            <CardTitle>أداء الفريق</CardTitle>
             <CardDescription>
-              Attendance, notes, and incident reporting.
+              الحضور والملاحظات وتقرير الحوادث.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -176,22 +176,22 @@ export default function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Upcoming Reviews</CardTitle>
+            <CardTitle>مراجعات قادمة</CardTitle>
             <CardDescription>
-              Medical and psychological assessments this week.
+              تقييمات طبية ونفسية لهذا الأسبوع.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex items-center gap-3 text-sm text-muted-foreground">
-            <CalendarCheck className="h-4 w-4" /> 54 assessments scheduled
+            <CalendarCheck className="h-4 w-4" /> 54 تقييمات مجدولة
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Notifications Summary</CardTitle>
-            <CardDescription>Automated alerts and messages.</CardDescription>
+            <CardTitle>ملخص الإشعارات</CardTitle>
+            <CardDescription>تنبيهات ورسائل تلقائية.</CardDescription>
           </CardHeader>
           <CardContent className="flex items-center gap-3 text-sm text-muted-foreground">
-            <Bell className="h-4 w-4" /> 12 urgent · 36 normal · 128 info
+            <Bell className="h-4 w-4" /> ١٢ عاجلة · ٣٦ عادية · ١٢٨ معلومات
           </CardContent>
         </Card>
       </section>
