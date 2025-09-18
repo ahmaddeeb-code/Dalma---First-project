@@ -390,11 +390,11 @@ function UserDialog({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{existing ? "تعديل مستخدم" : "مستخدم جديد"}</DialogTitle>
+          <DialogTitle>{existing ? t("pages.accessControl.users.edit") : t("pages.accessControl.users.new")}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-2">
           <div className="grid gap-2">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">{t("pages.accessControl.users.form.name")}</Label>
             <Input
               id="name"
               value={name}
@@ -402,7 +402,7 @@ function UserDialog({
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("pages.accessControl.users.form.email")}</Label>
             <Input
               id="email"
               type="email"
@@ -411,7 +411,7 @@ function UserDialog({
             />
           </div>
           <div className="grid gap-2">
-            <Label>Roles</Label>
+            <Label>{t("pages.accessControl.users.form.roles")}</Label>
             <div className="grid grid-cols-2 gap-2">
               {roles.map((r) => (
                 <label key={r.id} className="flex items-center gap-2 text-sm">
@@ -427,7 +427,7 @@ function UserDialog({
             </div>
           </div>
           <div className="grid gap-2">
-            <Label>Direct Privileges</Label>
+            <Label>{t("pages.accessControl.users.form.directPrivs")}</Label>
             <div className="grid grid-cols-2 gap-2 max-h-40 overflow-auto">
               {privileges.map((p) => (
                 <label key={p.id} className="flex items-center gap-2 text-sm">
@@ -490,17 +490,17 @@ function RoleDialog({
         ) : (
           <Button>
             <Plus className="ml-1 h-4 w-4" />
-            دور جديد
+            {t("pages.accessControl.roles.new")}
           </Button>
         )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{existing ? "تعديل دور" : "دور جديد"}</DialogTitle>
+          <DialogTitle>{existing ? t("pages.accessControl.roles.edit") : t("pages.accessControl.roles.new")}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-2">
           <div className="grid gap-2">
-            <Label htmlFor="rname">Name</Label>
+            <Label htmlFor="rname">{t("pages.accessControl.roles.form.name")}</Label>
             <Input
               id="rname"
               value={name}
@@ -508,7 +508,7 @@ function RoleDialog({
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="rdesc">Description</Label>
+            <Label htmlFor="rdesc">{t("pages.accessControl.roles.form.description")}</Label>
             <Input
               id="rdesc"
               value={description}
@@ -576,19 +576,17 @@ function PrivilegeDialog({
         ) : (
           <Button>
             <Plus className="ml-1 h-4 w-4" />
-            صلاحية جديدة
+            {t("pages.accessControl.privileges.new")}
           </Button>
         )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            {existing ? "تعديل صلاحية" : "صلاحية جديدة"}
-          </DialogTitle>
+          <DialogTitle>{existing ? t("pages.accessControl.privileges.edit") : t("pages.accessControl.privileges.new")}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-2">
           <div className="grid gap-2">
-            <Label htmlFor="pname">Name</Label>
+            <Label htmlFor="pname">{t("pages.accessControl.privileges.form.name")}</Label>
             <Input
               id="pname"
               value={name}
@@ -596,7 +594,7 @@ function PrivilegeDialog({
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="pdesc">Description</Label>
+            <Label htmlFor="pdesc">{t("pages.accessControl.privileges.form.description")}</Label>
             <Input
               id="pdesc"
               value={description}
@@ -604,12 +602,12 @@ function PrivilegeDialog({
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="pcat">Category</Label>
+            <Label htmlFor="pcat">{t("pages.accessControl.privileges.form.category")}</Label>
             <Input
               id="pcat"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              placeholder="e.g., Records, Administration, Reporting"
+              placeholder={t("pages.accessControl.privileges.form.placeholder")}
             />
           </div>
         </div>
