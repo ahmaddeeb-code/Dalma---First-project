@@ -129,7 +129,7 @@ export default function BeneficiaryProfile() {
       <div className="space-y-4">
         <p className="text-muted-foreground">
           {ar
-            ? "لا يوجد مستفيد بهذا المعرف"
+            ? "لا يوجد ��ستفيد بهذا المعرف"
             : "No beneficiary found for this ID"}
         </p>
         <Button asChild>
@@ -343,7 +343,7 @@ export default function BeneficiaryProfile() {
                   </AlertDialogTitle>
                   <AlertDialogDescription>
                     {ar
-                      ? "سيتم حذف هذا المس��فيد نهائياً. لا يمكن التراجع."
+                      ? "سيتم حذف هذا المستفيد نهائياً. لا يمكن التراجع."
                       : "This will permanently delete this beneficiary. This action cannot be undone."}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
@@ -617,7 +617,7 @@ export default function BeneficiaryProfile() {
                     <>
                       <Input className="h-8 w-56" placeholder={ar?"أضف هدفاً":"Add goal"} onKeyDown={(e)=>{ if(e.key==="Enter"){ const v=(e.target as HTMLInputElement).value.trim(); if(v){ b.care.goals.push(v); (e.target as HTMLInputElement).value=""; }}}} />
                       <Select onValueChange={(id)=>{ const tpl = settings.carePlanTemplates.find(t=>t.id===id); if(tpl){ tpl.goals.forEach(g=>{ if(!b.care.goals.includes(g)) b.care.goals.push(g); }); toast.success(ar?"تم تطبيق القالب":"Template applied"); } }}>
-                        <SelectTrigger className="h-8 w-56"><SelectValue placeholder={ar?"تطبيق قالب":"Apply template"} /></SelectTrigger>
+                        <SelectTrigger className="h-8 w-56"><SelectValue placeholder={ar?"تطبيق ق��لب":"Apply template"} /></SelectTrigger>
                         <SelectContent>
                           {settings.carePlanTemplates.map(t=>(<SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>))}
                         </SelectContent>
@@ -755,6 +755,11 @@ export default function BeneficiaryProfile() {
                 <div className="font-medium mb-1">
                   {ar ? "الأنشطة" : "Activities"}
                 </div>
+                {edit && (
+                  <div className="flex items-center gap-2 mb-2">
+                    <Input className="h-8 w-56" placeholder={ar?"إضافة نشاط":"Add activity"} onKeyDown={(e)=>{ if(e.key==="Enter"){ const v=(e.target as HTMLInputElement).value.trim(); if(v){ b.education.activities.push(v); (e.target as HTMLInputElement).value=""; }}}} />
+                  </div>
+                )}
                 <ul className="list-disc pl-5 space-y-1">
                   {b.education.activities.map((p) => (
                     <li key={p}>{p}</li>
@@ -938,7 +943,7 @@ export default function BeneficiaryProfile() {
           <Card>
             <CardHeader>
               <CardTitle>
-                {ar ? "التوا��ل والملاحظات" : "Communication & Feedback"}
+                {ar ? "التواصل والملاحظات" : "Communication & Feedback"}
               </CardTitle>
               <CardDescription>
                 {ar
