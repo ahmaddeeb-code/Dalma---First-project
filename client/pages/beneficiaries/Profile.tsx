@@ -90,8 +90,16 @@ export default function BeneficiaryProfile() {
   const { id } = useParams();
   const b = useBeneficiary(id);
   const ar = getLocale() === "ar";
+  const user = useMemo(() => getCurrentUser(), []);
+  const canEdit = useMemo(() => {
+    if (!user) return false;
+    const acl = loadACL();
+    const privs = effectivePrivileges(user, acl.roles, acl.privileges);
+    return privs.some((p) => p.id === "p_edit_records");
+  }, [user]);
 
   const age = useMemo(() => (b ? getAge(b) : 0), [b]);
+  const [edit, setEdit] = useState(false);
 
   if (!b) {
     return (
@@ -372,7 +380,7 @@ export default function BeneficiaryProfile() {
               </div>
               <div>
                 <div className="font-medium mb-2">
-                  {ar ? "جدول الجلسات" : "Appointments"}
+                  {ar ? "جدول الجلس��ت" : "Appointments"}
                 </div>
                 <Table>
                   <TableHeader>
@@ -470,7 +478,7 @@ export default function BeneficiaryProfile() {
               </CardTitle>
               <CardDescription>
                 {ar
-                  ? "تقارير طبية وشهادات وإفادات"
+                  ? "تقارير طبي�� وشهادات وإفادات"
                   : "Medical reports, certificates, prescriptions"}
               </CardDescription>
             </CardHeader>
@@ -626,7 +634,7 @@ export default function BeneficiaryProfile() {
               </CardTitle>
               <CardDescription>
                 {ar
-                  ? "جهات اتصال وملاحظات طبية حرجة"
+                  ? "جهات اتصال وملاحظات ��بية حرجة"
                   : "Emergency contacts and critical notes"}
               </CardDescription>
             </CardHeader>
