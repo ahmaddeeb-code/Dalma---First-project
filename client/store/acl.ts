@@ -84,6 +84,12 @@ const seed: ACLState = {
       description: "Read-only family access",
       privilegeIds: ["p_view_records"],
     },
+    {
+      id: "r_beneficiary",
+      name: "Beneficiary",
+      description: "Personal record access",
+      privilegeIds: ["p_view_records"],
+    },
   ],
   users: [
     {
@@ -105,6 +111,13 @@ const seed: ACLState = {
       name: "Parent A",
       email: "parent@dalma.org",
       roleIds: ["r_family"],
+      privilegeIds: [],
+    },
+    {
+      id: "u4",
+      name: "Beneficiary A",
+      email: "beneficiary@dalma.org",
+      roleIds: ["r_beneficiary"],
       privilegeIds: [],
     },
   ],
