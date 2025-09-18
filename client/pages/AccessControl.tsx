@@ -389,14 +389,14 @@ function UserDialog({
           </Button>
         ) : (
           <Button>
-            <Plus className="mr-1 h-4 w-4" />
-            New User
+            <Plus className="ml-1 h-4 w-4" />
+            مستخدم جديد
           </Button>
         )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{existing ? "Edit User" : "New User"}</DialogTitle>
+          <DialogTitle>{existing ? "تعديل مستخدم" : "مستخدم جديد"}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-2">
           <div className="grid gap-2">
@@ -495,14 +495,14 @@ function RoleDialog({
           </Button>
         ) : (
           <Button>
-            <Plus className="mr-1 h-4 w-4" />
-            New Role
+            <Plus className="ml-1 h-4 w-4" />
+            دور جديد
           </Button>
         )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{existing ? "Edit Role" : "New Role"}</DialogTitle>
+          <DialogTitle>{existing ? "تعديل دور" : "دور جديد"}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-2">
           <div className="grid gap-2">
@@ -581,15 +581,15 @@ function PrivilegeDialog({
           </Button>
         ) : (
           <Button>
-            <Plus className="mr-1 h-4 w-4" />
-            New Privilege
+            <Plus className="ml-1 h-4 w-4" />
+            صلاحية جديدة
           </Button>
         )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {existing ? "Edit Privilege" : "New Privilege"}
+            {existing ? "تعديل صلاحية" : "صلاحية جديدة"}
           </DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-2">
