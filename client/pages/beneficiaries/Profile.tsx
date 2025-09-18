@@ -47,6 +47,10 @@ import {
   getAge,
   getBeneficiary,
   subscribe as subscribeBeneficiaries,
+  addDocument,
+  updateBeneficiary,
+  removeBeneficiary,
+  archiveBeneficiaries,
 } from "@/store/beneficiaries";
 
 function useBeneficiary(id: string | undefined) {
@@ -250,7 +254,7 @@ export default function BeneficiaryProfile() {
                 </div>
                 <div className="text-sm">
                   <span className="text-muted-foreground">
-                    {ar ? "هاتف ولي الأمر" : "Guardian Phone"}:
+                    {ar ? "��اتف ولي الأمر" : "Guardian Phone"}:
                   </span>{" "}
                   {b.guardian.phone}
                 </div>
