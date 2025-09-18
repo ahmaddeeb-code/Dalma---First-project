@@ -23,7 +23,7 @@ export default function AdminDashboard() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">لوحة التحكم</h1>
           <p className="text-muted-foreground mt-1">
-            Real-time view over beneficiaries, staff, services and alerts.
+            نظرة فورية على المستفيدين والموظفين والخدمات والتنبيهات.
           </p>
         </div>
         <div className="flex gap-2">
