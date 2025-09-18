@@ -160,6 +160,11 @@ export default function AddEditBeneficiaryDialog({ open, onOpenChange, initial }
     base.photoUrl = photoDataUrl || base.photoUrl;
     base.documents = docs;
 
+    if (!initial) {
+      const entry = { id: `${Date.now()}`, at: new Date().toISOString(), userId: getCurrentUserId() || "system", action: "create", patch: { name: base.name } } as any;
+      base.audit = [...(base.audit || []), entry];
+    }
+
     upsertBeneficiary(base);
     toast.success(ar ? (initial ? "تم تحديث المستفيد" : "تم إضافة مستفيد") : (initial ? "Beneficiary updated" : "Beneficiary added"));
     onOpenChange(false);
