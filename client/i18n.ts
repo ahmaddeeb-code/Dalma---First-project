@@ -94,6 +94,10 @@ const messages = {
       readOnly: "Read-only access",
       moreCount: "+{{count}} more",
       all: "All",
+      pageSize: "Page size",
+      filtered: "Filtered",
+      fullDataset: "Full dataset",
+      format: "Format",
     },
     pages: {
       employees: {
@@ -535,6 +539,10 @@ const messages = {
       readOnly: "صلاحية القراءة فقط",
       moreCount: "+{{count}} المزيد",
       all: "الكل",
+      pageSize: "حجم الصفحة",
+      filtered: "المجموعة المفلترة",
+      fullDataset: "كامل البيانات",
+      format: "تنسيق",
     },
     pages: {
       employees: {
@@ -557,7 +565,7 @@ const messages = {
         tabs: { users: "المستخدمون", roles: "الأدوار", privs: "الصلاحيات" },
         users: {
           title: "المستخدمون",
-          desc: "إنشاء الحسابات وتعيين الأدوار/الصلاحيات.",
+          desc: "إنشاء الحسابات وتعيين الأدوار/الصلاحيا��.",
           headers: {
             name: "الاسم",
             email: "البريد الإلكتروني",
@@ -592,7 +600,7 @@ const messages = {
         },
         privileges: {
           title: "الصلاحيات",
-          desc: "صلاحيات أساسية تُسند إلى الأدوار أو مباشرة للمستخدمين.",
+          desc: "صلاحيات ��ساسية تُسند إلى الأدوار أو مباشرة للمستخدمين.",
           headers: {
             name: "الاسم",
             category: "الفئة",
@@ -680,7 +688,7 @@ const messages = {
         desc: "تحكم في الترجمات بناءً على المفاتيح الإنجليزية وفحص جميع الترجمات",
         totalKeys: "إجمالي المفاتيح",
         missing: "مفقود",
-        needsReview: "بحاجة لمراجعة",
+        needsReview: "بحاج�� لمراجعة",
         tableTitle: "الترجمات",
         tableDesc: "ابحث وحرّر العربية",
         onlyMissing: "إظهار الناقصة فقط",
@@ -808,7 +816,7 @@ const messages = {
         ctaDonate: "ادعمنا بالتبرع",
       },
       metrics: {
-        active: "المستفيدون النشطون",
+        active: "المستف��دون النشطون",
         monthly: "المواعيد الشهرية",
         satisfaction: "متوسط الرضا",
       },
@@ -838,7 +846,7 @@ const messages = {
           title: "لوحة التحكم",
           bullets: [
             "تحليلات المؤشرات",
-            "الأدوار والصلاحيات",
+            "الأدوار والصلاحي��ت",
             "الميزانيات والمالية",
             "سجلات ��لتدقيق",
           ],
@@ -869,7 +877,7 @@ const messages = {
         urgent: "عاجل",
         absences: "تم رصد ٣ غيابات",
         medium: "متوسط",
-        schedule: "تم تحديث جدول العلاجات",
+        schedule: "تم تحديث جدول العلاجا��",
         low: "منخفض",
       },
       security: {
