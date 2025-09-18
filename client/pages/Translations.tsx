@@ -143,6 +143,30 @@ export default function Translations() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground">{ar?"حجم الصفحة":"Page size"}</span>
+            <select className="h-9 rounded-md border bg-background px-2 text-sm" value={pageSize} onChange={(e)=>{ setPageSize(Number(e.target.value)); setPage(1); }}>
+              {[20,50,100].map(n=> (<option key={n} value={n}>{n}</option>))}
+            </select>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline"><Download className="h-4 w-4 ml-1" /> {ar?"تصدير جدول":"Export table"}</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>{ar?"تنسيق":"Format"}</DropdownMenuLabel>
+              {(["csv","xlsx","pdf"] as const).map(fmt => (
+                <DropdownMenuItem key={fmt} onClick={()=>{
+                  const cols: ColumnDef<{key:string; en:string; currentAr:string}>[] = [
+                    { header: "Key", accessor: r=>r.key },
+                    { header: "English", accessor: r=>r.en },
+                    { header: ar?"Arabic":"Arabic", accessor: r=>r.currentAr },
+                  ];
+                  exportAll(rows, cols, fmt, `translations_${fmt}`);
+                }}>{ar?"المجموعة المفلترة":"Filtered"} – {fmt.toUpperCase()}</DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button variant="outline" onClick={exportOverrides}>
             <Download className="h-4 w-4 ml-1" /> {ar ? "تصدير" : "Export"}
           </Button>
