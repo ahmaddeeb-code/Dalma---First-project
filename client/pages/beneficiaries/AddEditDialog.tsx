@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import {
   Dialog,
   DialogContent,
@@ -433,7 +433,7 @@ export default function AddEditBeneficiaryDialog({ open, onOpenChange, initial }
                     <Command>
                       <CommandInput placeholder={ar?"ابحث عن العائلة...":"Search family..."} />
                       <CommandList>
-                        <CommandEmpty>{ar?"لا توجد نتائج":"No family found."}</CommandEmpty>
+                        <CommandEmpty>{ar?"لا ��وجد نتائج":"No family found."}</CommandEmpty>
                         <CommandGroup>
                           {families.map((f)=> (
                             <CommandItem key={f.id} value={`${f.familyId} ${f.name||""} ${f.contact.phone||""}`} onSelect={() => { setSelectedFamilyId(f.id); setFamilyPickerOpen(false); }}>
@@ -562,7 +562,7 @@ export default function AddEditBeneficiaryDialog({ open, onOpenChange, initial }
             <div className="space-y-2">
               <Label>
                 {ar
-                  ? "جهات الطوارئ (اسم:صلة:هاتف \n لكل سط��)"
+                  ? "جهات الطوارئ (اسم:صلة:هاتف \n لكل سطر)"
                   : "Emergency Contacts (Name:Relation:Phone per line)"}
               </Label>
               <Textarea value={emergencyContacts} onChange={(e) => setEmergencyContacts(e.target.value)} />
