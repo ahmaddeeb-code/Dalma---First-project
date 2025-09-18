@@ -15,7 +15,10 @@ import { getCurrentUser, getCurrentUserId, subscribeAuth } from "@/store/auth";
 import { effectivePrivileges, loadACL } from "@/store/acl";
 import { listFamilies, subscribeFamilies, upsertFamily, removeFamily, uid as familyUid, type Family, type Guardian, addGuardian, upsertGuardian, removeGuardian, linkBeneficiary, unlinkBeneficiary, setGuardianRelation, addFamilyDocument, removeFamilyDocument } from "@/store/families";
 import { listBeneficiaries, type Beneficiary } from "@/store/beneficiaries";
-import { Plus, Pencil, Trash2, FilePlus } from "lucide-react";
+import { Plus, Pencil, Trash2, FilePlus, Download } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { exportAll, type ColumnDef } from "@/lib/export";
 
 function useFamilies(){ return useSyncExternalStore((cb)=>subscribeFamilies(cb), ()=>listFamilies(), ()=>listFamilies()); }
 function readFileAsDataURL(file: File): Promise<string> { return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result as string); r.onerror=reject; r.readAsDataURL(file); }); }
