@@ -30,7 +30,7 @@ export default function Index() {
             {t("home.hero.badge")}
           </div>
           <h1 className="mt-4 text-4xl md:text-5xl font-extrabold tracking-tight">
-{t("home.hero.title")}
+            {t("home.hero.title")}
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">
             {t("home.hero.desc")}
@@ -45,15 +45,21 @@ export default function Index() {
           </div>
           <div className="mt-10 grid grid-cols-3 gap-6 text-sm">
             <div>
-              <p className="text-muted-foreground">{t("home.metrics.active")}</p>
+              <p className="text-muted-foreground">
+                {t("home.metrics.active")}
+              </p>
               <p className="text-2xl font-semibold">1,248</p>
             </div>
             <div>
-              <p className="text-muted-foreground">{t("home.metrics.monthly")}</p>
+              <p className="text-muted-foreground">
+                {t("home.metrics.monthly")}
+              </p>
               <p className="text-2xl font-semibold">8,532</p>
             </div>
             <div>
-              <p className="text-muted-foreground">{t("home.metrics.satisfaction")}</p>
+              <p className="text-muted-foreground">
+                {t("home.metrics.satisfaction")}
+              </p>
               <p className="text-2xl font-semibold">96%</p>
             </div>
           </div>
@@ -123,19 +129,25 @@ export default function Index() {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>{t("home.monitor.title")}</CardTitle>
-            <CardDescription>
-              {t("home.monitor.desc")}
-            </CardDescription>
+            <CardDescription>{t("home.monitor.desc")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid gap-6 md:grid-cols-3">
-              <StatusBar label={t("home.monitor.medical")} value={86} color="bg-primary" />
+              <StatusBar
+                label={t("home.monitor.medical")}
+                value={86}
+                color="bg-primary"
+              />
               <StatusBar
                 label={t("home.monitor.psychological")}
                 value={91}
                 color="bg-secondary"
               />
-              <StatusBar label={t("home.monitor.functional")} value={78} color="bg-success" />
+              <StatusBar
+                label={t("home.monitor.functional")}
+                value={78}
+                color="bg-success"
+              />
             </div>
             <p className="mt-4 text-xs text-muted-foreground">
               Updated live from check-ins, therapy completion, and device
@@ -146,11 +158,10 @@ export default function Index() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <AlertTriangle className="text-warning" /> {t("home.notifications.title")}
+              <AlertTriangle className="text-warning" />{" "}
+              {t("home.notifications.title")}
             </CardTitle>
-            <CardDescription>
-              {t("home.notifications.desc")}
-            </CardDescription>
+            <CardDescription>{t("home.notifications.desc")}</CardDescription>
           </CardHeader>
           <CardContent>
             <ul className="space-y-3 text-sm">
@@ -210,12 +221,8 @@ export default function Index() {
       </section>
 
       <section className="rounded-xl border p-8 text-center">
-        <h3 className="text-xl font-semibold">
-          {t("home.cta.title")}
-        </h3>
-        <p className="mt-2 text-muted-foreground">
-          {t("home.cta.desc")}
-        </p>
+        <h3 className="text-xl font-semibold">{t("home.cta.title")}</h3>
+        <p className="mt-2 text-muted-foreground">{t("home.cta.desc")}</p>
         <div className="mt-4">
           <Button asChild size="lg">
             <Link to="/admin">{t("home.cta.button")}</Link>

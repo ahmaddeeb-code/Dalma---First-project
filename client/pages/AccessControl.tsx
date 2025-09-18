@@ -53,7 +53,9 @@ export default function AccessControl() {
     <div className="space-y-8">
       <header className="flex items-end justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">التحكم بالصلاحيات</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            التحكم بالصلاحيات
+          </h1>
           <p className="text-muted-foreground">
             إدارة المستخدمين والأدوار والصلاحيات؛ وتعيينها بأمان.
           </p>
@@ -124,7 +126,9 @@ export default function AccessControl() {
                           ))}
                           {eff.length > 3 ? (
                             <span className="text-xs text-muted-foreground">
-                              {ar ? `+${eff.length - 3} المزيد` : `+${eff.length - 3} more`}
+                              {ar
+                                ? `+${eff.length - 3} المزيد`
+                                : `+${eff.length - 3} more`}
                             </span>
                           ) : null}
                         </TableCell>
@@ -230,7 +234,7 @@ export default function AccessControl() {
                           }
                         >
                           <Trash2 className="ml-1 h-4 w-4" />
-                            حذف
+                          حذف
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -247,7 +251,9 @@ export default function AccessControl() {
               <div>
                 <CardTitle>{ar ? "الصلاحيات" : "Privileges"}</CardTitle>
                 <CardDescription>
-                  {ar ? "صلاحيات أساسية تُسند إلى الأدوار أو مباشرة للمستخدمين." : "Atomic permissions assigned to roles or directly to users."}
+                  {ar
+                    ? "صلاحيات أساسية تُسند إلى الأدوار أو مباشرة للمستخدمين."
+                    : "Atomic permissions assigned to roles or directly to users."}
                 </CardDescription>
               </div>
               <PrivilegeDialog
@@ -312,7 +318,7 @@ export default function AccessControl() {
                           }
                         >
                           <Trash2 className="ml-1 h-4 w-4" />
-                            حذف
+                          حذف
                         </Button>
                       </TableCell>
                     </TableRow>

@@ -57,8 +57,7 @@ const messages = {
       hero: {
         badge: "End-to-end care for people with disabilities",
         title: "DALMA Smart Platform",
-        desc:
-          "A unified, cloud-based system connecting beneficiaries, employees, administrators, and families—delivering transparent, efficient, and sustainable services.",
+        desc: "A unified, cloud-based system connecting beneficiaries, employees, administrators, and families—delivering transparent, efficient, and sustainable services.",
         ctaAdmin: "Explore Admin Dashboard",
         ctaDonate: "Support with a Donation",
       },
@@ -69,8 +68,7 @@ const messages = {
       },
       portals: {
         title: "Portals for every stakeholder",
-        desc:
-          "Beneficiary, Employee, Admin, and Family portals streamline daily operations—registration, records, therapies, attendance, and secure communication.",
+        desc: "Beneficiary, Employee, Admin, and Family portals streamline daily operations—registration, records, therapies, attendance, and secure communication.",
         open: "Open",
         beneficiary: {
           title: "Beneficiary Portal",
@@ -115,7 +113,8 @@ const messages = {
         medical: "Medical",
         psychological: "Psychological",
         functional: "Functional",
-        updated: "Updated live from check-ins, therapy completion, and device integrations.",
+        updated:
+          "Updated live from check-ins, therapy completion, and device integrations.",
       },
       notifications: {
         title: "Smart Notifications",
@@ -129,13 +128,24 @@ const messages = {
       },
       security: {
         title: "Security, accessibility, and trust",
-        desc:
-          "Advanced security with data encryption, 2FA, audit logs, and full accessibility. Cloud ready and scalable with integrations into national systems and medical devices.",
+        desc: "Advanced security with data encryption, 2FA, audit logs, and full accessibility. Cloud ready and scalable with integrations into national systems and medical devices.",
         features: {
-          advanced: { title: "Advanced Security", text: "Encryption at rest & in transit, 2FA, and role-based access." },
-          comms: { title: "Unified Communication", text: "Internal messaging, file sharing, and family updates." },
-          schedule: { title: "Scheduling & Reminders", text: "Therapies, health checks, and appointment reminders." },
-          reports: { title: "Reports & Exports", text: "KPI tracking with export to Excel & PDF." },
+          advanced: {
+            title: "Advanced Security",
+            text: "Encryption at rest & in transit, 2FA, and role-based access.",
+          },
+          comms: {
+            title: "Unified Communication",
+            text: "Internal messaging, file sharing, and family updates.",
+          },
+          schedule: {
+            title: "Scheduling & Reminders",
+            text: "Therapies, health checks, and appointment reminders.",
+          },
+          reports: {
+            title: "Reports & Exports",
+            text: "KPI tracking with export to Excel & PDF.",
+          },
         },
       },
       cta: {
@@ -174,8 +184,7 @@ const messages = {
       hero: {
         badge: "رعاية شاملة للأشخاص ذوي الإعاقة",
         title: "منصة دلما الذكية",
-        desc:
-          "نظام موحد قائم على السحابة يربط المستفيدين والموظفين والإداريين والعائلات — يقدم خدمات شفافة وفعالة ومستدامة.",
+        desc: "نظام موحد قائم على السحابة يربط المستفيدين والموظفين والإداريين والعائلات — يقدم خدمات شفافة وفعالة ومستدامة.",
         ctaAdmin: "فتح لوحة التحكم",
         ctaDonate: "ادعمنا بالتبرع",
       },
@@ -186,24 +195,43 @@ const messages = {
       },
       portals: {
         title: "بوابات لجميع الأطراف",
-        desc:
-          "بوابات المستفيد والموظف والإدارة والعائلة لتبسيط العمليات اليومية — التسجيل والسجلات والعلاجات والحضور والتواصل الآمن.",
+        desc: "بوابات المستفيد والموظف والإدارة والعائلة لتبسيط العمليات اليومية — التسجيل والسجلات والعلاجات والحضور والتواصل الآمن.",
         open: "فتح",
         beneficiary: {
           title: "بوابة المستفيد",
-          bullets: ["التسجيل والملفات الشخصية", "رفع المستندات", "المواعيد والعلاجات", "تتبع الحالة"],
+          bullets: [
+            "التسجيل والملفات الشخصية",
+            "رفع المستندات",
+            "المواعيد والعلاجات",
+            "تتبع الحالة",
+          ],
         },
         employee: {
           title: "بوابة الموظف",
-          bullets: ["المهام والملاحظات", "تسجيل الحضور/الانصراف والميدان", "الوصول إلى السجلات", "تقارير الحوادث"],
+          bullets: [
+            "المهام والملاحظات",
+            "تسجيل الحضور/الانصراف والميدان",
+            "الوصول إلى السجلات",
+            "تقارير الحوادث",
+          ],
         },
         admin: {
           title: "لوحة التحكم",
-          bullets: ["تحليلات المؤشرات", "الأدوار والصلاحيات", "الميزانيات والمالية", "سجلات التدقيق"],
+          bullets: [
+            "تحليلات المؤشرات",
+            "الأدوار والصلاحيات",
+            "الميزانيات والمالية",
+            "سجلات التدقيق",
+          ],
         },
         family: {
           title: "نظام العائلة",
-          bullets: ["الحالة الصحية", "الحضور والتقدم", "التنبيهات والجداول", "رسائل مباشرة"],
+          bullets: [
+            "الحالة الصحية",
+            "الحضور والتقدم",
+            "التنبيهات والجداول",
+            "رسائل مباشرة",
+          ],
         },
       },
       monitor: {
@@ -212,7 +240,8 @@ const messages = {
         medical: "طبي",
         psychological: "نفسي",
         functional: "وظيفي",
-        updated: "تحديثات مباشرة من تسجيلات الوص��ل وإكمال العلاج والتكامل مع الأجهزة.",
+        updated:
+          "تحديثات مباشرة من تسجيلات الوص��ل وإكمال العلاج والتكامل مع الأجهزة.",
       },
       notifications: {
         title: "تنبيهات ذكية",
@@ -226,13 +255,24 @@ const messages = {
       },
       security: {
         title: "الأمان وإمكانية الوصول والثقة",
-        desc:
-          "أمان متقدم مع تشفير البيانات والمصادقة الثنائية وسجلات التدقيق وإمكانية الوصول الكاملة. جاهز للسحابة وقابل للتوسع مع تكاملات للأنظمة الوطنية والأجهزة الطبية.",
+        desc: "أمان متقدم مع تشفير البيانات والمصادقة الثنائية وسجلات التدقيق وإمكانية الوصول الكاملة. جاهز للسحابة وقابل للتوسع مع تكاملات للأنظمة الوطنية والأجهزة الطبية.",
         features: {
-          advanced: { title: "أمان متقدم", text: "تشفير أثناء السكون والنقل، مصادقة ثنائية، وصلاحيات حسب الأدوار." },
-          comms: { title: "اتصال موحد", text: "رسائل داخلية، مشاركة ملفات، وتحديثات للعائلة." },
-          schedule: { title: "الجدولة والتذكيرات", text: "العلاجات، الفحوصات الصحية، وتذكيرات المواعيد." },
-          reports: { title: "التقارير والتصدير", text: "تتبع المؤشرات مع التصدير إلى Excel وPDF." },
+          advanced: {
+            title: "أمان متقدم",
+            text: "تشفير أثناء السكون والنقل، مصادقة ثنائية، وصلاحيات حسب الأدوار.",
+          },
+          comms: {
+            title: "اتصال موحد",
+            text: "رسائل داخلية، مشاركة ملفات، وتحديثات للعائلة.",
+          },
+          schedule: {
+            title: "الجدولة والتذكيرات",
+            text: "العلاجات، الفحوصات الصحية، وتذكيرات المواعيد.",
+          },
+          reports: {
+            title: "التقارير والتصدير",
+            text: "تتبع المؤشرات مع التصدير إلى Excel وPDF.",
+          },
         },
       },
       cta: {
@@ -245,7 +285,13 @@ const messages = {
 } as const;
 
 type Paths<T> = T extends object
-  ? { [K in keyof T]: `${Extract<K, string>}` | (T[K] extends object ? `${Extract<K, string>}.${Paths<T[K]>}` : never) }[keyof T]
+  ? {
+      [K in keyof T]:
+        | `${Extract<K, string>}`
+        | (T[K] extends object
+            ? `${Extract<K, string>}.${Paths<T[K]>}`
+            : never);
+    }[keyof T]
   : never;
 
 type MessageKey = Paths<typeof messages.en>;

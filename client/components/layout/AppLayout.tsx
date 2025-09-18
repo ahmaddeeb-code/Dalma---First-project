@@ -1,12 +1,51 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Bell, HeartHandshake, LayoutDashboard, LogOut, ShieldCheck, UserCircle2, Users2, FileBarChart2, HandHeart, Users, Languages } from "lucide-react";
+import {
+  Bell,
+  HeartHandshake,
+  LayoutDashboard,
+  LogOut,
+  ShieldCheck,
+  UserCircle2,
+  Users2,
+  FileBarChart2,
+  HandHeart,
+  Users,
+  Languages,
+} from "lucide-react";
 import { ReactNode, useEffect, useMemo, useSyncExternalStore } from "react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { getCurrentUser, getCurrentUserId, logout, subscribeAuth } from "@/store/auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  getCurrentUser,
+  getCurrentUserId,
+  logout,
+  subscribeAuth,
+} from "@/store/auth";
 import { loadACL } from "@/store/acl";
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarSeparator, SidebarTrigger } from "@/components/ui/sidebar";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarSeparator,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 import { getLocale, setLocale, subscribeLocale, t } from "@/i18n";
 
 const navItems = [
@@ -41,7 +80,9 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   const roles = useMemo(() => {
     if (!user) return [] as string[];
     const acl = loadACL();
-    return user.roleIds.map((id) => acl.roles.find((r) => r.id === id)?.name || id);
+    return user.roleIds.map(
+      (id) => acl.roles.find((r) => r.id === id)?.name || id,
+    );
   }, [user]);
   const { pathname } = useLocation();
   const locale = useLocale();
@@ -55,7 +96,10 @@ export default function AppLayout({ children }: { children: ReactNode }) {
 
   return (
     <SidebarProvider>
-      <Sidebar side={locale === "ar" ? "right" : "left"} className={cn(locale === "ar" ? "border-l" : "border-r")}>
+      <Sidebar
+        side={locale === "ar" ? "right" : "left"}
+        className={cn(locale === "ar" ? "border-l" : "border-r")}
+      >
         <SidebarHeader>
           <Link to="/" className="flex items-center justify-end gap-2 px-2">
             <span className="font-extrabold tracking-tight">{t("brand")}</span>
@@ -90,7 +134,10 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         </SidebarContent>
         <SidebarFooter className="mt-auto">
           <Button asChild className="w-full">
-            <Link to="/donations"><HeartHandshake className="ml-2" />{t("header.donate")}</Link>
+            <Link to="/donations">
+              <HeartHandshake className="ml-2" />
+              {t("header.donate")}
+            </Link>
           </Button>
         </SidebarFooter>
       </Sidebar>
@@ -99,7 +146,9 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           <div className="container flex h-14 items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <SidebarTrigger />
-              <span className="text-sm text-muted-foreground">{t("header.welcome")} {user ? user.name : t("header.guest")}</span>
+              <span className="text-sm text-muted-foreground">
+                {t("header.welcome")} {user ? user.name : t("header.guest")}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <DropdownMenu>
@@ -109,8 +158,12 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start">
-                  <DropdownMenuItem onClick={() => setLocale("ar")}>العربية</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setLocale("en")}>English</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocale("ar")}>
+                    العربية
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setLocale("en")}>
+                    English
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               <Button variant="ghost" size="icon" aria-label="الإشعارات">
@@ -119,14 +172,25 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="secondary"><UserCircle2 className="ml-2" /> {user.name}</Button>
+                    <Button variant="secondary">
+                      <UserCircle2 className="ml-2" /> {user.name}
+                    </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start">
                     <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    {roles.length ? <DropdownMenuItem disabled>{roles.join("، ")}</DropdownMenuItem> : null}
+                    {roles.length ? (
+                      <DropdownMenuItem disabled>
+                        {roles.join("، ")}
+                      </DropdownMenuItem>
+                    ) : null}
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => { logout(); window.location.reload(); }}>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        logout();
+                        window.location.reload();
+                      }}
+                    >
                       <LogOut className="ml-2 h-4 w-4" /> {t("header.signOut")}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -134,14 +198,28 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               ) : (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="secondary"><UserCircle2 className="ml-2" /> {t("header.signIn")}</Button>
+                    <Button variant="secondary">
+                      <UserCircle2 className="ml-2" /> {t("header.signIn")}
+                    </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start">
-                    <DropdownMenuLabel>{t("header.chooseRole")}</DropdownMenuLabel>
-                    <DropdownMenuItem asChild><Link to="/login/admin">{t("header.administrator")}</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link to="/login/staff">{t("header.staff")}</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link to="/login/family">{t("header.family")}</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link to="/login/beneficiary">{t("header.beneficiary")}</Link></DropdownMenuItem>
+                    <DropdownMenuLabel>
+                      {t("header.chooseRole")}
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem asChild>
+                      <Link to="/login/admin">{t("header.administrator")}</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/login/staff">{t("header.staff")}</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/login/family">{t("header.family")}</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/login/beneficiary">
+                        {t("header.beneficiary")}
+                      </Link>
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               )}
@@ -153,9 +231,15 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           <div className="container py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
             <p>© {new Date().getFullYear()} مركز دلما. جميع الحقوق محفوظة.</p>
             <div className="flex items-center gap-4">
-              <Link to="/privacy" className="hover:text-foreground">الخصوصية</Link>
-              <Link to="/security" className="hover:text-foreground">الأمان</Link>
-              <Link to="/contact" className="hover:text-foreground">تواصل</Link>
+              <Link to="/privacy" className="hover:text-foreground">
+                الخصوصية
+              </Link>
+              <Link to="/security" className="hover:text-foreground">
+                الأمان
+              </Link>
+              <Link to="/contact" className="hover:text-foreground">
+                تواصل
+              </Link>
             </div>
           </div>
         </footer>

@@ -22,22 +22,29 @@ export default function AdminDashboard() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{ar ? "لوحة التحكم" : "Admin Dashboard"}</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {ar ? "لوحة التحكم" : "Admin Dashboard"}
+          </h1>
           <p className="text-muted-foreground mt-1">
-            {ar ? "نظرة فورية على المستفيدين والموظفين والخدمات والتنبيهات." : "Real-time view over beneficiaries, staff, services and alerts."}
+            {ar
+              ? "نظرة فورية على المستفيدين والموظفين والخدمات والتنبيهات."
+              : "Real-time view over beneficiaries, staff, services and alerts."}
           </p>
         </div>
         <div className="flex gap-2">
           <Button asChild>
             <a href="/admin/access-control">
-              <Users className="ml-2" /> {ar ? "التحكم بالصلاحيات" : "Access Control"}
+              <Users className="ml-2" />{" "}
+              {ar ? "التحكم بالصلاحيات" : "Access Control"}
             </a>
           </Button>
           <Button>
-            <FileChartColumn className="ml-2" /> {ar ? "تصدير تقرير" : "Export Report"}
+            <FileChartColumn className="ml-2" />{" "}
+            {ar ? "تصدير تقرير" : "Export Report"}
           </Button>
           <Button variant="secondary">
-            <Bell className="ml-2" /> {ar ? "مركز التنبيهات" : "Notification Center"}
+            <Bell className="ml-2" />{" "}
+            {ar ? "مركز التنبيهات" : "Notification Center"}
           </Button>
         </div>
       </div>
@@ -45,9 +52,14 @@ export default function AdminDashboard() {
       <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader>
-            <CardDescription>{ar ? "المستفيدون" : "Beneficiaries"}</CardDescription>
+            <CardDescription>
+              {ar ? "المستفيدون" : "Beneficiaries"}
+            </CardDescription>
             <CardTitle className="flex items-baseline gap-2">
-              1,248 <Badge variant="secondary">{ar ? "+٢٤ اليوم" : "+24 today"}</Badge>
+              1,248{" "}
+              <Badge variant="secondary">
+                {ar ? "+٢٤ اليوم" : "+24 today"}
+              </Badge>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -55,13 +67,17 @@ export default function AdminDashboard() {
               <div className="h-full w-3/4 rounded bg-primary" />
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              {ar ? "سكنية ٤٥٪ · نهارية ٤٠٪ · منزلية ١٥٪" : "Residential 45% · Daycare 40% · Home-based 15%"}
+              {ar
+                ? "سكنية ٤٥٪ · نهارية ٤٠٪ · منزلية ١٥٪"
+                : "Residential 45% · Daycare 40% · Home-based 15%"}
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardDescription>{ar ? "مواعيد اليوم" : "Appointments Today"}</CardDescription>
+            <CardDescription>
+              {ar ? "مواعيد اليوم" : "Appointments Today"}
+            </CardDescription>
             <CardTitle className="flex items-baseline gap-2">342</CardTitle>
           </CardHeader>
           <CardContent className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -70,7 +86,9 @@ export default function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader>
-            <CardDescription>{ar ? "استغلال الموظفين" : "Staff Utilization"}</CardDescription>
+            <CardDescription>
+              {ar ? "استغلال الموظفين" : "Staff Utilization"}
+            </CardDescription>
             <CardTitle>72%</CardTitle>
           </CardHeader>
           <CardContent>
@@ -84,7 +102,9 @@ export default function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader>
-            <CardDescription>{ar ? "مؤشر الجودة" : "Quality KPI"}</CardDescription>
+            <CardDescription>
+              {ar ? "مؤشر الجودة" : "Quality KPI"}
+            </CardDescription>
             <CardTitle className="flex items-center gap-2">
               96% <Activity className="h-5 w-5 text-success" />
             </CardTitle>
@@ -99,29 +119,39 @@ export default function AdminDashboard() {
       <section className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>{ar ? "المستفيدون حسب الفئة" : "Beneficiaries by Category"}</CardTitle>
+            <CardTitle>
+              {ar ? "المستفيدون حسب الفئة" : "Beneficiaries by Category"}
+            </CardTitle>
             <CardDescription>
-              {ar ? "توزيع الخدمات السكنية والنهارية والمنزلية." : "Distribution across Residential, Daycare, and Home-based services."}
+              {ar
+                ? "توزيع الخدمات السكنية والنهارية والمنزلية."
+                : "Distribution across Residential, Daycare, and Home-based services."}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-3 gap-6">
               <div>
-                <p className="text-sm text-muted-foreground">{ar ? "سكنية" : "Residential"}</p>
+                <p className="text-sm text-muted-foreground">
+                  {ar ? "سكنية" : "Residential"}
+                </p>
                 <p className="text-2xl font-semibold">560</p>
                 <div className="mt-2 h-2 rounded bg-muted">
                   <div className="h-full w-[45%] rounded bg-primary" />
                 </div>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">{ar ? "نهارية" : "Daycare"}</p>
+                <p className="text-sm text-muted-foreground">
+                  {ar ? "نهارية" : "Daycare"}
+                </p>
                 <p className="text-2xl font-semibold">499</p>
                 <div className="mt-2 h-2 rounded bg-muted">
                   <div className="h-full w-[40%] rounded bg-secondary" />
                 </div>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">{ar ? "منزلية" : "Home-based"}</p>
+                <p className="text-sm text-muted-foreground">
+                  {ar ? "منزلية" : "Home-based"}
+                </p>
                 <p className="text-2xl font-semibold">189</p>
                 <div className="mt-2 h-2 rounded bg-muted">
                   <div className="h-full w-[15%] rounded bg-info" />
@@ -133,20 +163,31 @@ export default function AdminDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <AlertTriangle className="text-warning" /> {ar ? "تنبيهات عاجلة" : "Urgent Alerts"}
+              <AlertTriangle className="text-warning" />{" "}
+              {ar ? "تنبيهات عاجلة" : "Urgent Alerts"}
             </CardTitle>
-            <CardDescription>{ar ? "تنبيهات حرجة بالوقت الحقيقي." : "Real-time critical notifications."}</CardDescription>
+            <CardDescription>
+              {ar
+                ? "تنبيهات حرجة بالوقت الحقيقي."
+                : "Real-time critical notifications."}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <ul className="space-y-3 text-sm">
               <li className="flex items-center justify-between">
-                <span>{ar ? "دواء فائت (غرفة ٢٠٣)" : "Missed medication (Room 203)"}</span>
+                <span>
+                  {ar ? "دواء فائت (غرفة ٢٠٣)" : "Missed medication (Room 203)"}
+                </span>
                 <span className="rounded bg-warning/15 text-warning px-2 py-0.5">
                   {ar ? "عالي" : "High"}
                 </span>
               </li>
               <li className="flex items-center justify-between">
-                <span>{ar ? "تأخير النقل (٥ مستفيدين)" : "Transport delay (5 beneficiaries)"}</span>
+                <span>
+                  {ar
+                    ? "تأخير النقل (٥ مستفيدين)"
+                    : "Transport delay (5 beneficiaries)"}
+                </span>
                 <span className="rounded bg-warning/15 text-warning px-2 py-0.5">
                   {ar ? "متوسط" : "Medium"}
                 </span>
@@ -167,7 +208,9 @@ export default function AdminDashboard() {
           <CardHeader>
             <CardTitle>{ar ? "أداء الفريق" : "Team Performance"}</CardTitle>
             <CardDescription>
-              {ar ? "الحضور والملاحظات وتقرير الحوادث." : "Attendance, notes, and incident reporting."}
+              {ar
+                ? "الحضور والملاحظات وتقرير الحوادث."
+                : "Attendance, notes, and incident reporting."}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -179,7 +222,9 @@ export default function AdminDashboard() {
           <CardHeader>
             <CardTitle>{ar ? "مراجعات قادمة" : "Upcoming Reviews"}</CardTitle>
             <CardDescription>
-              {ar ? "تقييمات طبية ونفسية لهذا الأسبوع." : "Medical and psychological assessments this week."}
+              {ar
+                ? "تقييمات طبية ونفسية لهذا الأسبوع."
+                : "Medical and psychological assessments this week."}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -188,8 +233,14 @@ export default function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>{ar ? "ملخص الإشعارات" : "Notifications Summary"}</CardTitle>
-            <CardDescription>{ar ? "تنبيهات ورسائل تلقائية." : "Automated alerts and messages."}</CardDescription>
+            <CardTitle>
+              {ar ? "ملخص الإشعارات" : "Notifications Summary"}
+            </CardTitle>
+            <CardDescription>
+              {ar
+                ? "تنبيهات ورسائل تلقائية."
+                : "Automated alerts and messages."}
+            </CardDescription>
           </CardHeader>
           <CardContent className="flex items-center gap-3 text-sm text-muted-foreground">
             <Bell className="h-4 w-4" /> ١٢ عاجلة · ٣٦ عادية · ١٢٨ معلومات
