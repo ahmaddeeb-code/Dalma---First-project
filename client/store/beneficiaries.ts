@@ -1,4 +1,10 @@
-import { v4 as uuidv4 } from "uuid";
+function uid() {
+  // Prefer secure UUID when available
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
+  return `${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`;
+}
 
 export type Gender = "male" | "female";
 export type DisabilityType =
