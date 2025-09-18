@@ -1,6 +1,9 @@
 import { Link, useParams } from "react-router-dom";
 import { useMemo, useSyncExternalStore, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -86,7 +89,7 @@ export default function BeneficiaryProfile() {
         </p>
         <Button asChild>
           <Link to="/beneficiaries">
-            {ar ? "عودة إ��ى القائمة" : "Back to list"}
+            {ar ? "عودة إلى القائمة" : "Back to list"}
           </Link>
         </Button>
       </div>
@@ -402,7 +405,7 @@ export default function BeneficiaryProfile() {
           <Card>
             <CardHeader>
               <CardTitle>
-                {ar ? "التعل��م والأنشطة" : "Education & Activities"}
+                {ar ? "التعليم والأنشطة" : "Education & Activities"}
               </CardTitle>
               <CardDescription>
                 {ar
