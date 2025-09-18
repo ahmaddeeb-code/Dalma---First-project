@@ -41,6 +41,7 @@ const App = () => (
               path="/admin/medical-settings"
               element={<MedicalSettings />}
             />
+            <Route path="/admin/beneficiary-settings" element={<BeneficiarySettings />} />
             <Route path="/admin/logistics" element={<Logistics />} />
             <Route path="/login/admin" element={<LoginAdmin />} />
             <Route path="/login/staff" element={<LoginStaff />} />
