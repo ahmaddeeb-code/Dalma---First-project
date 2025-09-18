@@ -51,25 +51,35 @@ import {
 } from "@/components/ui/sidebar";
 import { getLocale, setLocale, subscribeLocale, t } from "@/i18n";
 
-const navItems = [
-  { to: "/admin", key: "nav.admin", icon: LayoutDashboard },
-  { to: "/beneficiaries", key: "nav.beneficiaries", icon: Users2 },
-  { to: "/employees", key: "nav.employees", icon: Users },
-  { to: "/family", key: "nav.family", icon: UserCircle2 },
-  { to: "/reports", key: "nav.reports", icon: FileBarChart2 },
-  { to: "/donations", key: "nav.donations", icon: HandHeart },
-  { to: "/admin/access-control", key: "nav.accessControl", icon: ShieldCheck },
+const groups = [
   {
-    to: "/admin/medical-settings",
-    key: "nav.medicalSettings",
-    icon: ShieldCheck,
+    labelKey: "nav.home",
+    items: [
+      { to: "/admin", key: "nav.admin", icon: LayoutDashboard },
+      { to: "/reports", key: "nav.reports", icon: FileBarChart2 },
+    ],
   },
-  { to: "/admin/beneficiary-settings", key: "nav.beneficiarySettings", icon: ShieldCheck },
-  { to: "/admin/logistics", key: "nav.logistics", icon: Building2 },
-  { to: "/admin/organization-settings", key: "nav.organizationSettings", icon: ShieldCheck },
-  { to: "/admin/security-settings", key: "nav.securitySettings", icon: ShieldCheck },
-  { to: "/admin/families", key: "nav.families", icon: UserCircle2 },
-  { to: "/admin/translations", key: "nav.translations", icon: Languages },
+  {
+    labelKey: "nav.management",
+    items: [
+      { to: "/beneficiaries", key: "nav.beneficiaries", icon: Users2 },
+      { to: "/employees", key: "nav.employees", icon: Users },
+      { to: "/admin/families", key: "nav.families", icon: UserCircle2 },
+      { to: "/admin/logistics", key: "nav.logistics", icon: Building2 },
+      { to: "/donations", key: "nav.donations", icon: HandHeart },
+    ],
+  },
+  {
+    labelKey: "nav.settings",
+    items: [
+      { to: "/admin/access-control", key: "nav.accessControl", icon: ShieldCheck },
+      { to: "/admin/medical-settings", key: "nav.medicalSettings", icon: ShieldCheck },
+      { to: "/admin/beneficiary-settings", key: "nav.beneficiarySettings", icon: ShieldCheck },
+      { to: "/admin/organization-settings", key: "nav.organizationSettings", icon: ShieldCheck },
+      { to: "/admin/security-settings", key: "nav.securitySettings", icon: ShieldCheck },
+      { to: "/admin/translations", key: "nav.translations", icon: Languages },
+    ],
+  },
 ] as const;
 
 function useAuthUserId() {
