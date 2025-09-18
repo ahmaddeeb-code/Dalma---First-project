@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import {
   Dialog,
   DialogContent,
@@ -323,7 +323,7 @@ export default function AddEditBeneficiaryDialog({
             />
           </div>
           <div className="space-y-2">
-            <Label>{ar ? "رقم المستفيد" : "Beneficiary ID"} *</Label>
+            <Label>{ar ? "رق�� المستفيد" : "Beneficiary ID"} *</Label>
             <Input
               value={beneficiaryId}
               onChange={(e) => setBeneficiaryId(e.target.value)}
@@ -354,7 +354,7 @@ export default function AddEditBeneficiaryDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>{ar ? "اسم ولي الأمر" : "Guardian Name"} *</Label>
+            <Label>{ar ? "ا��م ولي الأمر" : "Guardian Name"} *</Label>
             <Input
               value={guardianName}
               onChange={(e) => setGuardianName(e.target.value)}
