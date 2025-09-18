@@ -3,6 +3,8 @@ import { useMemo, useSyncExternalStore, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   AlertDialog,
@@ -180,7 +182,7 @@ export default function BeneficiaryProfile() {
                     {
                       physical: ar ? "حركية" : "Physical",
                       intellectual: ar ? "ذهنية" : "Intellectual",
-                      sensory: ar ? "حس��ة" : "Sensory",
+                      sensory: ar ? "حسية" : "Sensory",
                       autism: ar ? "توحد" : "Autism",
                       multiple: ar ? "متعددة" : "Multiple",
                     }[b.medical.disabilityType]
@@ -278,7 +280,7 @@ export default function BeneficiaryProfile() {
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>
-                    {ar ? "تأك��د" : "Confirm"}
+                    {ar ? "تأكيد" : "Confirm"}
                   </AlertDialogTitle>
                   <AlertDialogDescription>
                     {b.archived
@@ -941,7 +943,7 @@ export default function BeneficiaryProfile() {
               </div>
               <div>
                 <div className="font-medium mb-1">
-                  {ar ? "ملاحظات" : "Notes"}
+                  {ar ? "ملا��ظات" : "Notes"}
                 </div>
                 <p>{b.emergency.notes || (ar ? "لا يوجد" : "None")}</p>
               </div>
