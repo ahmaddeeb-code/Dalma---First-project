@@ -129,7 +129,7 @@ export default function BeneficiaryProfile() {
       <div className="space-y-4">
         <p className="text-muted-foreground">
           {ar
-            ? "لا يوجد ��ستفيد بهذا المعرف"
+            ? "لا يوجد مستفيد بهذا المعرف"
             : "No beneficiary found for this ID"}
         </p>
         <Button asChild>
@@ -617,7 +617,7 @@ export default function BeneficiaryProfile() {
                     <>
                       <Input className="h-8 w-56" placeholder={ar?"أضف هدفاً":"Add goal"} onKeyDown={(e)=>{ if(e.key==="Enter"){ const v=(e.target as HTMLInputElement).value.trim(); if(v){ b.care.goals.push(v); (e.target as HTMLInputElement).value=""; }}}} />
                       <Select onValueChange={(id)=>{ const tpl = settings.carePlanTemplates.find(t=>t.id===id); if(tpl){ tpl.goals.forEach(g=>{ if(!b.care.goals.includes(g)) b.care.goals.push(g); }); toast.success(ar?"تم تطبيق القالب":"Template applied"); } }}>
-                        <SelectTrigger className="h-8 w-56"><SelectValue placeholder={ar?"تطبيق ق��لب":"Apply template"} /></SelectTrigger>
+                        <SelectTrigger className="h-8 w-56"><SelectValue placeholder={ar?"تطبيق قالب":"Apply template"} /></SelectTrigger>
                         <SelectContent>
                           {settings.carePlanTemplates.map(t=>(<SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>))}
                         </SelectContent>
@@ -789,8 +789,20 @@ export default function BeneficiaryProfile() {
             </CardHeader>
             <CardContent>
               {canEdit && (
-                <div className="mb-3 flex items-center gap-2">
-                  <label className="cursor-pointer">
+                <div className="mb-3 grid gap-2">
+                  <div className="flex items-center gap-2">
+                    <Select onValueChange={(v)=>((window as any)._docType=v)}>
+                      <SelectTrigger className="h-8 w-56"><SelectValue placeholder={ar?"نوع المستند":"Document type"} /></SelectTrigger>
+                      <SelectContent>
+                        {settings.documentCategories.map((c)=>(<SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>))}
+                      </SelectContent>
+                    </Select>
+                    <Input className="h-8 w-56" placeholder={ar?"العنوان":"Title"} onChange={(e)=>((window as any)._docTitle=e.target.value)} />
+                    <Input className="h-8" type="date" onChange={(e)=>((window as any)._docIssued=e.target.value)} />
+                    <Input className="h-8" type="date" onChange={(e)=>((window as any)._docExp=e.target.value)} />
+                  </div>
+                  <label className="cursor-pointer inline-flex items-center gap-2">
+                    <UploadCloud className="h-4 w-4" /> {ar?"رفع ملف":"Upload file"}
                     <Input
                       type="file"
                       accept="image/*,application/pdf"
@@ -1018,7 +1030,7 @@ export default function BeneficiaryProfile() {
               <CardTitle>{ar ? "سجل التعديلات" : "Edit History"}</CardTitle>
               <CardDescription>
                 {ar
-                  ? "تعقب التعديلات للمراجعة"
+                  ? "ت��قب التعديلات للمراجعة"
                   : "Audit trail for accountability"}
               </CardDescription>
             </CardHeader>
