@@ -17,26 +17,27 @@ import {
 } from "lucide-react";
 
 export default function AdminDashboard() {
+  const ar = document.documentElement.getAttribute("dir") === "rtl";
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">لوحة التحكم</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{ar ? "لوحة التحكم" : "Admin Dashboard"}</h1>
           <p className="text-muted-foreground mt-1">
-            نظرة فورية على المستفيدين والموظفين والخدمات والتنبيهات.
+            {ar ? "نظرة فورية على المستفيدين والموظفين والخدمات والتنبيهات." : "Real-time view over beneficiaries, staff, services and alerts."}
           </p>
         </div>
         <div className="flex gap-2">
           <Button asChild>
             <a href="/admin/access-control">
-              <Users className="ml-2" /> التحكم بالصلاحيات
+              <Users className="ml-2" /> {ar ? "التحكم بالصلاحيات" : "Access Control"}
             </a>
           </Button>
           <Button>
-            <FileChartColumn className="ml-2" /> تصدير تقرير
+            <FileChartColumn className="ml-2" /> {ar ? "تصدير تقرير" : "Export Report"}
           </Button>
           <Button variant="secondary">
-            <Bell className="ml-2" /> مركز التنبيهات
+            <Bell className="ml-2" /> {ar ? "مركز التنبيهات" : "Notification Center"}
           </Button>
         </div>
       </div>
