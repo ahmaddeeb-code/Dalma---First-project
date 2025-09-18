@@ -372,7 +372,7 @@ export default function BeneficiaryProfile() {
         <TabsList className="flex flex-wrap gap-2">
           <TabsTrigger value="personal">
             <Home className="h-4 w-4 ml-1" />{" "}
-            {ar ? "البيانات الشخصية" : "Personal"}
+            {ar ? "البيانات الشخص��ة" : "Personal"}
           </TabsTrigger>
           <TabsTrigger value="medical">
             <Stethoscope className="h-4 w-4 ml-1" />{" "}
@@ -654,8 +654,18 @@ export default function BeneficiaryProfile() {
                 </div>
               </div>
               <div>
-                <div className="font-medium mb-2">
+                <div className="font-medium mb-2 flex items-center gap-2">
                   {ar ? "جدول الجلسات" : "Appointments"}
+                  {edit && (
+                    <>
+                      <Input className="h-8 w-36" placeholder={ar?"النوع":"Type"} onChange={(e)=>((window as any)._apType=e.target.value)} />
+                      <Input className="h-8 w-52" type="datetime-local" onChange={(e)=>((window as any)._apDate=e.target.value)} />
+                      <Input className="h-8 w-40" placeholder={ar?"المعالج":"Therapist"} onChange={(e)=>((window as any)._apTher=e.target.value)} />
+                      <Button size="sm" onClick={()=>{ const t=(window as any)._apType||"Session"; const d=(window as any)._apDate||new Date().toISOString(); const th=(window as any)._apTher; b.care.appointments.push({ id: String(Date.now()), type: t, date: d, therapist: th }); toast.success(ar?"تمت الإضافة":"Added"); }}>
+                        {ar?"إضافة":"Add"}
+                      </Button>
+                    </>
+                  )}
                 </div>
                 <Table>
                   <TableHeader>
@@ -706,7 +716,7 @@ export default function BeneficiaryProfile() {
               </CardTitle>
               <CardDescription>
                 {ar
-                  ? "البرامج ال��لتحق بها والأنشطة"
+                  ? "البرامج الملتحق بها والأنشطة"
                   : "Enrolled programs and activities"}
               </CardDescription>
             </CardHeader>
