@@ -13,6 +13,7 @@ import AccessControl from "./pages/AccessControl";
 import Placeholder from "./pages/_Placeholder";
 import Beneficiaries from "@/pages/Beneficiaries";
 import BeneficiaryProfile from "@/pages/beneficiaries/Profile";
+import Employees from "@/pages/Employees";
 import LoginAdmin from "./pages/auth/LoginAdmin";
 import LoginStaff from "./pages/auth/LoginStaff";
 import LoginFamily from "./pages/auth/LoginFamily";
