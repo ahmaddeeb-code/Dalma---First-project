@@ -140,27 +140,39 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         </SidebarHeader>
         <SidebarSeparator />
         <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>{t("nav.home")}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {navItems.map((n) => {
-                  const Icon = n.icon;
-                  const active = pathname === n.to;
-                  return (
-                    <SidebarMenuItem key={n.to}>
-                      <SidebarMenuButton asChild isActive={active}>
-                        <NavLink to={n.to} className="flex items-center gap-2">
-                          <span className="truncate">{t(n.key as any)}</span>
-                          <Icon />
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  );
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+          {groups.map((g) => {
+            const isOpen = openGroups[g.labelKey] ?? true;
+            return (
+              <SidebarGroup key={g.labelKey}>
+                <SidebarGroupLabel className="flex items-center justify-between">
+                  <span>{t(g.labelKey as any)}</span>
+                  <button onClick={() => toggleGroup(g.labelKey)} className="rounded-md p-1 hover:bg-sidebar-accent">
+                    {isOpen ? <ChevronDown className="h-4 w-4"/> : <ChevronRight className="h-4 w-4"/>}
+                  </button>
+                </SidebarGroupLabel>
+                {isOpen && (
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {g.items.map((n) => {
+                        const Icon = n.icon;
+                        const active = pathname === n.to;
+                        return (
+                          <SidebarMenuItem key={n.to}>
+                            <SidebarMenuButton asChild isActive={active} className="rounded-lg">
+                              <NavLink to={n.to} className="flex items-center gap-2">
+                                <Icon />
+                                <span className="truncate">{t(n.key as any)}</span>
+                              </NavLink>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        );
+                      })}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                )}
+              </SidebarGroup>
+            );
+          })}
         </SidebarContent>
         <SidebarFooter className="mt-auto">
           <Button asChild className="w-full">
