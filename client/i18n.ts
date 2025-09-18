@@ -39,6 +39,7 @@ const messages = {
       reports: "Reports",
       donations: "Donations",
       accessControl: "Access Control",
+      translations: "Translations",
     },
     header: {
       donate: "Donate",
@@ -166,6 +167,7 @@ const messages = {
       reports: "التقارير",
       donations: "التبرعات",
       accessControl: "التحكم بالصلاحيات",
+      translations: "الترجمات",
     },
     header: {
       donate: "تبرع",
@@ -251,7 +253,7 @@ const messages = {
         absences: "تم رصد ٣ غيابات",
         medium: "متوسط",
         schedule: "تم تحديث جدول العلاجات",
-        low: "منخفض",
+        low: "��نخفض",
       },
       security: {
         title: "الأمان وإمكانية الوصول والثقة",
@@ -296,13 +298,87 @@ type Paths<T> = T extends object
 
 type MessageKey = Paths<typeof messages.en>;
 
-export function t(key: MessageKey): string {
-  const loc = getLocale();
+// Runtime translation overrides (persisted)
+const OV_KEY = "i18n_overrides_v1";
+let ovCache: Partial<Record<Locale, Record<string, string>>> | null = null;
+const transSubs = new Set<() => void>();
+function loadOv() {
+  if (ovCache) return ovCache;
+  try {
+    const raw = localStorage.getItem(OV_KEY);
+    ovCache = raw ? (JSON.parse(raw) as any) : {};
+  } catch {
+    ovCache = {};
+  }
+  return ovCache!;
+}
+function saveOv(v: Partial<Record<Locale, Record<string, string>>>) {
+  ovCache = v;
+  localStorage.setItem(OV_KEY, JSON.stringify(v));
+  transSubs.forEach((cb) => cb());
+}
+export function subscribeTranslations(cb: () => void) {
+  transSubs.add(cb);
+  return () => transSubs.delete(cb);
+}
+
+function flatten(obj: any, prefix = ""): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const k of Object.keys(obj)) {
+    const val = (obj as any)[k];
+    const key = prefix ? `${prefix}.${k}` : k;
+    if (typeof val === "string") out[key] = val;
+    else if (val && typeof val === "object") Object.assign(out, flatten(val, key));
+  }
+  return out;
+}
+
+export function listI18nKeys(): string[] {
+  return Object.keys(flatten(messages.en));
+}
+export function getBaseMessage(locale: Locale, key: string): string | undefined {
   const parts = key.split(".");
-  let obj: any = messages[loc as keyof typeof messages];
+  let obj: any = messages[locale as keyof typeof messages];
   for (const p of parts) {
     obj = obj?.[p];
-    if (obj === undefined) break;
+    if (obj === undefined) return undefined;
   }
-  return typeof obj === "string" ? obj : key;
+  return typeof obj === "string" ? obj : undefined;
+}
+export function getOverride(locale: Locale, key: string): string | undefined {
+  const o = loadOv()[locale];
+  return o ? o[key] : undefined;
+}
+export function setOverride(locale: Locale, key: string, value: string) {
+  const cur = loadOv();
+  const bucket = { ...(cur[locale] || {}) };
+  bucket[key] = value;
+  const next = { ...cur, [locale]: bucket };
+  saveOv(next);
+}
+export function removeOverride(locale: Locale, key: string) {
+  const cur = loadOv();
+  const bucket = { ...(cur[locale] || {}) };
+  delete bucket[key];
+  const next = { ...cur, [locale]: bucket };
+  saveOv(next);
+}
+export function clearOverrides(locale?: Locale) {
+  const cur = loadOv();
+  if (!locale) saveOv({});
+  else {
+    const next = { ...cur } as any;
+    delete next[locale];
+    saveOv(next);
+  }
+}
+
+export function t(key: MessageKey): string {
+  const loc = getLocale();
+  const ov = getOverride(loc, key);
+  if (typeof ov === "string" && ov.length) return ov;
+  const base = getBaseMessage(loc, key);
+  if (typeof base === "string") return base;
+  const en = getBaseMessage("en", key);
+  return typeof en === "string" ? en : key;
 }
