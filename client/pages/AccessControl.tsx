@@ -54,7 +54,7 @@ export default function AccessControl() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">التحكم بالصلاحيات</h1>
           <p className="text-muted-foreground">
-            إدار�� المستخدمين والأدوار والصلاحيات؛ وتعيينها بأمان.
+            إدارة المستخدمين والأدوار والصلاحيات؛ وتعيينها بأمان.
           </p>
         </div>
       </header>
@@ -244,7 +244,7 @@ export default function AccessControl() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Privileges</CardTitle>
+                <CardTitle>الصلاحيات</CardTitle>
                 <CardDescription>
                   Atomic permissions assigned to roles or directly to users.
                 </CardDescription>
