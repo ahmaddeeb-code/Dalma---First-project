@@ -1,4 +1,5 @@
 import { loadACL, saveACL, type User } from "./acl";
+import { addAudit } from "./security";
 
 const AUTH_KEY = "auth_user_id_v1";
 
@@ -31,10 +32,12 @@ export function login(user: User) {
     saveACL(acl);
   }
   localStorage.setItem(AUTH_KEY, user.id);
+  try { addAudit({ userId: user.id, action: "login", entity: "auth" }); } catch {}
   emit();
 }
 
 export function logout() {
   localStorage.removeItem(AUTH_KEY);
+  try { addAudit({ userId: null, action: "logout", entity: "auth" }); } catch {}
   emit();
 }
