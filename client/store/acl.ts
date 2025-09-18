@@ -16,6 +16,10 @@ export type User = {
   email: string;
   roleIds: string[];
   privilegeIds: string[];
+  phone?: string;
+  department?: string;
+  title?: string;
+  active?: boolean;
 };
 
 export type ACLState = {
@@ -25,6 +29,15 @@ export type ACLState = {
 };
 
 const STORAGE_KEY = "acl_data_v1";
+
+const subs = new Set<() => void>();
+function notify() {
+  subs.forEach((cb) => cb());
+}
+export function subscribeACL(cb: () => void) {
+  subs.add(cb);
+  return () => subs.delete(cb);
+}
 
 const seed: ACLState = {
   privileges: [
@@ -79,6 +92,18 @@ const seed: ACLState = {
       privilegeIds: ["p_view_records", "p_edit_records", "p_view_reports"],
     },
     {
+      id: "r_doctor",
+      name: "Doctor",
+      description: "Medical staff with patient editing permissions",
+      privilegeIds: ["p_view_records", "p_edit_records", "p_view_reports"],
+    },
+    {
+      id: "r_therapist",
+      name: "Therapist",
+      description: "Therapy staff with patient editing permissions",
+      privilegeIds: ["p_view_records", "p_edit_records", "p_view_reports"],
+    },
+    {
       id: "r_family",
       name: "Family",
       description: "Read-only family access",
@@ -98,6 +123,7 @@ const seed: ACLState = {
       email: "admin@dalma.org",
       roleIds: ["r_admin"],
       privilegeIds: [],
+      active: true,
     },
     {
       id: "u2",
@@ -105,6 +131,7 @@ const seed: ACLState = {
       email: "staff@dalma.org",
       roleIds: ["r_staff"],
       privilegeIds: [],
+      active: true,
     },
     {
       id: "u3",
@@ -112,6 +139,7 @@ const seed: ACLState = {
       email: "parent@dalma.org",
       roleIds: ["r_family"],
       privilegeIds: [],
+      active: true,
     },
     {
       id: "u4",
@@ -119,6 +147,7 @@ const seed: ACLState = {
       email: "beneficiary@dalma.org",
       roleIds: ["r_beneficiary"],
       privilegeIds: [],
+      active: true,
     },
   ],
 };
@@ -131,7 +160,6 @@ export function loadACL(): ACLState {
       return seed;
     }
     const parsed = JSON.parse(raw) as ACLState;
-    // Basic shape validation
     if (!parsed.users || !parsed.roles || !parsed.privileges)
       throw new Error("Invalid ACL data");
     return parsed;
@@ -143,6 +171,7 @@ export function loadACL(): ACLState {
 
 export function saveACL(state: ACLState) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  notify();
 }
 
 export function uid(prefix: string) {
@@ -178,4 +207,48 @@ export function removeById<T extends { id: string }>(
   id: string,
 ): T[] {
   return list.filter((x) => x.id !== id);
+}
+
+// Helpers for managing users/roles/privileges
+export function listUsers() {
+  return loadACL().users;
+}
+export function listRoles() {
+  return loadACL().roles;
+}
+export function listPrivileges() {
+  return loadACL().privileges;
+}
+export function getUserById(id: string) {
+  return loadACL().users.find((u) => u.id === id) || null;
+}
+export function upsertUser(user: User) {
+  const state = loadACL();
+  state.users = upsert(state.users, user);
+  saveACL(state);
+}
+export function removeUser(id: string) {
+  const state = loadACL();
+  state.users = removeById(state.users, id);
+  saveACL(state);
+}
+export function assignRole(userId: string, roleId: string, add: boolean) {
+  const u = getUserById(userId);
+  if (!u) return;
+  const set = new Set(u.roleIds);
+  if (add) set.add(roleId);
+  else set.delete(roleId);
+  upsertUser({ ...u, roleIds: Array.from(set) });
+}
+export function assignPrivilege(
+  userId: string,
+  privilegeId: string,
+  add: boolean,
+) {
+  const u = getUserById(userId);
+  if (!u) return;
+  const set = new Set(u.privilegeIds);
+  if (add) set.add(privilegeId);
+  else set.delete(privilegeId);
+  upsertUser({ ...u, privilegeIds: Array.from(set) });
 }
