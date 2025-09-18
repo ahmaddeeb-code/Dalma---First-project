@@ -36,6 +36,7 @@ import {
   upsertProtocol,
   upsertTemplate,
   upsertTherapyType,
+  removeDosageUnit,
 } from "@/store/medical";
 import { getCurrentUser } from "@/store/auth";
 import { Plus, Pencil, Trash2 } from "lucide-react";
@@ -361,7 +362,7 @@ function MedicationCard({ state, canManage }: { state: MedicalSettingsState; can
           </div>
           <div className="mt-2 flex flex-wrap gap-2">
             {state.medication.categories.map((c) => (
-              <Badge key={c} className="cursor-pointer" onClick={() => canManage && removeMedicationCategory(c)} variant="secondary">{c}</Badge>
+              <Badge key={c} className="cursor-pointer" onClick={() => { if (canManage) { removeMedicationCategory(c); toast.success(t("pages.medical.saved")); } }} variant="secondary">{c}</Badge>
             ))}
           </div>
         </div>
@@ -373,7 +374,7 @@ function MedicationCard({ state, canManage }: { state: MedicalSettingsState; can
           </div>
           <div className="mt-2 flex flex-wrap gap-2">
             {state.medication.dosageUnits.map((u) => (
-              <Badge key={u} className="cursor-pointer" onClick={() => canManage && removeDosageUnit(u)} variant="secondary">{u}</Badge>
+              <Badge key={u} className="cursor-pointer" onClick={() => { if (canManage) { removeDosageUnit(u); toast.success(t("pages.medical.saved")); } }} variant="secondary">{u}</Badge>
             ))}
           </div>
         </div>
@@ -385,7 +386,7 @@ function MedicationCard({ state, canManage }: { state: MedicalSettingsState; can
           </div>
           <div className="mt-2 flex flex-wrap gap-2">
             {state.medication.schedules.map((s) => (
-              <Badge key={s} className="cursor-pointer" onClick={() => canManage && removeSchedule(s)} variant="secondary">{s}</Badge>
+              <Badge key={s} className="cursor-pointer" onClick={() => { if (canManage) { removeSchedule(s); toast.success(t("pages.medical.saved")); } }} variant="secondary">{s}</Badge>
             ))}
           </div>
         </div>
