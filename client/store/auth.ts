@@ -1,0 +1,25 @@
+import { loadACL, saveACL, type User } from "./acl";
+
+const AUTH_KEY = "auth_user_id_v1";
+
+export function getCurrentUser(): User | null {
+  const id = localStorage.getItem(AUTH_KEY);
+  if (!id) return null;
+  const { users } = loadACL();
+  return users.find((u) => u.id === id) || null;
+}
+
+export function login(user: User) {
+  // Ensure user exists in ACL store
+  const acl = loadACL();
+  const exists = acl.users.find((u) => u.id === user.id);
+  if (!exists) {
+    acl.users.push(user);
+    saveACL(acl);
+  }
+  localStorage.setItem(AUTH_KEY, user.id);
+}
+
+export function logout() {
+  localStorage.removeItem(AUTH_KEY);
+}
