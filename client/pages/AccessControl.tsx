@@ -53,12 +53,8 @@ export default function AccessControl() {
     <div className="space-y-8">
       <header className="flex items-end justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            التحكم بالصلاحيات
-          </h1>
-          <p className="text-muted-foreground">
-            إدارة المستخدمين والأدوار والصلاحيات؛ وتعيينها بأمان.
-          </p>
+          <h1 className="text-3xl font-bold tracking-tight">{t("pages.accessControl.title")}</h1>
+          <p className="text-muted-foreground">{t("pages.accessControl.subtitle")}</p>
         </div>
       </header>
 
