@@ -31,6 +31,11 @@ export default function FamilyProfiles(){
   const canManage = useMemo(()=>{ if(!me) return false; const acl = loadACL(); const has = effectivePrivileges(me, acl.roles, acl.privileges).some(p=>p.id==="p_manage_families"); const isAdmin = me.roleIds.includes("r_admin"); return has || isAdmin; }, [me]);
 
   const filtered = families.filter(f => (f.familyId + (f.name||"")).toLowerCase().includes(search.toLowerCase()));
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const start = (page - 1) * pageSize;
+  const pageItems = filtered.slice(start, start + pageSize);
 
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Family|null>(null);
@@ -46,26 +51,89 @@ export default function FamilyProfiles(){
       </header>
 
       <Card>
-        <CardHeader><CardTitle>{getLocale()==="ar"?"قائمة العائلات":"Families"}</CardTitle><CardDescription>{getLocale()==="ar"?"ابحث ورتب وافتح التفاصيل":"Search and open details"}</CardDescription></CardHeader>
+        <CardHeader className="flex items-center justify-between">
+          <div>
+            <CardTitle>{getLocale()==="ar"?"قائمة العائلات":"Families"}</CardTitle>
+            <CardDescription>{getLocale()==="ar"?"ابحث ورتب وافتح التفاصيل":"Search and open details"}</CardDescription>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
+              <Label className="text-xs">{getLocale()==="ar"?"حجم الصفحة":"Page size"}</Label>
+              <select className="h-9 rounded-md border bg-background px-2 text-sm" value={pageSize} onChange={(e)=>{ setPageSize(Number(e.target.value)); setPage(1); }}>
+                {[10,20,50,100].map(n=> (<option key={n} value={n}>{n}</option>))}
+              </select>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline"><Download className="h-4 w-4 ml-1" /> {getLocale()==="ar"?"تصدير":"Export"}</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>{getLocale()==="ar"?"تنسيق":"Format"}</DropdownMenuLabel>
+                {(["csv","xlsx","pdf"] as const).map(fmt => (
+                  <DropdownMenuItem key={fmt} onClick={()=>{
+                    const cols: ColumnDef<Family>[] = [
+                      { header: "ID", accessor: r=>r.familyId },
+                      { header: getLocale()==="ar"?"الاسم":"Name", accessor: r=>r.name||"" },
+                      { header: getLocale()==="ar"?"الهاتف":"Phone", accessor: r=>r.contact.phone||"" },
+                      { header: getLocale()==="ar"?"البريد":"Email", accessor: r=>r.contact.email||"" },
+                      { header: getLocale()==="ar"?"المستفيدون":"Beneficiaries", accessor: r=>r.links.length },
+                    ];
+                    exportAll(filtered, cols, fmt, `families_${fmt}`);
+                  }}>{getLocale()==="ar"?"المجموعة المفلترة":"Filtered"} – {fmt.toUpperCase()}</DropdownMenuItem>
+                ))}
+                <DropdownMenuSeparator />
+                {(["csv","xlsx","pdf"] as const).map(fmt => (
+                  <DropdownMenuItem key={fmt} onClick={()=>{
+                    const cols: ColumnDef<Family>[] = [
+                      { header: "ID", accessor: r=>r.familyId },
+                      { header: getLocale()==="ar"?"الاسم":"Name", accessor: r=>r.name||"" },
+                      { header: getLocale()==="ar"?"الهاتف":"Phone", accessor: r=>r.contact.phone||"" },
+                      { header: getLocale()==="ar"?"البريد":"Email", accessor: r=>r.contact.email||"" },
+                      { header: getLocale()==="ar"?"المستفيدون":"Beneficiaries", accessor: r=>r.links.length },
+                    ];
+                    exportAll(families, cols, fmt, `families_${fmt}`);
+                  }}>{getLocale()==="ar"?"كامل البيانات":"Full dataset"} – {fmt.toUpperCase()}</DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader><TableRow><TableHead>ID</TableHead><TableHead>{t("common.name")}</TableHead><TableHead>{getLocale()==="ar"?"الهاتف":"Phone"}</TableHead><TableHead>{getLocale()==="ar"?"البريد":"Email"}</TableHead><TableHead>{getLocale()==="ar"?"المستفيدون":"Beneficiaries"}</TableHead><TableHead>{t("common.actions")}</TableHead></TableRow></TableHeader>
-            <TableBody>
-              {filtered.map(f => (
-                <TableRow key={f.id}>
-                  <TableCell className="font-mono">{f.familyId}</TableCell>
-                  <TableCell>{f.name || "—"}</TableCell>
-                  <TableCell>{f.contact.phone || "—"}</TableCell>
-                  <TableCell>{f.contact.email || "—"}</TableCell>
-                  <TableCell>{f.links.length}</TableCell>
-                  <TableCell className="flex gap-2">
-                    <Button size="sm" variant="secondary" onClick={()=>{ setEditing(f); setOpen(true); }}><Pencil className="ml-1 h-4 w-4" /> {t("common.edit")}</Button>
-                    {canManage && <Button size="sm" variant="destructive" onClick={()=>{ removeFamily(f.id); toast.success(t("pages.medical.saved")); }}>{t("common.delete")}</Button>}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <div className="w-full overflow-x-auto">
+            <Table>
+              <TableHeader><TableRow><TableHead>ID</TableHead><TableHead>{t("common.name")}</TableHead><TableHead>{getLocale()==="ar"?"الهاتف":"Phone"}</TableHead><TableHead className="hidden md:table-cell">{getLocale()==="ar"?"البريد":"Email"}</TableHead><TableHead>{getLocale()==="ar"?"المستفيدون":"Beneficiaries"}</TableHead><TableHead>{t("common.actions")}</TableHead></TableRow></TableHeader>
+              <TableBody>
+                {pageItems.map(f => (
+                  <TableRow key={f.id}>
+                    <TableCell className="font-mono">{f.familyId}</TableCell>
+                    <TableCell>{f.name || "—"}</TableCell>
+                    <TableCell>{f.contact.phone || "—"}</TableCell>
+                    <TableCell className="hidden md:table-cell">{f.contact.email || "—"}</TableCell>
+                    <TableCell>{f.links.length}</TableCell>
+                    <TableCell className="flex gap-2">
+                      <Button size="sm" variant="secondary" onClick={()=>{ setEditing(f); setOpen(true); }}><Pencil className="ml-1 h-4 w-4" /> {t("common.edit")}</Button>
+                      {canManage && <Button size="sm" variant="destructive" onClick={()=>{ removeFamily(f.id); toast.success(t("pages.medical.saved")); }}>{t("common.delete")}</Button>}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <div className="mt-4">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious href="#" onClick={(e)=>{ e.preventDefault(); setPage(p=>Math.max(1, p-1)); }} />
+                </PaginationItem>
+                <PaginationItem>
+                  <span className="px-3 py-2 text-sm text-muted-foreground">{page} / {totalPages}</span>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext href="#" onClick={(e)=>{ e.preventDefault(); setPage(p=>Math.min(totalPages, p+1)); }} />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
         </CardContent>
       </Card>
 
