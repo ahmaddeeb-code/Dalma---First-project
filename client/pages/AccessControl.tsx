@@ -88,7 +88,7 @@ export default function AccessControl() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>الاسم</TableHead>
-                    <TableHead>البريد الإلكتروني</TableHead>
+                    <TableHead>البريد الإلكتر��ني</TableHead>
                     <TableHead>الأدوار</TableHead>
                     <TableHead>الصلاحيات الفعلية</TableHead>
                     <TableHead className="w-[120px]">إجراءات</TableHead>
@@ -244,7 +244,7 @@ export default function AccessControl() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>الصلاحيات</CardTitle>
+                <CardTitle>الصلاح��ات</CardTitle>
                 <CardDescription>
                   Atomic permissions assigned to roles or directly to users.
                 </CardDescription>
@@ -451,7 +451,7 @@ function UserDialog({
         </div>
         <DialogFooter>
           <Button onClick={save} disabled={!name.trim() || !email.trim()}>
-            Save
+            حفظ
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -540,7 +540,7 @@ function RoleDialog({
         </div>
         <DialogFooter>
           <Button onClick={save} disabled={!name.trim()}>
-            Save
+            حفظ
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -621,7 +621,7 @@ function PrivilegeDialog({
         </div>
         <DialogFooter>
           <Button onClick={save} disabled={!name.trim()}>
-            Save
+            حفظ
           </Button>
         </DialogFooter>
       </DialogContent>
