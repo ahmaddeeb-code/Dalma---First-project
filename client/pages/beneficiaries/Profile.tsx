@@ -53,6 +53,10 @@ import {
   archiveBeneficiaries,
 } from "@/store/beneficiaries";
 
+import { getCurrentUser, getCurrentUserId } from "@/store/auth";
+import { effectivePrivileges, loadACL } from "@/store/acl";
+import { toast } from "sonner";
+
 function useBeneficiary(id: string | undefined) {
   return useSyncExternalStore(
     (cb) => subscribeBeneficiaries(cb),
@@ -254,7 +258,7 @@ export default function BeneficiaryProfile() {
                 </div>
                 <div className="text-sm">
                   <span className="text-muted-foreground">
-                    {ar ? "��اتف ولي الأمر" : "Guardian Phone"}:
+                    {ar ? "هاتف ولي الأمر" : "Guardian Phone"}:
                   </span>{" "}
                   {b.guardian.phone}
                 </div>
