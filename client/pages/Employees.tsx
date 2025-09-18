@@ -30,7 +30,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { getLocale } from "@/i18n";
+import { getLocale, t } from "@/i18n";
 import {
   User,
   Role,
@@ -100,18 +100,12 @@ export default function Employees() {
     <div className="space-y-6">
       <div className="flex items-end justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            {ar ? "إدارة الموظفين" : "Employee Management"}
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            {ar
-              ? "إضافة الموظفين وتعيين الأدوار والصلاحيات (مثل الأطباء والمعالجين)"
-              : "Add employees and assign roles & privileges (e.g., Doctors, Therapists)"}
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight">{t("pages.employees.title")}</h1>
+          <p className="text-muted-foreground mt-1">{t("pages.employees.desc")}</p>
         </div>
         {canManage && (
           <Button onClick={() => setAddOpen(true)}>
-            <Plus className="h-4 w-4 ml-1" /> {ar ? "إضافة موظف" : "Add Employee"}
+            <Plus className="h-4 w-4 ml-1" /> {t("pages.employees.addEmployee")}
           </Button>
         )}
       </div>
@@ -119,19 +113,19 @@ export default function Employees() {
       <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{ar ? "إجمالي" : "Total"}</CardDescription>
+            <CardDescription>{t("common.total")}</CardDescription>
             <CardTitle className="text-2xl">{total}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{ar ? "الأطباء" : "Doctors"}</CardDescription>
+            <CardDescription>{t("common.doctors")}</CardDescription>
             <CardTitle className="text-2xl">{doctors}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{ar ? "المعالجون" : "Therapists"}</CardDescription>
+            <CardDescription>{t("common.therapists")}</CardDescription>
             <CardTitle className="text-2xl">{therapists}</CardTitle>
           </CardHeader>
         </Card>
@@ -141,22 +135,22 @@ export default function Employees() {
         <CardHeader className="flex items-center justify-between gap-4">
           <div>
             <CardTitle className="flex items-center gap-2">
-              <Filter className="h-5 w-5" /> {ar ? "الفلاتر" : "Filters"}
+              <Filter className="h-5 w-5" /> {t("common.filters")}
             </CardTitle>
             <CardDescription>
-              {ar ? "بحث وتصنيف حسب الدور" : "Search and filter by role"}
+              {t("common.search")}
             </CardDescription>
           </div>
           {!canManage && (
             <Badge variant="secondary" className="text-xs">
               <ShieldCheck className="h-3 w-3 ml-1" />
-              {ar ? "صلاحية القراءة فقط" : "Read-only access"}
+              {t("common.readOnly")}
             </Badge>
           )}
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="md:col-span-2">
-            <Label>{ar ? "بحث" : "Search"}</Label>
+            <Label>{t("common.search")}</Label>
             <div className="relative">
               <Search
                 className="absolute top-2.5 text-muted-foreground"
@@ -166,18 +160,18 @@ export default function Employees() {
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 className={ar ? "pr-8" : "pl-8"}
-                placeholder={ar ? "اسم، بريد، قسم..." : "Name, email, department..."}
+                placeholder={t("pages.employees.filters.searchPlaceholder")}
               />
             </div>
           </div>
           <div>
-            <Label>{ar ? "الدور" : "Role"}</Label>
+            <Label>{t("common.role")}</Label>
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value as any)}
               className="w-full h-9 rounded-md border bg-background px-3 text-sm"
             >
-              <option value="all">{ar ? "الكل" : "All"}</option>
+              <option value="all">{t("common.all")}</option>
               {roles.map((r) => (
                 <option key={r.id} value={r.id}>
                   {r.name}
@@ -190,21 +184,21 @@ export default function Employees() {
 
       <Card>
         <CardHeader>
-          <CardTitle>{ar ? "الموظفون" : "Employees"}</CardTitle>
+          <CardTitle>{t("pages.employees.table.title")}</CardTitle>
           <CardDescription>
-            {ar ? "انقر تعديل لتحديث الأدوار والصلاحيات" : "Click edit to update roles and privileges"}
+            {t("pages.employees.table.desc")}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{ar ? "الاسم" : "Name"}</TableHead>
-                <TableHead>{ar ? "البريد" : "Email"}</TableHead>
-                <TableHead>{ar ? "القسم/المسمى" : "Department/Title"}</TableHead>
-                <TableHead>{ar ? "الأدوار" : "Roles"}</TableHead>
-                <TableHead>{ar ? "الصلاحيات" : "Privileges"}</TableHead>
-                {canManage && <TableHead className="text-center">{ar ? "إجراءات" : "Actions"}</TableHead>}
+                <TableHead>{t("common.name")}</TableHead>
+                <TableHead>{t("common.email")}</TableHead>
+                <TableHead>{t("common.departmentTitle")}</TableHead>
+                <TableHead>{t("common.roles")}</TableHead>
+                <TableHead>{t("common.privileges")}</TableHead>
+                {canManage && <TableHead className="text-center">{t("common.actions")}</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -241,7 +235,7 @@ export default function Employees() {
                     <TableCell className="text-center">
                       <div className="flex items-center justify-center gap-2">
                         <Button size="sm" variant="secondary" onClick={() => setEditing(u)}>
-                          {ar ? "تعديل" : "Edit"}
+                          {t("common.edit")}
                         </Button>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
@@ -251,24 +245,20 @@ export default function Employees() {
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                {ar ? "حذف الموظف؟" : "Delete employee?"}
-                              </AlertDialogTitle>
+                              <AlertDialogTitle>{t("pages.employees.confirmDeleteTitle")}</AlertDialogTitle>
                               <AlertDialogDescription>
-                                {ar
-                                  ? "سيتم حذف هذا المستخدم من النظام."
-                                  : "This user will be removed from the system."}
+                                {t("pages.employees.confirmDeleteMsg")}
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                              <AlertDialogCancel>{ar ? "إلغاء" : "Cancel"}</AlertDialogCancel>
+                              <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={() => {
                                   removeUser(u.id);
-                                  toast.success(ar ? "تم الحذف" : "Deleted");
+                                  toast.success(t("pages.employees.deleted"));
                                 }}
                               >
-                                {ar ? "حذف" : "Delete"}
+                                {t("common.delete")}
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
