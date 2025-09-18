@@ -154,23 +154,28 @@ const seed: ACLState = {
 };
 
 export function loadACL(): ACLState {
+  if (cache) return cache;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
-      saveACL(seed);
-      return seed;
+      cache = seed;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(seed));
+      return cache;
     }
     const parsed = JSON.parse(raw) as ACLState;
     if (!parsed.users || !parsed.roles || !parsed.privileges)
       throw new Error("Invalid ACL data");
-    return parsed;
+    cache = parsed;
+    return cache;
   } catch {
-    saveACL(seed);
-    return seed;
+    cache = seed;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(seed));
+    return cache;
   }
 }
 
 export function saveACL(state: ACLState) {
+  cache = state;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   notify();
 }
@@ -225,13 +230,19 @@ export function getUserById(id: string) {
 }
 export function upsertUser(user: User) {
   const state = loadACL();
-  state.users = upsert(state.users, user);
-  saveACL(state);
+  const next: ACLState = {
+    ...state,
+    users: upsert(state.users, user),
+  };
+  saveACL(next);
 }
 export function removeUser(id: string) {
   const state = loadACL();
-  state.users = removeById(state.users, id);
-  saveACL(state);
+  const next: ACLState = {
+    ...state,
+    users: removeById(state.users, id),
+  };
+  saveACL(next);
 }
 export function assignRole(userId: string, roleId: string, add: boolean) {
   const u = getUserById(userId);
