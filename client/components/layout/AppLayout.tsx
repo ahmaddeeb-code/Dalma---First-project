@@ -218,7 +218,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="secondary">
+                    <Button variant="secondary" className="rounded-lg">
                       <UserCircle2 className="ml-2" /> {user.name}
                     </Button>
                   </DropdownMenuTrigger>
@@ -244,7 +244,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               ) : (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="secondary">
+                    <Button variant="secondary" className="rounded-lg">
                       <UserCircle2 className="ml-2" /> {t("header.signIn")}
                     </Button>
                   </DropdownMenuTrigger>
