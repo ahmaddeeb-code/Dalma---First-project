@@ -182,7 +182,7 @@ export default function BeneficiaryProfile() {
                 </span>{" "}
                 {b.care.assignedDoctor || (ar ? "غير محدد" : "Unassigned")} ·{" "}
                 <span className="text-muted-foreground">
-                  {ar ? "المعالج" : "Therapist"}:
+                  {ar ? "الم��الج" : "Therapist"}:
                 </span>{" "}
                 {b.care.assignedTherapist || (ar ? "غير محدد" : "Unassigned")}
               </div>
@@ -403,6 +403,15 @@ export default function BeneficiaryProfile() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="text-sm flex items-center gap-2 flex-wrap">
+                <span className="text-muted-foreground">{ar ? "الطبيب" : "Doctor"}:</span> {edit ? (
+                  <Input className="h-8 w-48" defaultValue={b.care.assignedDoctor} onChange={(e)=> (b.care.assignedDoctor = e.target.value)} />
+                ) : (b.care.assignedDoctor || (ar?"غير محدد":"Unassigned"))}
+                <span>·</span>
+                <span className="text-muted-foreground">{ar ? "المعالج" : "Therapist"}:</span> {edit ? (
+                  <Input className="h-8 w-48" defaultValue={b.care.assignedTherapist} onChange={(e)=> (b.care.assignedTherapist = e.target.value)} />
+                ) : (b.care.assignedTherapist || (ar?"غير محدد":"Unassigned"))}
+              </div>
               <div>
                 <div className="font-medium mb-2">
                   {ar ? "الأهداف" : "Goals"}
