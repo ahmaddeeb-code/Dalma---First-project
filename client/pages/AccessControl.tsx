@@ -43,6 +43,7 @@ import {
 import { Pencil, Plus, Trash2 } from "lucide-react";
 
 export default function AccessControl() {
+  const ar = document.documentElement.getAttribute("dir") === "rtl";
   const [state, setState] = useState<ACLState>(() => loadACL());
   useEffect(() => saveACL(state), [state]);
 
