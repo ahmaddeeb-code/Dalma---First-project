@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { useMemo, useSyncExternalStore } from "react";
+import { useMemo, useSyncExternalStore, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -86,7 +86,7 @@ export default function BeneficiaryProfile() {
         </p>
         <Button asChild>
           <Link to="/beneficiaries">
-            {ar ? "عودة إلى القائمة" : "Back to list"}
+            {ar ? "عودة إ��ى القائمة" : "Back to list"}
           </Link>
         </Button>
       </div>
@@ -402,7 +402,7 @@ export default function BeneficiaryProfile() {
           <Card>
             <CardHeader>
               <CardTitle>
-                {ar ? "التعليم والأنشطة" : "Education & Activities"}
+                {ar ? "التعل��م والأنشطة" : "Education & Activities"}
               </CardTitle>
               <CardDescription>
                 {ar
