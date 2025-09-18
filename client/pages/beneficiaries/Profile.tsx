@@ -191,6 +191,55 @@ export default function BeneficiaryProfile() {
         </CardContent>
       </Card>
 
+      {canEdit && (
+        <Card>
+          <CardContent className="py-4 flex flex-wrap items-center gap-2">
+            {!edit ? (
+              <Button size="sm" variant="outline" onClick={() => setEdit(true)}><Edit3 className="h-4 w-4 ml-1" /> {ar?"تعديل":"Edit"}</Button>
+            ) : (
+              <>
+                <Button size="sm" onClick={() => { if (!b) return; updateBeneficiary(b.id, { ...b }, getCurrentUserId() || undefined, "inline_update"); setEdit(false); toast.success(ar?"تم الحفظ":"Saved"); }}><Save className="h-4 w-4 ml-1" /> {ar?"حفظ":"Save"}</Button>
+                <Button size="sm" variant="ghost" onClick={() => { window.location.reload(); }}><X className="h-4 w-4 ml-1" /> {ar?"إلغاء":"Cancel"}</Button>
+              </>
+            )}
+            <label className="cursor-pointer inline-flex items-center gap-1 text-sm bg-secondary text-secondary-foreground rounded-md px-2 py-1">
+              <UploadCloud className="h-4 w-4" /> {ar?"صورة الملف":"Profile Photo"}
+              <input type="file" accept="image/*" className="hidden" onChange={async (e) => { const f = e.target.files?.[0]; if (!f || !b) return; const reader = new FileReader(); reader.onload = () => { updateBeneficiary(b.id, { photoUrl: reader.result as string }, getCurrentUserId() || undefined, "upload_photo"); toast.success(ar?"تم تحديث الصورة":"Photo updated"); }; reader.readAsDataURL(f); }} />
+            </label>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button size="sm" variant="secondary"><Archive className="h-4 w-4 ml-1" /> {b.archived ? (ar?"إلغاء الأرشفة":"Unarchive") : (ar?"أرشفة":"Archive")}</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>{ar?"تأكيد":"Confirm"}</AlertDialogTitle>
+                  <AlertDialogDescription>{b.archived ? (ar?"هل تريد إلغاء أرشفة هذا الملف؟":"Unarchive this profile?") : (ar?"هل تريد أرشفة هذا الملف؟":"Archive this profile?")}</AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>{ar?"إلغاء":"Cancel"}</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => { if (!b) return; archiveBeneficiaries([b.id], !b.archived, getCurrentUserId() || undefined); toast.success(ar?"تم التحديث":"Updated"); }}>{ar?"تأكيد":"Confirm"}</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button size="sm" variant="destructive"><Trash2 className="h-4 w-4 ml-1" /> {ar?"حذف":"Delete"}</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>{ar?"حذف نهائي":"Permanent Delete"}</AlertDialogTitle>
+                  <AlertDialogDescription>{ar?"سيتم حذف هذا المستفيد نهائياً. لا يمكن التراجع.":"This will permanently delete this beneficiary. This action cannot be undone."}</AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>{ar?"إلغاء":"Cancel"}</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => { if (!b) return; removeBeneficiary(b.id); toast.success(ar?"تم الحذف":"Deleted"); window.history.back(); }}>{ar?"حذف":"Delete"}</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </CardContent>
+        </Card>
+      )}
+
       <Tabs defaultValue="personal" className="w-full">
         <TabsList className="flex flex-wrap gap-2">
           <TabsTrigger value="personal">
