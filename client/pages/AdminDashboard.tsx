@@ -27,6 +27,9 @@ export default function AdminDashboard() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button asChild>
+            <a href="/admin/access-control"><Users className="mr-2" /> Access Control</a>
+          </Button>
           <Button>
             <FileChartColumn className="mr-2" /> Export Report
           </Button>
