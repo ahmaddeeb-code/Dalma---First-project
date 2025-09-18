@@ -191,17 +191,20 @@ export default function BeneficiaryProfile() {
                     b.gender === "male" ? (ar?"ذكر":"Male") : (ar?"أنثى":"Female")
                   )}
                 </span>
-                <span>
-                  {ar ? "الإعاقة" : "Disability"}:{" "}
-                  {
-                    {
-                      physical: ar ? "حركية" : "Physical",
-                      intellectual: ar ? "ذهنية" : "Intellectual",
-                      sensory: ar ? "حسية" : "Sensory",
-                      autism: ar ? "توحد" : "Autism",
-                      multiple: ar ? "متعددة" : "Multiple",
-                    }[b.medical.disabilityType]
-                  }
+                <span className="flex items-center gap-2">
+                  <span>{ar ? "الإعاقة" : "Disability"}:</span>
+                  {edit ? (
+                    <Select defaultValue={b.medical.disabilityType} onValueChange={(v)=> (b.medical.disabilityType = v)}>
+                      <SelectTrigger className="h-8 w-40"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {settings.disabilityCategories.map((d)=> (
+                          <SelectItem key={d} value={d}>{d}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    b.medical.disabilityType
+                  )}
                 </span>
               </div>
               <div className="text-sm mt-2">
