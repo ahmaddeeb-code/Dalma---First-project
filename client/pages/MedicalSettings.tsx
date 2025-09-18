@@ -1,4 +1,4 @@
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { getLocale, t } from "@/i18n";
 import { effectivePrivileges, loadACL } from "@/store/acl";
 import {
@@ -105,6 +106,7 @@ export default function MedicalSettings() {
 function TherapyTypesCard({ state, canManage }: { state: MedicalSettingsState; canManage: boolean }) {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<TherapySessionType | null>(null);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
   return (
     <Card>
       <CardHeader className="flex items-center justify-between">
@@ -140,7 +142,7 @@ function TherapyTypesCard({ state, canManage }: { state: MedicalSettingsState; c
                       <Button size="sm" variant="secondary" onClick={() => { setEditing(t0); setOpen(true); }}>
                         <Pencil className="ml-1 h-4 w-4" /> {t("common.edit")}
                       </Button>
-                      <Button size="sm" variant="destructive" onClick={() => { removeTherapyType(t0.id); toast.success(t("pages.medical.saved")); }}>
+                      <Button size="sm" variant="destructive" onClick={() => setConfirmId(t0.id)}>
                         <Trash2 className="ml-1 h-4 w-4" /> {t("common.delete")}
                       </Button>
                     </>
@@ -152,6 +154,26 @@ function TherapyTypesCard({ state, canManage }: { state: MedicalSettingsState; c
         </Table>
       </CardContent>
       <TherapyDialog open={open} onOpenChange={(v) => { if (!v) setEditing(null); setOpen(v); }} editing={editing} />
+      <AlertDialog open={!!confirmId}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("common.delete")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("pages.medical.therapy.title")} — {t("common.delete")}?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setConfirmId(null)}>{t("common.cancel")}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => {
+              if (confirmId) {
+                removeTherapyType(confirmId);
+                setConfirmId(null);
+                toast.success(t("pages.medical.saved"));
+              }
+            }}>{t("common.delete")}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }
@@ -161,6 +183,12 @@ function TherapyDialog({ open, onOpenChange, editing }: { open: boolean; onOpenC
   const [description, setDescription] = useState(editing?.description || "");
   const [durationMin, setDurationMin] = useState(String(editing?.durationMin ?? 45));
   const [freq, setFreq] = useState<"daily" | "weekly" | "monthly">((editing?.defaultFrequency as any) || "weekly");
+  useEffect(() => {
+    setName(editing?.name || "");
+    setDescription(editing?.description || "");
+    setDurationMin(String(editing?.durationMin ?? 45));
+    setFreq((editing?.defaultFrequency as any) || "weekly");
+  }, [editing, open]);
   const valid = name.trim().length >= 2 && Number(durationMin) > 0;
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
