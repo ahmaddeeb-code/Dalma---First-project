@@ -1,4 +1,4 @@
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -40,10 +40,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { getLocale } from "@/i18n";
-import { getCurrentUser, getCurrentUserId } from "@/store/auth";
+import { getCurrentUser } from "@/store/auth";
 import { effectivePrivileges, loadACL } from "@/store/acl";
 import AddEditBeneficiaryDialog from "@/pages/beneficiaries/AddEditDialog";
-import { archiveBeneficiaries, removeBeneficiary } from "@/store/beneficiaries";
+import { archiveBeneficiaries } from "@/store/beneficiaries";
 import { toast } from "sonner";
 import {
   BadgeCheck,
@@ -56,6 +56,12 @@ import {
   UserSquare2,
   ArrowUpDown,
   Download,
+  Users,
+  Activity,
+  GraduationCap,
+  Stethoscope,
+  Save,
+  Trash2,
 } from "lucide-react";
 import {
   Beneficiary,
@@ -69,7 +75,6 @@ import {
 } from "@/store/beneficiaries";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -83,7 +88,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { exportAll, exportToCSV, type ColumnDef } from "@/lib/export";
+import { exportAll, type ColumnDef } from "@/lib/export";
 
 function useBeneficiaries() {
   return useSyncExternalStore(
@@ -124,7 +129,7 @@ function disabilityLabel(d: DisabilityType, ar: boolean) {
         autism: "توحد",
         multiple: "متعددة",
       } as const
-    )[d];
+    )[d as keyof any] || d;
   }
   return (
     {
@@ -134,8 +139,23 @@ function disabilityLabel(d: DisabilityType, ar: boolean) {
       autism: "Autism",
       multiple: "Multiple",
     } as const
-  )[d];
+  )[d as keyof any] || d;
 }
+
+type FilterState = {
+  searchText: string;
+  disability: DisabilityType | "all";
+  status: BeneficiaryStatus | "all";
+  program: string | "all";
+  therapist: string | "all";
+  ageMin?: number;
+  ageMax?: number;
+  sortBy: "name" | "age" | "status";
+  sortDir: "asc" | "desc";
+  pageSize: number;
+};
+
+const SAVED_VIEWS_KEY = "dalma_saved_beneficiary_views_v1";
 
 export default function Beneficiaries() {
   const data = useBeneficiaries();
@@ -218,6 +238,106 @@ export default function Beneficiaries() {
 
   const alerts = computeAlerts();
 
+  // saved views
+  type SavedView = { id: string; name: string; state: FilterState };
+  const [saved, setSaved] = useState<SavedView[]>([]);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(SAVED_VIEWS_KEY);
+      setSaved(raw ? (JSON.parse(raw) as SavedView[]) : []);
+    } catch {
+      setSaved([]);
+    }
+  }, []);
+  function saveViews(next: SavedView[]) {
+    setSaved(next);
+    localStorage.setItem(SAVED_VIEWS_KEY, JSON.stringify(next));
+  }
+  function currentState(): FilterState {
+    return {
+      searchText,
+      disability,
+      status,
+      program,
+      therapist,
+      ageMin: ageMin ? Number(ageMin) : undefined,
+      ageMax: ageMax ? Number(ageMax) : undefined,
+      sortBy,
+      sortDir,
+      pageSize,
+    };
+  }
+  function applyState(s: FilterState) {
+    setSearchText(s.searchText || "");
+    setDisability(s.disability || "all");
+    setStatus(s.status || "all");
+    setProgram(s.program || "all");
+    setTherapist(s.therapist || "all");
+    setAgeMin(s.ageMin != null ? String(s.ageMin) : "");
+    setAgeMax(s.ageMax != null ? String(s.ageMax) : "");
+    setSortBy(s.sortBy);
+    setSortDir(s.sortDir);
+    setPageSize(s.pageSize || 10);
+    setPage(1);
+  }
+  function clearAll() {
+    setSearchText("");
+    setDisability("all");
+    setStatus("all");
+    setProgram("all");
+    setTherapist("all");
+    setAgeMin("");
+    setAgeMax("");
+    setSortBy("name");
+    setSortDir("asc");
+    setPageSize(10);
+    setPage(1);
+  }
+
+  const activeFilterChips: string[] = [];
+  if (searchText) activeFilterChips.push(`${ar ? "بحث" : "Search"}: ${searchText}`);
+  if (disability !== "all") activeFilterChips.push(`${ar ? "إعاقة" : "Disability"}: ${disabilityLabel(disability, ar)}`);
+  if (status !== "all") activeFilterChips.push(`${ar ? "حالة" : "Status"}: ${status}`);
+  if (program !== "all") activeFilterChips.push(`${ar ? "برنامج" : "Program"}: ${program}`);
+  if (therapist !== "all") activeFilterChips.push(`${ar ? "معالج" : "Therapist"}: ${therapist}`);
+  if (ageMin) activeFilterChips.push(`${ar ? "عمر ≥" : "Age ≥"} ${ageMin}`);
+  if (ageMax) activeFilterChips.push(`${ar ? "عمر ≤" : "Age ≤"} ${ageMax}`);
+
+  // widgets data
+  const upcoming = useMemo(() => {
+    const out: { id: string; when: Date; who: string; type: string }[] = [];
+    for (const b of data) {
+      for (const ap of b.care.appointments) {
+        const d = new Date(ap.date);
+        if (d > new Date()) out.push({ id: b.id, when: d, who: b.name, type: ap.type });
+      }
+    }
+    return out.sort((a, b) => +a.when - +b.when).slice(0, 6);
+  }, [data]);
+  const expiringDocs = useMemo(() => {
+    const now = new Date();
+    const soon = new Date();
+    soon.setDate(soon.getDate() + 30);
+    const out: { who: string; title: string; when: Date }[] = [];
+    for (const b of data) {
+      for (const d of b.documents) {
+        if (!d.expiresAt) continue;
+        const dt = new Date(d.expiresAt);
+        if (dt <= soon && dt >= now) out.push({ who: b.name, title: d.title, when: dt });
+      }
+    }
+    return out.sort((a, b) => +a.when - +b.when).slice(0, 6);
+  }, [data]);
+  const therapistLoad = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const b of data) {
+      if (b.care.assignedTherapist) {
+        map.set(b.care.assignedTherapist, (map.get(b.care.assignedTherapist) || 0) + 1);
+      }
+    }
+    return Array.from(map.entries()).sort((a, b) => b[1] - a[1]).slice(0, 6);
+  }, [data]);
+
   return (
     <div className="space-y-6">
       <div className="flex items-end justify-between gap-4 flex-wrap">
@@ -234,35 +354,28 @@ export default function Beneficiaries() {
       </div>
 
       <div className="grid gap-4 grid-cols-1 md:grid-cols-4">
-        <Card>
+        <Card className="bg-gradient-to-br from-primary/10 to-primary/5">
           <CardHeader className="pb-2">
-            <CardDescription>{ar ? "إجمالي" : "Total"}</CardDescription>
-            <CardTitle className="text-2xl">{total}</CardTitle>
+            <CardDescription className="flex items-center gap-2"><Users className="h-4 w-4" />{ar ? "إجمالي" : "Total"}</CardDescription>
+            <CardTitle className="text-3xl">{total}</CardTitle>
           </CardHeader>
         </Card>
-        <Card>
+        <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5">
           <CardHeader className="pb-2">
-            <CardDescription>{ar ? "نشطون" : "Active"}</CardDescription>
-            <CardTitle className="text-2xl flex items-center gap-2">
-              {active}{" "}
-              <Badge className="bg-emerald-600 text-white">
-                {ar ? "نشط" : "Active"}
-              </Badge>
-            </CardTitle>
+            <CardDescription className="flex items-center gap-2"><Activity className="h-4 w-4" />{ar ? "نشطون" : "Active"}</CardDescription>
+            <CardTitle className="text-3xl">{active}</CardTitle>
           </CardHeader>
         </Card>
-        <Card>
+        <Card className="bg-gradient-to-br from-blue-500/10 to-blue-500/5">
           <CardHeader className="pb-2">
-            <CardDescription>
-              {ar ? "تحت العلاج" : "Under Treatment"}
-            </CardDescription>
-            <CardTitle className="text-2xl">{under}</CardTitle>
+            <CardDescription className="flex items-center gap-2"><Stethoscope className="h-4 w-4" />{ar ? "تحت العلاج" : "Under Treatment"}</CardDescription>
+            <CardTitle className="text-3xl">{under}</CardTitle>
           </CardHeader>
         </Card>
-        <Card>
+        <Card className="bg-gradient-to-br from-gray-500/10 to-gray-500/5">
           <CardHeader className="pb-2">
-            <CardDescription>{ar ? "متخرجون" : "Graduated"}</CardDescription>
-            <CardTitle className="text-2xl">{grads}</CardTitle>
+            <CardDescription className="flex items-center gap-2"><GraduationCap className="h-4 w-4" />{ar ? "متخرجون" : "Graduated"}</CardDescription>
+            <CardTitle className="text-3xl">{grads}</CardTitle>
           </CardHeader>
         </Card>
       </div>
@@ -280,7 +393,7 @@ export default function Beneficiaries() {
             </CardDescription>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            <div className="flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-2">
               <Label className="text-xs">
                 {ar ? "حجم الصفحة" : "Page size"}
               </Label>
@@ -302,8 +415,7 @@ export default function Beneficiaries() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline">
-                  <Download className="h-4 w-4 ml-1" />{" "}
-                  {ar ? "تصدير" : "Export"}
+                  <Download className="h-4 w-4 ml-1" /> {ar ? "تصدير" : "Export"}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -313,32 +425,16 @@ export default function Beneficiaries() {
                     key={fmt}
                     onClick={() => {
                       const cols: ColumnDef<Beneficiary>[] = [
-                        {
-                          header: ar ? "الاسم" : "Name",
-                          accessor: (r) => r.name,
-                        },
-                        {
-                          header: ar ? "العمر" : "Age",
-                          accessor: (r) => getAge(r),
-                        },
-                        {
-                          header: ar ? "الإعاقة" : "Disability",
-                          accessor: (r) => r.medical.disabilityType,
-                        },
-                        {
-                          header: ar ? "المعالج" : "Therapist",
-                          accessor: (r) => r.care.assignedTherapist || "",
-                        },
-                        {
-                          header: ar ? "الحالة" : "Status",
-                          accessor: (r) => r.status,
-                        },
+                        { header: ar ? "الاسم" : "Name", accessor: (r) => r.name },
+                        { header: ar ? "العمر" : "Age", accessor: (r) => getAge(r) },
+                        { header: ar ? "الإعاقة" : "Disability", accessor: (r) => r.medical.disabilityType },
+                        { header: ar ? "المعالج" : "Therapist", accessor: (r) => r.care.assignedTherapist || "" },
+                        { header: ar ? "الحالة" : "Status", accessor: (r) => r.status },
                       ];
                       exportAll(filtered, cols, fmt, `beneficiaries_${fmt}`);
                     }}
                   >
-                    {ar ? "المجموعة المفلترة" : "Filtered"} –{" "}
-                    {fmt.toUpperCase()}
+                    {ar ? "المجموعة المفلترة" : "Filtered"} – {fmt.toUpperCase()}
                   </DropdownMenuItem>
                 ))}
                 <DropdownMenuSeparator />
@@ -347,36 +443,66 @@ export default function Beneficiaries() {
                     key={fmt}
                     onClick={() => {
                       const cols: ColumnDef<Beneficiary>[] = [
-                        {
-                          header: ar ? "الاسم" : "Name",
-                          accessor: (r) => r.name,
-                        },
-                        {
-                          header: ar ? "العمر" : "Age",
-                          accessor: (r) => getAge(r),
-                        },
-                        {
-                          header: ar ? "الإعاقة" : "Disability",
-                          accessor: (r) => r.medical.disabilityType,
-                        },
-                        {
-                          header: ar ? "المعالج" : "Therapist",
-                          accessor: (r) => r.care.assignedTherapist || "",
-                        },
-                        {
-                          header: ar ? "الحالة" : "Status",
-                          accessor: (r) => r.status,
-                        },
+                        { header: ar ? "الاسم" : "Name", accessor: (r) => r.name },
+                        { header: ar ? "العمر" : "Age", accessor: (r) => getAge(r) },
+                        { header: ar ? "الإعاقة" : "Disability", accessor: (r) => r.medical.disabilityType },
+                        { header: ar ? "المعالج" : "Therapist", accessor: (r) => r.care.assignedTherapist || "" },
+                        { header: ar ? "الحالة" : "Status", accessor: (r) => r.status },
                       ];
                       exportAll(data, cols, fmt, `beneficiaries_${fmt}`);
                     }}
                   >
-                    {ar ? "كامل البيانات" : "Full dataset"} –{" "}
-                    {fmt.toUpperCase()}
+                    {ar ? "كامل البيانات" : "Full dataset"} – {fmt.toUpperCase()}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="secondary">
+                  <Save className="h-4 w-4" /> {ar ? "العروض المحفوظة" : "Saved views"}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-64">
+                <DropdownMenuItem
+                  onClick={() => {
+                    const name = window.prompt(ar ? "اسم العرض" : "View name");
+                    if (!name) return;
+                    const view: SavedView = {
+                      id: Math.random().toString(36).slice(2),
+                      name,
+                      state: currentState(),
+                    };
+                    saveViews([view, ...saved]);
+                    toast.success(ar ? "تم الحفظ" : "Saved");
+                  }}
+                >
+                  {ar ? "حفظ العرض الحالي" : "Save current view"}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                {saved.length === 0 && (
+                  <DropdownMenuItem disabled>
+                    {ar ? "لا توجد عروض محفوظة" : "No saved views"}
+                  </DropdownMenuItem>
+                )}
+                {saved.map((v) => (
+                  <div key={v.id} className="px-2 py-1.5 text-sm flex items-center justify-between gap-2">
+                    <button className="hover:underline" onClick={() => applyState(v.state)}>{v.name}</button>
+                    <button
+                      className="text-destructive hover:underline"
+                      onClick={() => {
+                        const next = saved.filter((s) => s.id !== v.id);
+                        saveViews(next);
+                      }}
+                      title={ar ? "حذف" : "Delete"}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button variant="ghost" onClick={clearAll}>{ar ? "مسح الكل" : "Clear all"}</Button>
             {canEdit && (
               <Button onClick={() => setAddOpen(true)}>
                 {ar ? "إضافة مستفيد" : "Add Beneficiary"}
@@ -402,119 +528,61 @@ export default function Beneficiaries() {
               />
             </div>
           </div>
-          <div>
-            <Label>{ar ? "نوع الإعاقة" : "Disability"}</Label>
-            <Select
-              value={disability}
-              onValueChange={(v) => setDisability(v as any)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={ar ? "الكل" : "All"} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{ar ? "الكل" : "All"}</SelectItem>
-                <SelectItem value="physical">
-                  {disabilityLabel("physical", ar)}
-                </SelectItem>
-                <SelectItem value="intellectual">
-                  {disabilityLabel("intellectual", ar)}
-                </SelectItem>
-                <SelectItem value="sensory">
-                  {disabilityLabel("sensory", ar)}
-                </SelectItem>
-                <SelectItem value="autism">
-                  {disabilityLabel("autism", ar)}
-                </SelectItem>
-                <SelectItem value="multiple">
-                  {disabilityLabel("multiple", ar)}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>{ar ? "الحالة" : "Status"}</Label>
-            <Select value={status} onValueChange={(v) => setStatus(v as any)}>
-              <SelectTrigger>
-                <SelectValue placeholder={ar ? "الكل" : "All"} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{ar ? "الكل" : "All"}</SelectItem>
-                <SelectItem value="active">{ar ? "نشط" : "Active"}</SelectItem>
-                <SelectItem value="under_treatment">
-                  {ar ? "تحت العلاج" : "Under treatment"}
-                </SelectItem>
-                <SelectItem value="graduated">
-                  {ar ? "متخرج" : "Graduated"}
-                </SelectItem>
-                <SelectItem value="inactive">
-                  {ar ? "غير نشط" : "Inactive"}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>{ar ? "البرنامج" : "Program"}</Label>
-            <Select value={program} onValueChange={(v) => setProgram(v as any)}>
-              <SelectTrigger>
-                <SelectValue placeholder={ar ? "الكل" : "All"} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{ar ? "الكل" : "All"}</SelectItem>
-                {programs.map((p) => (
-                  <SelectItem key={p} value={p}>
-                    {p}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>{ar ? "المع��لج" : "Therapist"}</Label>
-            <Select
-              value={therapist}
-              onValueChange={(v) => setTherapist(v as any)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={ar ? "الكل" : "All"} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{ar ? "الكل" : "All"}</SelectItem>
-                {therapists.map((t) => (
-                  <SelectItem key={t} value={t}>
-                    {t}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>{ar ? "ترتيب حسب" : "Sort by"}</Label>
-            <Select value={sortBy} onValueChange={(v) => setSortBy(v as any)}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="name">{ar ? "الاسم" : "Name"}</SelectItem>
-                <SelectItem value="age">{ar ? "العمر" : "Age"}</SelectItem>
-                <SelectItem value="status">
-                  {ar ? "الحالة" : "Status"}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label>{ar ? "الاتجاه" : "Direction"}</Label>
-            <Select value={sortDir} onValueChange={(v) => setSortDir(v as any)}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="asc">{ar ? "تصاعدي" : "Asc"}</SelectItem>
-                <SelectItem value="desc">{ar ? "تنازلي" : "Desc"}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="md:col-span-5 flex items-end gap-2 flex-wrap">
+            <div>
+              <Label>{ar ? "نوع الإعاقة" : "Disability"}</Label>
+              <Select
+                value={disability}
+                onValueChange={(v) => setDisability(v as any)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={ar ? "الكل" : "All"} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{ar ? "الكل" : "All"}</SelectItem>
+                  <SelectItem value="physical">{disabilityLabel("physical", ar)}</SelectItem>
+                  <SelectItem value="intellectual">{disabilityLabel("intellectual", ar)}</SelectItem>
+                  <SelectItem value="sensory">{disabilityLabel("sensory", ar)}</SelectItem>
+                  <SelectItem value="autism">{disabilityLabel("autism", ar)}</SelectItem>
+                  <SelectItem value="multiple">{disabilityLabel("multiple", ar)}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>{ar ? "البرنامج" : "Program"}</Label>
+              <Select value={program} onValueChange={(v) => setProgram(v as any)}>
+                <SelectTrigger>
+                  <SelectValue placeholder={ar ? "الكل" : "All"} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{ar ? "الكل" : "All"}</SelectItem>
+                  {programs.map((p) => (
+                    <SelectItem key={p} value={p}>
+                      {p}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>{ar ? "المعالج" : "Therapist"}</Label>
+              <Select
+                value={therapist}
+                onValueChange={(v) => setTherapist(v as any)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={ar ? "الكل" : "All"} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{ar ? "الكل" : "All"}</SelectItem>
+                  {therapists.map((t) => (
+                    <SelectItem key={t} value={t}>
+                      {t}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <div>
               <Label>{ar ? "العمر الأدنى" : "Min Age"}</Label>
               <Input
@@ -531,6 +599,62 @@ export default function Beneficiaries() {
                 onChange={(e) => setAgeMax(e.target.value)}
               />
             </div>
+            <div>
+              <Label>{ar ? "ترتيب حسب" : "Sort by"}</Label>
+              <Select value={sortBy} onValueChange={(v) => setSortBy(v as any)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="name">{ar ? "الاسم" : "Name"}</SelectItem>
+                  <SelectItem value="age">{ar ? "العمر" : "Age"}</SelectItem>
+                  <SelectItem value="status">{ar ? "الحالة" : "Status"}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>{ar ? "الاتجاه" : "Direction"}</Label>
+              <Select value={sortDir} onValueChange={(v) => setSortDir(v as any)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="asc">{ar ? "تصاعدي" : "Asc"}</SelectItem>
+                  <SelectItem value="desc">{ar ? "تنازلي" : "Desc"}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="md:col-span-7 flex items-center gap-2 flex-wrap">
+            <div className="text-sm text-muted-foreground">
+              {ar ? "فلاتر الحالة:" : "Status filters:"}
+            </div>
+            {([
+              { key: "all", label: ar ? "الكل" : "All" },
+              { key: "active", label: ar ? "نشط" : "Active" },
+              { key: "under_treatment", label: ar ? "تحت العلاج" : "Under" },
+              { key: "graduated", label: ar ? "متخرج" : "Graduated" },
+              { key: "inactive", label: ar ? "غير نشط" : "Inactive" },
+            ] as const).map((s) => (
+              <Button
+                key={s.key}
+                size="sm"
+                variant={status === s.key ? "default" : "outline"}
+                onClick={() => setStatus(s.key as any)}
+              >
+                {s.label}
+              </Button>
+            ))}
+            {activeFilterChips.length > 0 && (
+              <div className="ml-auto flex items-center gap-2 text-xs flex-wrap">
+                {activeFilterChips.map((c, i) => (
+                  <span key={i} className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-1">
+                    {c}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -597,13 +721,10 @@ export default function Beneficiaries() {
           )}
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <UserSquare2 className="h-5 w-5" />{" "}
-              {ar ? "المستفيدون" : "Beneficiaries"}
+              <UserSquare2 className="h-5 w-5" /> {ar ? "المستفيدون" : "Beneficiaries"}
             </CardTitle>
             <CardDescription>
-              {ar
-                ? "انقر على الاسم لفتح الملف"
-                : "Click a name to open profile"}
+              {ar ? "انقر على الاسم لفتح الملف" : "Click a name to open profile"}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -621,8 +742,7 @@ export default function Beneficiaries() {
                           onCheckedChange={(v) =>
                             setSelected((prev) => {
                               const ids = pageItems.map((b) => b.id);
-                              if (v)
-                                return Array.from(new Set([...prev, ...ids]));
+                              if (v) return Array.from(new Set([...prev, ...ids]));
                               return prev.filter((id) => !ids.includes(id));
                             })
                           }
@@ -634,15 +754,12 @@ export default function Beneficiaries() {
                       onClick={() => {
                         setSortBy("name");
                         setSortDir(
-                          sortBy === "name" && sortDir === "asc"
-                            ? "desc"
-                            : "asc",
+                          sortBy === "name" && sortDir === "asc" ? "desc" : "asc",
                         );
                       }}
                     >
                       <span className="inline-flex items-center gap-1">
-                        {ar ? "المستفيد" : "Beneficiary"}{" "}
-                        <ArrowUpDown className="h-3 w-3 opacity-60" />
+                        {ar ? "المستفيد" : "Beneficiary"} <ArrowUpDown className="h-3 w-3 opacity-60" />
                       </span>
                     </TableHead>
                     <TableHead
@@ -650,15 +767,12 @@ export default function Beneficiaries() {
                       onClick={() => {
                         setSortBy("age");
                         setSortDir(
-                          sortBy === "age" && sortDir === "asc"
-                            ? "desc"
-                            : "asc",
+                          sortBy === "age" && sortDir === "asc" ? "desc" : "asc",
                         );
                       }}
                     >
                       <span className="inline-flex items-center gap-1">
-                        {ar ? "العمر" : "Age"}{" "}
-                        <ArrowUpDown className="h-3 w-3 opacity-60" />
+                        {ar ? "العمر" : "Age"} <ArrowUpDown className="h-3 w-3 opacity-60" />
                       </span>
                     </TableHead>
                     <TableHead>{ar ? "الإعاقة" : "Disability"}</TableHead>
@@ -683,9 +797,7 @@ export default function Beneficiaries() {
                             checked={selected.includes(b.id)}
                             onCheckedChange={(v) =>
                               setSelected((prev) =>
-                                v
-                                  ? [...prev, b.id]
-                                  : prev.filter((x) => x !== b.id),
+                                v ? [...prev, b.id] : prev.filter((x) => x !== b.id),
                               )
                             }
                           />
@@ -700,10 +812,7 @@ export default function Beneficiaries() {
                           </Avatar>
                           <div>
                             <div className="font-medium">
-                              <Link
-                                to={`/beneficiaries/${b.id}`}
-                                className="hover:underline"
-                              >
+                              <Link to={`/beneficiaries/${b.id}`} className="hover:underline">
                                 {b.name}
                               </Link>
                             </div>
@@ -721,8 +830,7 @@ export default function Beneficiaries() {
                         {b.education.programs.join(", ")}
                       </TableCell>
                       <TableCell className="hidden md:table-cell">
-                        {b.care.assignedTherapist ||
-                          (ar ? "غير محدد" : "Unassigned")}
+                        {b.care.assignedTherapist || (ar ? "غير محدد" : "Unassigned")}
                       </TableCell>
                       <TableCell>{statusBadge(b.status)}</TableCell>
                       <TableCell className="text-center">
@@ -784,23 +892,15 @@ export default function Beneficiaries() {
             </CardHeader>
             <CardContent className="space-y-3">
               {alerts.missed.map((a) => (
-                <div
-                  key={a.text}
-                  className="flex items-center justify-between text-sm"
-                >
+                <div key={a.text} className="flex items-center justify-between text-sm">
                   <span className="flex items-center gap-2">
                     <CalendarClock className="h-4 w-4" /> {a.text}
                   </span>
-                  <Badge variant="secondary">
-                    {ar ? "جلسة فائتة" : "Missed"}
-                  </Badge>
+                  <Badge variant="secondary">{ar ? "جلسة فائتة" : "Missed"}</Badge>
                 </div>
               ))}
               {alerts.reviews.map((a) => (
-                <div
-                  key={a.text}
-                  className="flex items-center justify-between text-sm"
-                >
+                <div key={a.text} className="flex items-center justify-between text-sm">
                   <span className="flex items-center gap-2">
                     <BadgeCheck className="h-4 w-4" /> {a.text}
                   </span>
@@ -808,10 +908,7 @@ export default function Beneficiaries() {
                 </div>
               ))}
               {alerts.expiring.map((a) => (
-                <div
-                  key={a.text}
-                  className="flex items-center justify-between text-sm"
-                >
+                <div key={a.text} className="flex items-center justify-between text-sm">
                   <span className="flex items-center gap-2">
                     <FileWarning className="h-4 w-4" /> {a.text}
                   </span>
@@ -820,13 +917,74 @@ export default function Beneficiaries() {
                   </Badge>
                 </div>
               ))}
-              {alerts.missed.length +
-                alerts.reviews.length +
-                alerts.expiring.length ===
-                0 && (
-                <p className="text-sm text-muted-foreground">
-                  {ar ? "لا توجد تنبيهات" : "No alerts"}
-                </p>
+              {alerts.missed.length + alerts.reviews.length + alerts.expiring.length === 0 && (
+                <p className="text-sm text-muted-foreground">{ar ? "لا توجد تنبيهات" : "No alerts"}</p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CalendarClock className="h-5 w-5" /> {ar ? "مواعيد قادمة" : "Upcoming"}
+              </CardTitle>
+              <CardDescription>
+                {ar ? "أقرب 6 مواعيد" : "Next 6 appointments"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              {upcoming.map((u, i) => (
+                <div key={i} className="flex items-center justify-between">
+                  <span>{u.who} – {u.type}</span>
+                  <span className="text-muted-foreground">{u.when.toLocaleString()}</span>
+                </div>
+              ))}
+              {upcoming.length === 0 && (
+                <div className="text-muted-foreground">{ar ? "لا يوجد" : "None"}</div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileWarning className="h-5 w-5" /> {ar ? "مستندات على وشك الانتهاء" : "Expiring docs"}
+              </CardTitle>
+              <CardDescription>
+                {ar ? "خلال 30 يوماً" : "Within 30 days"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              {expiringDocs.map((d, i) => (
+                <div key={i} className="flex items-center justify-between">
+                  <span>{d.who} – {d.title}</span>
+                  <span className="text-muted-foreground">{d.when.toLocaleDateString()}</span>
+                </div>
+              ))}
+              {expiringDocs.length === 0 && (
+                <div className="text-muted-foreground">{ar ? "لا يوجد" : "None"}</div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Stethoscope className="h-5 w-5" /> {ar ? "عبء المعالجين" : "Therapist load"}
+              </CardTitle>
+              <CardDescription>
+                {ar ? "أكثر 6 معالجين" : "Top 6 therapists"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              {therapistLoad.map(([t, n]) => (
+                <div key={t} className="flex items-center justify-between">
+                  <span>{t}</span>
+                  <Badge variant="secondary">{n}</Badge>
+                </div>
+              ))}
+              {therapistLoad.length === 0 && (
+                <div className="text-muted-foreground">{ar ? "لا يوجد" : "None"}</div>
               )}
             </CardContent>
           </Card>
