@@ -14,6 +14,7 @@ import Placeholder from "./pages/_Placeholder";
 import Beneficiaries from "@/pages/Beneficiaries";
 import BeneficiaryProfile from "@/pages/beneficiaries/Profile";
 import Employees from "@/pages/Employees";
+import Translations from "@/pages/Translations";
 import LoginAdmin from "./pages/auth/LoginAdmin";
 import LoginStaff from "./pages/auth/LoginStaff";
 import LoginFamily from "./pages/auth/LoginFamily";
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/login/beneficiary" element={<LoginBeneficiary />} />
             <Route path="/beneficiaries" element={<Beneficiaries />} />
             <Route path="/beneficiaries/:id" element={<BeneficiaryProfile />} />
+            <Route path="/admin/translations" element={<Translations />} />
             <Route path="/employees" element={<Employees />} />
             <Route
               path="/family"
