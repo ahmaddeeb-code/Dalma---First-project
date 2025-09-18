@@ -11,7 +11,7 @@ export function subscribeLocale(cb: () => void) {
 
 export function getLocale(): Locale {
   const v = localStorage.getItem(LOCALE_KEY);
-  return (v === "en" || v === "ar" ? v : "ar") as Locale;
+  return (v === "en" || v === "ar" ? v : "en") as Locale;
 }
 
 export function setLocale(locale: Locale) {
@@ -149,6 +149,45 @@ const messages = {
         fileInvalid: "Invalid file",
         importedN: "Imported {{count}}",
         saved: "Saved",
+      },
+      beneficiaries: {
+        title: "Beneficiary Management",
+        desc: "List of beneficiaries with search, filters, and quick access to profiles",
+        stats: { total: "Total", active: "Active", under: "Under Treatment", graduated: "Graduated" },
+        filters: {
+          search: "Search",
+          disability: "Disability",
+          status: "Status",
+          program: "Program",
+          therapist: "Therapist",
+          sortBy: "Sort by",
+          sortDir: "Direction",
+          minAge: "Min Age",
+          maxAge: "Max Age",
+          searchPlaceholder: "Name, ID, guardian...",
+          asc: "Asc",
+          desc: "Desc",
+          all: "All",
+        },
+        actions: { add: "Add Beneficiary", notify: "Send Notification", export: "Export", archive: "Archive", clear: "Clear", open: "Open" },
+        table: {
+          beneficiary: "Beneficiary",
+          age: "Age",
+          disability: "Disability",
+          programs: "Programs",
+          therapist: "Therapist",
+          status: "Status",
+          profile: "Profile",
+        },
+        badges: { active: "Active", underTreatment: "Under treatment", graduated: "Graduated", inactive: "Inactive" },
+        alerts: {
+          title: "Alerts",
+          desc: "Missed sessions, upcoming reviews, expiring documents",
+          missed: "Missed",
+          review: "Review",
+          expiring: "Expiring",
+          none: "No alerts",
+        },
       },
       admin: { title: "Admin Dashboard" },
     },
@@ -321,7 +360,7 @@ const messages = {
         desc: "إضافة الموظفين وتعيين الأدوار والصلاحيات (مثل الأطباء والمعالجين)",
         addEmployee: "إضافة موظف",
         cards: { total: "إجمالي", doctors: "الأطباء", therapists: "المعالجون" },
-        table: { title: "الموظفون", desc: "انقر تعديل لتحديث الأدوار والصلاحيات" },
+        table: { title: "الموظفون", desc: "انقر تعدي�� لتحديث الأدوار والصلاحيات" },
         filters: { searchPlaceholder: "اسم، بريد، قسم..." },
         confirmDeleteTitle: "حذف الموظف؟",
         confirmDeleteMsg: "سيتم حذف هذا المستخدم من النظام.",
@@ -375,6 +414,45 @@ const messages = {
         fileInvalid: "ملف غير صالح",
         importedN: "تم استيراد {{count}}",
         saved: "تم الحفظ",
+      },
+      beneficiaries: {
+        title: "إدارة المستفيدين",
+        desc: "قائمة المستفيدين مع البحث والفلاتر والوصول السريع للملفات",
+        stats: { total: "إجمالي", active: "نشطون", under: "تحت العلاج", graduated: "متخرجون" },
+        filters: {
+          search: "بحث",
+          disability: "نوع الإعاقة",
+          status: "الحالة",
+          program: "البرنامج",
+          therapist: "المعالج",
+          sortBy: "ترتيب حسب",
+          sortDir: "الاتجاه",
+          minAge: "العمر الأدنى",
+          maxAge: "العمر الأقصى",
+          searchPlaceholder: "اسم، رقم هوية، ولي أمر...",
+          asc: "تصاعدي",
+          desc: "تنازلي",
+          all: "الكل",
+        },
+        actions: { add: "إضافة مستفيد", notify: "إرسال إشعار", export: "تصدير", archive: "أرشفة", clear: "مسح", open: "فتح" },
+        table: {
+          beneficiary: "المستفيد",
+          age: "العمر",
+          disability: "الإعاقة",
+          programs: "البرامج",
+          therapist: "المعالج",
+          status: "الحالة",
+          profile: "الملف",
+        },
+        badges: { active: "نشط", underTreatment: "تحت العلاج", graduated: "متخرج", inactive: "غير نشط" },
+        alerts: {
+          title: "تنبيهات",
+          desc: "جلسات فائتة، مراجعات قادمة، مستندات على وشك الانتهاء",
+          missed: "جلسة فائتة",
+          review: "مراجعة",
+          expiring: "قرب الانتهاء",
+          none: "لا توجد تنبيهات",
+        },
       },
       admin: { title: "لوحة التحكم" },
     },
@@ -439,7 +517,7 @@ const messages = {
         psychological: "نفسي",
         functional: "وظيفي",
         updated:
-          "تحديثات مباشرة من تسجيلات الوص��ل وإكمال العلاج والتكامل مع الأجهزة.",
+          "تحديثات مباشرة من تسجيلات الوص��ل وإكما�� العلاج والتكامل مع الأجهزة.",
       },
       notifications: {
         title: "تنبيهات ذكية",
@@ -461,7 +539,7 @@ const messages = {
           },
           comms: {
             title: "اتصال موحد",
-            text: "رسائل داخلية، مشاركة ملفات، وتحديثات للعائلة.",
+            text: "رسائل داخلية، مشاركة ملفات، ��تحديثات للعائلة.",
           },
           schedule: {
             title: "الجدولة والتذكيرات",
