@@ -92,7 +92,9 @@ export default function MedicalSettings() {
   const canManage = useMemo(() => {
     if (!me) return false;
     const acl = loadACL();
-    return effectivePrivileges(me, acl.roles, acl.privileges).some((p) => p.id === "p_manage_clinical");
+    const hasPriv = effectivePrivileges(me, acl.roles, acl.privileges).some((p) => p.id === "p_manage_clinical");
+    const isAdmin = me.roleIds.includes("r_admin");
+    return hasPriv || isAdmin;
   }, [me]);
   const ar = getLocale() === "ar";
 
