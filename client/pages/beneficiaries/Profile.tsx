@@ -312,17 +312,17 @@ export default function BeneficiaryProfile() {
                 </div>
               </div>
               <div>
-                <div className="text-sm">
-                  <span className="text-muted-foreground">
-                    {ar ? "ولي الأمر" : "Guardian"}:
-                  </span>{" "}
-                  {b.guardian.name} ({b.guardian.relation})
+                <div className="text-sm flex items-center gap-2">
+                  <span className="text-muted-foreground">{ar ? "ولي الأمر" : "Guardian"}:</span>
+                  {edit ? (
+                    <><Input className="h-8 w-48" defaultValue={b.guardian.name} onChange={(e)=> (b.guardian.name = e.target.value)} /> (<Input className="h-8 w-40" defaultValue={b.guardian.relation} onChange={(e)=> (b.guardian.relation = e.target.value)} />)</>
+                  ) : <>{b.guardian.name} ({b.guardian.relation})</>}
                 </div>
-                <div className="text-sm">
-                  <span className="text-muted-foreground">
-                    {ar ? "هاتف ولي الأمر" : "Guardian Phone"}:
-                  </span>{" "}
-                  {b.guardian.phone}
+                <div className="text-sm flex items-center gap-2">
+                  <span className="text-muted-foreground">{ar ? "هاتف ولي الأمر" : "Guardian Phone"}:</span>
+                  {edit ? (
+                    <Input className="h-8" defaultValue={b.guardian.phone} onChange={(e)=> (b.guardian.phone = e.target.value)} />
+                  ) : b.guardian.phone}
                 </div>
               </div>
             </CardContent>
