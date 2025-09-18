@@ -38,7 +38,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { getLocale, t } from "@/i18n";
+import { getLocale, subscribeLocale, t } from "@/i18n";
 import { effectivePrivileges, loadACL } from "@/store/acl";
 import {
   EmergencyProtocol,
@@ -81,6 +81,14 @@ function useMedical() {
   );
 }
 
+function useLocaleValue() {
+  return useSyncExternalStore(
+    (cb) => subscribeLocale(cb),
+    () => getLocale(),
+    () => getLocale(),
+  );
+}
+
 export default function MedicalSettings() {
   const state = useMedical();
   const userId = useSyncExternalStore(
@@ -96,7 +104,7 @@ export default function MedicalSettings() {
     const isAdmin = me.roleIds.includes("r_admin");
     return hasPriv || isAdmin;
   }, [me]);
-  const loc = getLocale();
+  const loc = useLocaleValue();
 
   return (
     <div className="space-y-8">
@@ -162,6 +170,15 @@ export default function MedicalSettings() {
   );
 }
 
+function L(loc: "en" | "ar", v: any): string {
+  if (v == null) return "";
+  if (typeof v === "string") return v;
+  if (typeof v === "object" && ("en" in v || "ar" in v)) {
+    return (v[loc] as string) || (v.en as string) || "";
+  }
+  return String(v);
+}
+
 function TherapyTypesCard({ state, canManage, loc }: { state: MedicalSettingsState; canManage: boolean; loc: "en" | "ar" }) {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<TherapySessionType | null>(null);
@@ -193,11 +210,11 @@ function TherapyTypesCard({ state, canManage, loc }: { state: MedicalSettingsSta
             {state.therapyTypes.map((t0) => (
               <TableRow key={t0.id}>
                 <TableCell>
-                  {t0.name[loc] || t0.name.en}
-                  <div className="text-xs text-muted-foreground">{t0.description?.[loc] || t0.description?.en}</div>
+                  {L(loc, t0.name)}
+                  <div className="text-xs text-muted-foreground">{L(loc, t0.description)}</div>
                 </TableCell>
                 <TableCell>{t0.durationMin} {t("pages.medical.therapy.min")}</TableCell>
-                <TableCell>{t0.defaultFrequency}</TableCell>
+                <TableCell>{t((`pages.medical.therapy.freq.${t0.defaultFrequency}`) as any)}</TableCell>
                 <TableCell className="flex items-center gap-2">
                   {canManage && (
                     <>
@@ -347,10 +364,10 @@ function PlanTemplatesCard({ state, canManage, loc }: { state: MedicalSettingsSt
             {state.templates.map((tpl) => (
               <TableRow key={tpl.id}>
                 <TableCell>
-                  {tpl.name[loc] || tpl.name.en}
-                  <div className="text-xs text-muted-foreground">{tpl.description?.[loc] || tpl.description?.en}</div>
+                  {L(loc, tpl.name)}
+                  <div className="text-xs text-muted-foreground">{L(loc, tpl.description)}</div>
                   <div className="text-xs text-muted-foreground mt-1">
-                    {t("pages.medical.plans.goals")} {(tpl.goals[loc] || []).join(", ")} • {t("pages.medical.plans.interventions")} {(tpl.interventions[loc] || []).join(", ")}
+                    {t("pages.medical.plans.goals")} {(tpl.goals[loc] || tpl.goals.en || []).join(", ")} • {t("pages.medical.plans.interventions")} {(tpl.interventions[loc] || tpl.interventions.en || []).join(", ")}
                   </div>
                 </TableCell>
                 <TableCell>
@@ -482,7 +499,7 @@ function MedicationCard({ state, canManage, loc }: { state: MedicalSettingsState
           </div>
           <div className="mt-2 flex flex-wrap gap-2">
             {state.medication.categories.map((c) => (
-              <Badge key={c.id} className="cursor-pointer" onClick={() => { if (canManage) { removeMedicationCategory(c.id); toast.success(t("pages.medical.saved")); } }} variant="secondary">{c.label[loc] || c.label.en}</Badge>
+              <Badge key={c.id} className="cursor-pointer" onClick={() => { if (canManage) { removeMedicationCategory(c.id); toast.success(t("pages.medical.saved")); } }} variant="secondary">{L(loc, c.label)}</Badge>
             ))}
           </div>
         </div>
@@ -495,7 +512,7 @@ function MedicationCard({ state, canManage, loc }: { state: MedicalSettingsState
           </div>
           <div className="mt-2 flex flex-wrap gap-2">
             {state.medication.dosageUnits.map((u) => (
-              <Badge key={u.id} className="cursor-pointer" onClick={() => { if (canManage) { removeDosageUnit(u.id); toast.success(t("pages.medical.saved")); } }} variant="secondary">{u.label[loc] || u.label.en}</Badge>
+              <Badge key={u.id} className="cursor-pointer" onClick={() => { if (canManage) { removeDosageUnit(u.id); toast.success(t("pages.medical.saved")); } }} variant="secondary">{L(loc, u.label)}</Badge>
             ))}
           </div>
         </div>
@@ -508,7 +525,7 @@ function MedicationCard({ state, canManage, loc }: { state: MedicalSettingsState
           </div>
           <div className="mt-2 flex flex-wrap gap-2">
             {state.medication.schedules.map((s) => (
-              <Badge key={s.id} className="cursor-pointer" onClick={() => { if (canManage) { removeSchedule(s.id); toast.success(t("pages.medical.saved")); } }} variant="secondary">{s.label[loc] || s.label.en}</Badge>
+              <Badge key={s.id} className="cursor-pointer" onClick={() => { if (canManage) { removeSchedule(s.id); toast.success(t("pages.medical.saved")); } }} variant="secondary">{L(loc, s.label)}</Badge>
             ))}
           </div>
         </div>
@@ -629,8 +646,8 @@ function ProgressCard({ state, canManage, loc }: { state: MedicalSettingsState; 
           <TableBody>
             {state.progress.criteria.map((c) => (
               <TableRow key={c.id}>
-                <TableCell>{c.name[loc] || c.name.en}</TableCell>
-                <TableCell className="text-muted-foreground">{c.description?.[loc] || c.description?.en}</TableCell>
+                <TableCell>{L(loc, c.name)}</TableCell>
+                <TableCell className="text-muted-foreground">{L(loc, c.description)}</TableCell>
                 <TableCell className="flex items-center gap-2">
                   {canManage && (
                     <>
@@ -722,9 +739,9 @@ function EmergencyCard({ state, canManage, loc }: { state: MedicalSettingsState;
           <TableBody>
             {state.emergencyProtocols.map((p) => (
               <TableRow key={p.id}>
-                <TableCell>{p.name[loc] || p.name.en}</TableCell>
-                <TableCell className="text-muted-foreground">{p.description?.[loc] || p.description?.en}</TableCell>
-                <TableCell className="text-muted-foreground">{(p.steps[loc] || p.steps.en).join(" → ")}</TableCell>
+                <TableCell>{L(loc, p.name)}</TableCell>
+                <TableCell className="text-muted-foreground">{L(loc, p.description)}</TableCell>
+                <TableCell className="text-muted-foreground">{((p.steps[loc] || p.steps.en) || []).join(" → ")}</TableCell>
                 <TableCell className="flex items-center gap-2">
                   {canManage && (
                     <>
