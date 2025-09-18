@@ -33,7 +33,6 @@ import {
 import { getCurrentUser } from "@/store/auth";
 import { effectivePrivileges, loadACL } from "@/store/acl";
 import { Download, FileUp } from "lucide-react";
-import { useMemo, useState, useSyncExternalStore } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { exportAll, type ColumnDef } from "@/lib/export";
