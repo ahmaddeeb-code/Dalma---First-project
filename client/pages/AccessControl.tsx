@@ -84,11 +84,11 @@ export default function AccessControl() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>الاسم</TableHead>
-                    <TableHead>البريد الإلكتروني</TableHead>
-                    <TableHead>الأدوار</TableHead>
-                    <TableHead>الصلاحيات الفعلية</TableHead>
-                    <TableHead className="w-[120px]">إجراءات</TableHead>
+                    <TableHead>{t("pages.accessControl.users.headers.name")}</TableHead>
+                    <TableHead>{t("pages.accessControl.users.headers.email")}</TableHead>
+                    <TableHead>{t("pages.accessControl.users.headers.roles")}</TableHead>
+                    <TableHead>{t("pages.accessControl.users.headers.effectivePrivs")}</TableHead>
+                    <TableHead className="w-[120px]">{t("pages.accessControl.users.headers.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
