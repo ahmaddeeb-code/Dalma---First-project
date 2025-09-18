@@ -292,11 +292,11 @@ export default function BeneficiaryProfile() {
             </CardHeader>
             <CardContent className="grid md:grid-cols-2 gap-4">
               <div>
-                <div className="text-sm">
-                  <span className="text-muted-foreground">
-                    {ar ? "الهاتف" : "Phone"}:
-                  </span>{" "}
-                  {b.contact.phone}
+                <div className="text-sm flex items-center gap-2">
+                  <span className="text-muted-foreground">{ar ? "الهاتف" : "Phone"}:</span>
+                  {edit ? (
+                    <Input className="h-8" defaultValue={b.contact.phone} onChange={(e)=> (b.contact.phone = e.target.value)} />
+                  ) : b.contact.phone}
                 </div>
                 <div className="text-sm">
                   <span className="text-muted-foreground">Email:</span>{" "}
@@ -331,7 +331,7 @@ export default function BeneficiaryProfile() {
           <Card>
             <CardHeader>
               <CardTitle>
-                {ar ? "المعلومات الطبية والإعاقة" : "Medical & Disability"}
+                {ar ? "المعلومات الطبية والإعا��ة" : "Medical & Disability"}
               </CardTitle>
               <CardDescription>
                 {ar
