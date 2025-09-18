@@ -124,7 +124,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                   <DropdownMenuContent align="start">
                     <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    {roles.length ? <DropdownMenuItem disabled>الأدوار: {roles.join("، ")}</DropdownMenuItem> : null}
+                    {roles.length ? <DropdownMenuItem disabled>{roles.join("، ")}</DropdownMenuItem> : null}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => { logout(); window.location.reload(); }}>
                       <LogOut className="ml-2 h-4 w-4" /> {t("header.signOut")}
