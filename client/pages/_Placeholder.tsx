@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-export default function Placeholder({ title, description }: { title: string; description?: string }) {
+export default function Placeholder({
+  title,
+  description,
+}: {
+  title: string;
+  description?: string;
+}) {
   return (
     <div className="mx-auto max-w-2xl text-center animate-fade-up">
       <h1 className="text-3xl font-bold tracking-tight">{title}</h1>

@@ -1,7 +1,12 @@
 import { Link, NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Bell, HeartHandshake, LayoutDashboard, ShieldCheck } from "lucide-react";
+import {
+  Bell,
+  HeartHandshake,
+  LayoutDashboard,
+  ShieldCheck,
+} from "lucide-react";
 import { ReactNode } from "react";
 
 const navItems = [
@@ -23,7 +28,9 @@ export default function AppLayout({ children }: { children: ReactNode }) {
             <div className="h-9 w-9 rounded-md bg-gradient-to-br from-primary to-secondary grid place-items-center text-white shadow-glow">
               <ShieldCheck className="h-5 w-5" />
             </div>
-            <span className="font-extrabold tracking-tight">DALMA Smart Platform</span>
+            <span className="font-extrabold tracking-tight">
+              DALMA Smart Platform
+            </span>
           </Link>
           <nav className="hidden md:flex items-center gap-1">
             {navItems.map((n) => (
@@ -33,7 +40,9 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                 className={({ isActive }) =>
                   cn(
                     "px-3 py-2 text-sm rounded-md transition-colors",
-                    isActive ? "bg-accent text-accent-foreground" : "hover:bg-accent hover:text-accent-foreground",
+                    isActive
+                      ? "bg-accent text-accent-foreground"
+                      : "hover:bg-accent hover:text-accent-foreground",
                   )
                 }
               >
@@ -46,10 +55,14 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               <Bell />
             </Button>
             <Button asChild className="hidden sm:inline-flex">
-              <Link to="/donations"><HeartHandshake className="mr-2" /> Donate</Link>
+              <Link to="/donations">
+                <HeartHandshake className="mr-2" /> Donate
+              </Link>
             </Button>
             <Button asChild variant="secondary" className="ml-1">
-              <Link to="/admin"><LayoutDashboard className="mr-2" /> Dashboard</Link>
+              <Link to="/admin">
+                <LayoutDashboard className="mr-2" /> Dashboard
+              </Link>
             </Button>
           </div>
         </div>
@@ -59,11 +72,19 @@ export default function AppLayout({ children }: { children: ReactNode }) {
 
       <footer className="mt-16 border-t">
         <div className="container py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} DALMA Center. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} DALMA Center. All rights reserved.
+          </p>
           <div className="flex items-center gap-4">
-            <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
-            <Link to="/security" className="hover:text-foreground">Security</Link>
-            <Link to="/contact" className="hover:text-foreground">Contact</Link>
+            <Link to="/privacy" className="hover:text-foreground">
+              Privacy
+            </Link>
+            <Link to="/security" className="hover:text-foreground">
+              Security
+            </Link>
+            <Link to="/contact" className="hover:text-foreground">
+              Contact
+            </Link>
           </div>
         </div>
       </footer>
