@@ -1,13 +1,32 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 import { getLocale } from "@/i18n";
-import { Beneficiary, DisabilityType, DocumentItem, newBeneficiary, upsertBeneficiary } from "@/store/beneficiaries";
+import {
+  Beneficiary,
+  DisabilityType,
+  DocumentItem,
+  newBeneficiary,
+  upsertBeneficiary,
+} from "@/store/beneficiaries";
 import { getCurrentUserId } from "@/store/auth";
 
 export type AddEditDialogProps = {
@@ -25,7 +44,11 @@ function readFileAsDataURL(file: File): Promise<string> {
   });
 }
 
-export default function AddEditBeneficiaryDialog({ open, onOpenChange, initial }: AddEditDialogProps) {
+export default function AddEditBeneficiaryDialog({
+  open,
+  onOpenChange,
+  initial,
+}: AddEditDialogProps) {
   const ar = getLocale() === "ar";
   const [name, setName] = useState("");
   const [gender, setGender] = useState<"male" | "female">("male");
@@ -76,9 +99,15 @@ export default function AddEditBeneficiaryDialog({ open, onOpenChange, initial }
         setPrograms(initial.education.programs.join(", "));
         setActivities(initial.education.activities.join(", "));
         setSponsorship(initial.financial.sponsorship || "");
-        setSupportPrograms((initial.financial.supportPrograms || []).join(", "));
+        setSupportPrograms(
+          (initial.financial.supportPrograms || []).join(", "),
+        );
         setEmergencyNotes(initial.emergency.notes || "");
-        setEmergencyContacts(initial.emergency.contacts.map((c) => `${c.name}:${c.relation}:${c.phone}`).join("\n"));
+        setEmergencyContacts(
+          initial.emergency.contacts
+            .map((c) => `${c.name}:${c.relation}:${c.phone}`)
+            .join("\n"),
+        );
         setPhotoDataUrl(initial.photoUrl);
         setDocs(initial.documents);
       } else {
@@ -134,39 +163,103 @@ export default function AddEditBeneficiaryDialog({ open, onOpenChange, initial }
     const list: DocumentItem[] = [];
     for (const f of Array.from(files)) {
       const url = await readFileAsDataURL(f);
-      list.push({ id: `${Date.now()}_${f.name}`.replace(/\s+/g, "_"), type: f.type || "Attachment", title: f.name, url, issuedAt: new Date().toISOString() });
+      list.push({
+        id: `${Date.now()}_${f.name}`.replace(/\s+/g, "_"),
+        type: f.type || "Attachment",
+        title: f.name,
+        url,
+        issuedAt: new Date().toISOString(),
+      });
     }
     setDocs((prev) => [...list, ...prev]);
   }
 
   function onSave() {
     if (!valid) {
-      toast.error(ar ? "يرجى ملء الحقول المطلوبة" : "Please fill required fields");
+      toast.error(
+        ar ? "يرجى ملء الحقول المطلوبة" : "Please fill required fields",
+      );
       return;
     }
-    const base = initial ? { ...initial } : newBeneficiary({ name, gender, dob, beneficiaryId, civilId });
+    const base = initial
+      ? { ...initial }
+      : newBeneficiary({ name, gender, dob, beneficiaryId, civilId });
     base.name = name;
     base.gender = gender;
     base.dob = dob;
     base.beneficiaryId = beneficiaryId;
     base.civilId = civilId;
     base.contact = { phone, email, address };
-    base.guardian = { name: guardianName, relation: guardianRelation, phone: guardianPhone };
+    base.guardian = {
+      name: guardianName,
+      relation: guardianRelation,
+      phone: guardianPhone,
+    };
     base.medical = { ...base.medical, disabilityType: disability, history };
-    base.care = { ...base.care, assignedDoctor: doctor, assignedTherapist: therapist, goals: goals.split(",").map((s) => s.trim()).filter(Boolean), progress };
-    base.education = { programs: programs.split(",").map((s) => s.trim()).filter(Boolean), activities: activities.split(",").map((s) => s.trim()).filter(Boolean) };
-    base.financial = { ...base.financial, sponsorship, supportPrograms: supportPrograms.split(",").map((s) => s.trim()).filter(Boolean) };
-    base.emergency = { contacts: emergencyContacts.split("\n").map((line) => { const [n,r,p] = line.split(":"); return n && r && p ? { name: n.trim(), relation: r.trim(), phone: p.trim() } : null; }).filter(Boolean) as any[], notes: emergencyNotes };
+    base.care = {
+      ...base.care,
+      assignedDoctor: doctor,
+      assignedTherapist: therapist,
+      goals: goals
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+      progress,
+    };
+    base.education = {
+      programs: programs
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+      activities: activities
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+    };
+    base.financial = {
+      ...base.financial,
+      sponsorship,
+      supportPrograms: supportPrograms
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+    };
+    base.emergency = {
+      contacts: emergencyContacts
+        .split("\n")
+        .map((line) => {
+          const [n, r, p] = line.split(":");
+          return n && r && p
+            ? { name: n.trim(), relation: r.trim(), phone: p.trim() }
+            : null;
+        })
+        .filter(Boolean) as any[],
+      notes: emergencyNotes,
+    };
     base.photoUrl = photoDataUrl || base.photoUrl;
     base.documents = docs;
 
     if (!initial) {
-      const entry = { id: `${Date.now()}`, at: new Date().toISOString(), userId: getCurrentUserId() || "system", action: "create", patch: { name: base.name } } as any;
+      const entry = {
+        id: `${Date.now()}`,
+        at: new Date().toISOString(),
+        userId: getCurrentUserId() || "system",
+        action: "create",
+        patch: { name: base.name },
+      } as any;
       base.audit = [...(base.audit || []), entry];
     }
 
     upsertBeneficiary(base);
-    toast.success(ar ? (initial ? "تم تحديث المستفيد" : "تم إضافة مستفيد") : (initial ? "Beneficiary updated" : "Beneficiary added"));
+    toast.success(
+      ar
+        ? initial
+          ? "تم تحديث المستفيد"
+          : "تم إضافة مستفيد"
+        : initial
+          ? "Beneficiary updated"
+          : "Beneficiary added",
+    );
     onOpenChange(false);
   }
 
@@ -174,8 +267,20 @@ export default function AddEditBeneficiaryDialog({ open, onOpenChange, initial }
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle>{ar ? (initial ? "تعديل مستفيد" : "إضافة مستفيد") : (initial ? "Edit Beneficiary" : "Add Beneficiary")}</DialogTitle>
-          <DialogDescription>{ar ? "أدخل البيانات المطلوبة. الحقول الأساسية مطلوبة." : "Enter the required information. Required fields must be filled."}</DialogDescription>
+          <DialogTitle>
+            {ar
+              ? initial
+                ? "تعديل مستفيد"
+                : "إضافة مستفيد"
+              : initial
+                ? "Edit Beneficiary"
+                : "Add Beneficiary"}
+          </DialogTitle>
+          <DialogDescription>
+            {ar
+              ? "أدخل البيانات المطلوبة. الحقول الأساسية مطلوبة."
+              : "Enter the required information. Required fields must be filled."}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
@@ -186,7 +291,9 @@ export default function AddEditBeneficiaryDialog({ open, onOpenChange, initial }
           <div className="space-y-2">
             <Label>{ar ? "الجنس" : "Gender"}</Label>
             <Select value={gender} onValueChange={(v) => setGender(v as any)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="male">{ar ? "ذكر" : "Male"}</SelectItem>
                 <SelectItem value="female">{ar ? "أنثى" : "Female"}</SelectItem>
@@ -195,15 +302,25 @@ export default function AddEditBeneficiaryDialog({ open, onOpenChange, initial }
           </div>
           <div className="space-y-2">
             <Label>{ar ? "تاريخ الميلاد" : "Date of Birth"} *</Label>
-            <Input type="date" value={dob} onChange={(e) => setDob(e.target.value)} />
+            <Input
+              type="date"
+              value={dob}
+              onChange={(e) => setDob(e.target.value)}
+            />
           </div>
           <div className="space-y-2">
             <Label>{ar ? "رقم المستفيد" : "Beneficiary ID"} *</Label>
-            <Input value={beneficiaryId} onChange={(e) => setBeneficiaryId(e.target.value)} />
+            <Input
+              value={beneficiaryId}
+              onChange={(e) => setBeneficiaryId(e.target.value)}
+            />
           </div>
           <div className="space-y-2">
             <Label>{ar ? "السجل المدني" : "Civil Registry"} *</Label>
-            <Input value={civilId} onChange={(e) => setCivilId(e.target.value)} />
+            <Input
+              value={civilId}
+              onChange={(e) => setCivilId(e.target.value)}
+            />
           </div>
           <div className="space-y-2">
             <Label>{ar ? "الهاتف" : "Phone"} *</Label>
@@ -215,38 +332,66 @@ export default function AddEditBeneficiaryDialog({ open, onOpenChange, initial }
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label>{ar ? "العنوان" : "Address"}</Label>
-            <Input value={address} onChange={(e) => setAddress(e.target.value)} />
+            <Input
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
           </div>
 
           <div className="space-y-2">
             <Label>{ar ? "اسم ولي الأمر" : "Guardian Name"} *</Label>
-            <Input value={guardianName} onChange={(e) => setGuardianName(e.target.value)} />
+            <Input
+              value={guardianName}
+              onChange={(e) => setGuardianName(e.target.value)}
+            />
           </div>
           <div className="space-y-2">
             <Label>{ar ? "صلة القرابة" : "Relation"}</Label>
-            <Input value={guardianRelation} onChange={(e) => setGuardianRelation(e.target.value)} />
+            <Input
+              value={guardianRelation}
+              onChange={(e) => setGuardianRelation(e.target.value)}
+            />
           </div>
           <div className="space-y-2">
             <Label>{ar ? "هاتف ولي الأمر" : "Guardian Phone"} *</Label>
-            <Input value={guardianPhone} onChange={(e) => setGuardianPhone(e.target.value)} />
+            <Input
+              value={guardianPhone}
+              onChange={(e) => setGuardianPhone(e.target.value)}
+            />
           </div>
 
           <div className="space-y-2">
             <Label>{ar ? "نوع الإعاقة" : "Disability"}</Label>
-            <Select value={disability} onValueChange={(v) => setDisability(v as any)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+            <Select
+              value={disability}
+              onValueChange={(v) => setDisability(v as any)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
-                <SelectItem value="physical">{ar?"حركية":"Physical"}</SelectItem>
-                <SelectItem value="intellectual">{ar?"ذهنية":"Intellectual"}</SelectItem>
-                <SelectItem value="sensory">{ar?"حسية":"Sensory"}</SelectItem>
-                <SelectItem value="autism">{ar?"توحد":"Autism"}</SelectItem>
-                <SelectItem value="multiple">{ar?"متعددة":"Multiple"}</SelectItem>
+                <SelectItem value="physical">
+                  {ar ? "حركية" : "Physical"}
+                </SelectItem>
+                <SelectItem value="intellectual">
+                  {ar ? "ذهنية" : "Intellectual"}
+                </SelectItem>
+                <SelectItem value="sensory">
+                  {ar ? "حسية" : "Sensory"}
+                </SelectItem>
+                <SelectItem value="autism">{ar ? "توحد" : "Autism"}</SelectItem>
+                <SelectItem value="multiple">
+                  {ar ? "متعددة" : "Multiple"}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label>{ar ? "تاريخ طبي" : "Medical History"}</Label>
-            <Textarea value={history} onChange={(e) => setHistory(e.target.value)} />
+            <Textarea
+              value={history}
+              onChange={(e) => setHistory(e.target.value)}
+            />
           </div>
           <div className="space-y-2">
             <Label>{ar ? "الطبيب" : "Doctor"}</Label>
@@ -254,60 +399,126 @@ export default function AddEditBeneficiaryDialog({ open, onOpenChange, initial }
           </div>
           <div className="space-y-2">
             <Label>{ar ? "المعالج" : "Therapist"}</Label>
-            <Input value={therapist} onChange={(e) => setTherapist(e.target.value)} />
+            <Input
+              value={therapist}
+              onChange={(e) => setTherapist(e.target.value)}
+            />
           </div>
           <div className="space-y-2 md:col-span-2">
-            <Label>{ar ? "الأهداف (افصلها بفاصلة)" : "Goals (comma separated)"}</Label>
+            <Label>
+              {ar ? "الأهداف (افصلها بفاصلة)" : "Goals (comma separated)"}
+            </Label>
             <Input value={goals} onChange={(e) => setGoals(e.target.value)} />
           </div>
           <div className="space-y-2">
             <Label>{ar ? "التقدم %" : "Progress %"}</Label>
-            <Input type="number" value={progress} onChange={(e) => setProgress(Number(e.target.value))} />
+            <Input
+              type="number"
+              value={progress}
+              onChange={(e) => setProgress(Number(e.target.value))}
+            />
           </div>
           <div className="space-y-2">
-            <Label>{ar ? "البرامج (بفواصل)" : "Programs (comma separated)"}</Label>
-            <Input value={programs} onChange={(e) => setPrograms(e.target.value)} />
+            <Label>
+              {ar ? "البرامج (بفواصل)" : "Programs (comma separated)"}
+            </Label>
+            <Input
+              value={programs}
+              onChange={(e) => setPrograms(e.target.value)}
+            />
           </div>
           <div className="space-y-2">
-            <Label>{ar ? "الأنشطة (بفواصل)" : "Activities (comma separated)"}</Label>
-            <Input value={activities} onChange={(e) => setActivities(e.target.value)} />
+            <Label>
+              {ar ? "الأنشطة (بفواصل)" : "Activities (comma separated)"}
+            </Label>
+            <Input
+              value={activities}
+              onChange={(e) => setActivities(e.target.value)}
+            />
           </div>
           <div className="space-y-2">
             <Label>{ar ? "الراعي" : "Sponsorship"}</Label>
-            <Input value={sponsorship} onChange={(e) => setSponsorship(e.target.value)} />
+            <Input
+              value={sponsorship}
+              onChange={(e) => setSponsorship(e.target.value)}
+            />
           </div>
           <div className="space-y-2">
-            <Label>{ar ? "برامج الدعم (بفواصل)" : "Support Programs (comma separated)"}</Label>
-            <Input value={supportPrograms} onChange={(e) => setSupportPrograms(e.target.value)} />
+            <Label>
+              {ar
+                ? "برامج الدعم (بفواصل)"
+                : "Support Programs (comma separated)"}
+            </Label>
+            <Input
+              value={supportPrograms}
+              onChange={(e) => setSupportPrograms(e.target.value)}
+            />
           </div>
 
           <div className="space-y-2 md:col-span-2">
             <Label>{ar ? "ملاحظات الطوارئ" : "Emergency Notes"}</Label>
-            <Textarea value={emergencyNotes} onChange={(e) => setEmergencyNotes(e.target.value)} />
+            <Textarea
+              value={emergencyNotes}
+              onChange={(e) => setEmergencyNotes(e.target.value)}
+            />
           </div>
           <div className="space-y-2 md:col-span-2">
-            <Label>{ar ? "جهات الطوارئ (اسم:صلة:هاتف \n لكل سطر)" : "Emergency Contacts (Name:Relation:Phone per line)"}</Label>
-            <Textarea value={emergencyContacts} onChange={(e) => setEmergencyContacts(e.target.value)} />
+            <Label>
+              {ar
+                ? "جهات الطوارئ (اسم:صلة:هاتف \n لكل سطر)"
+                : "Emergency Contacts (Name:Relation:Phone per line)"}
+            </Label>
+            <Textarea
+              value={emergencyContacts}
+              onChange={(e) => setEmergencyContacts(e.target.value)}
+            />
           </div>
 
           <div className="space-y-2">
             <Label>{ar ? "صورة الملف" : "Profile Photo"}</Label>
-            <Input type="file" accept="image/*" onChange={(e) => onPhotoChange(e.target.files?.[0] || null)} />
-            {photoDataUrl ? <img src={photoDataUrl} alt="photo" className="h-20 w-20 object-cover rounded-md" /> : null}
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={(e) => onPhotoChange(e.target.files?.[0] || null)}
+            />
+            {photoDataUrl ? (
+              <img
+                src={photoDataUrl}
+                alt="photo"
+                className="h-20 w-20 object-cover rounded-md"
+              />
+            ) : null}
           </div>
           <div className="space-y-2 md:col-span-2">
-            <Label>{ar ? "مرفقات (PDF/صور)" : "Attachments (PDF/Images)"}</Label>
-            <Input type="file" accept="image/*,application/pdf" multiple onChange={(e) => onDocsChange(e.target.files)} />
-            <div className="text-xs text-muted-foreground">{ar ? "سيتم حفظ الملفات كمرفقات داخلية" : "Files will be stored as inline attachments"}</div>
+            <Label>
+              {ar ? "مرفقات (PDF/صور)" : "Attachments (PDF/Images)"}
+            </Label>
+            <Input
+              type="file"
+              accept="image/*,application/pdf"
+              multiple
+              onChange={(e) => onDocsChange(e.target.files)}
+            />
+            <div className="text-xs text-muted-foreground">
+              {ar
+                ? "سيتم حفظ الملفات كمرفقات داخلية"
+                : "Files will be stored as inline attachments"}
+            </div>
             <ul className="text-sm list-disc pl-5">
-              {docs.map((d) => (<li key={d.id}>{d.title}</li>))}
+              {docs.map((d) => (
+                <li key={d.id}>{d.title}</li>
+              ))}
             </ul>
           </div>
         </div>
 
         <DialogFooter className="mt-4">
-          <Button variant="secondary" onClick={() => onOpenChange(false)}>{ar ? "إلغاء" : "Cancel"}</Button>
-          <Button onClick={onSave} disabled={!valid}>{ar ? "حفظ" : "Save"}</Button>
+          <Button variant="secondary" onClick={() => onOpenChange(false)}>
+            {ar ? "إلغاء" : "Cancel"}
+          </Button>
+          <Button onClick={onSave} disabled={!valid}>
+            {ar ? "حفظ" : "Save"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

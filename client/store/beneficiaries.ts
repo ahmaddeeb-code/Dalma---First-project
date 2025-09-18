@@ -51,7 +51,14 @@ export type Message = {
   content: string;
   date: string;
 };
-export type AuditEntry = { id: string; at: string; userId: string; action: string; note?: string; patch?: any };
+export type AuditEntry = {
+  id: string;
+  at: string;
+  userId: string;
+  action: string;
+  note?: string;
+  patch?: any;
+};
 
 export type Beneficiary = {
   id: string;
@@ -626,34 +633,103 @@ export function computeAlerts() {
   return { missed, expiring, reviews };
 }
 
-export function updateBeneficiary(id: string, patch: Partial<Beneficiary>, editorUserId?: string, action: string = "update") {
+export function updateBeneficiary(
+  id: string,
+  patch: Partial<Beneficiary>,
+  editorUserId?: string,
+  action: string = "update",
+) {
   const cur = getBeneficiary(id);
   if (!cur) return;
-  const next: Beneficiary = { ...cur, ...patch, medical: { ...cur.medical, ...patch.medical }, care: { ...cur.care, ...patch.care }, education: { ...cur.education, ...patch.education }, financial: { ...cur.financial, ...patch.financial }, communication: { ...cur.communication, ...patch.communication }, emergency: { ...cur.emergency, ...patch.emergency } };
-  const entry: AuditEntry = { id: uid(), at: new Date().toISOString(), userId: editorUserId || "system", action, patch };
+  const next: Beneficiary = {
+    ...cur,
+    ...patch,
+    medical: { ...cur.medical, ...patch.medical },
+    care: { ...cur.care, ...patch.care },
+    education: { ...cur.education, ...patch.education },
+    financial: { ...cur.financial, ...patch.financial },
+    communication: { ...cur.communication, ...patch.communication },
+    emergency: { ...cur.emergency, ...patch.emergency },
+  };
+  const entry: AuditEntry = {
+    id: uid(),
+    at: new Date().toISOString(),
+    userId: editorUserId || "system",
+    action,
+    patch,
+  };
   next.audit = [...(cur.audit || []), entry];
   upsertBeneficiary(next);
 }
 
-export function addDocument(id: string, doc: DocumentItem, editorUserId?: string) {
+export function addDocument(
+  id: string,
+  doc: DocumentItem,
+  editorUserId?: string,
+) {
   const b = getBeneficiary(id);
   if (!b) return;
   const next = { ...b, documents: [doc, ...b.documents] } as Beneficiary;
-  next.audit = [...(b.audit || []), { id: uid(), at: new Date().toISOString(), userId: editorUserId || "system", action: "add_document", patch: { doc } }];
+  next.audit = [
+    ...(b.audit || []),
+    {
+      id: uid(),
+      at: new Date().toISOString(),
+      userId: editorUserId || "system",
+      action: "add_document",
+      patch: { doc },
+    },
+  ];
   upsertBeneficiary(next);
 }
 
-export function removeDocument(id: string, docId: string, editorUserId?: string) {
+export function removeDocument(
+  id: string,
+  docId: string,
+  editorUserId?: string,
+) {
   const b = getBeneficiary(id);
   if (!b) return;
-  const next = { ...b, documents: b.documents.filter((d) => d.id !== docId) } as Beneficiary;
-  next.audit = [...(b.audit || []), { id: uid(), at: new Date().toISOString(), userId: editorUserId || "system", action: "remove_document", patch: { docId } }];
+  const next = {
+    ...b,
+    documents: b.documents.filter((d) => d.id !== docId),
+  } as Beneficiary;
+  next.audit = [
+    ...(b.audit || []),
+    {
+      id: uid(),
+      at: new Date().toISOString(),
+      userId: editorUserId || "system",
+      action: "remove_document",
+      patch: { docId },
+    },
+  ];
   upsertBeneficiary(next);
 }
 
-export function archiveBeneficiaries(ids: string[], archived: boolean = true, editorUserId?: string) {
+export function archiveBeneficiaries(
+  ids: string[],
+  archived: boolean = true,
+  editorUserId?: string,
+) {
   const arr = load();
-  const next = arr.map((b) => ids.includes(b.id) ? { ...b, archived, audit: [...(b.audit || []), { id: uid(), at: new Date().toISOString(), userId: editorUserId || "system", action: archived ? "archive" : "unarchive" }] } : b) as Beneficiary[];
+  const next = arr.map((b) =>
+    ids.includes(b.id)
+      ? {
+          ...b,
+          archived,
+          audit: [
+            ...(b.audit || []),
+            {
+              id: uid(),
+              at: new Date().toISOString(),
+              userId: editorUserId || "system",
+              action: archived ? "archive" : "unarchive",
+            },
+          ],
+        }
+      : b,
+  ) as Beneficiary[];
   save(next);
 }
 

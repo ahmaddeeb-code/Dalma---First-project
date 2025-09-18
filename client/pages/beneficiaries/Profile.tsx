@@ -3,7 +3,17 @@ import { useMemo, useSyncExternalStore, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -195,44 +205,141 @@ export default function BeneficiaryProfile() {
         <Card>
           <CardContent className="py-4 flex flex-wrap items-center gap-2">
             {!edit ? (
-              <Button size="sm" variant="outline" onClick={() => setEdit(true)}><Edit3 className="h-4 w-4 ml-1" /> {ar?"تعديل":"Edit"}</Button>
+              <Button size="sm" variant="outline" onClick={() => setEdit(true)}>
+                <Edit3 className="h-4 w-4 ml-1" /> {ar ? "تعديل" : "Edit"}
+              </Button>
             ) : (
               <>
-                <Button size="sm" onClick={() => { if (!b) return; updateBeneficiary(b.id, { ...b }, getCurrentUserId() || undefined, "inline_update"); setEdit(false); toast.success(ar?"تم الحفظ":"Saved"); }}><Save className="h-4 w-4 ml-1" /> {ar?"حفظ":"Save"}</Button>
-                <Button size="sm" variant="ghost" onClick={() => { window.location.reload(); }}><X className="h-4 w-4 ml-1" /> {ar?"إلغاء":"Cancel"}</Button>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    if (!b) return;
+                    updateBeneficiary(
+                      b.id,
+                      { ...b },
+                      getCurrentUserId() || undefined,
+                      "inline_update",
+                    );
+                    setEdit(false);
+                    toast.success(ar ? "تم الحفظ" : "Saved");
+                  }}
+                >
+                  <Save className="h-4 w-4 ml-1" /> {ar ? "حفظ" : "Save"}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    window.location.reload();
+                  }}
+                >
+                  <X className="h-4 w-4 ml-1" /> {ar ? "إلغاء" : "Cancel"}
+                </Button>
               </>
             )}
             <label className="cursor-pointer inline-flex items-center gap-1 text-sm bg-secondary text-secondary-foreground rounded-md px-2 py-1">
-              <UploadCloud className="h-4 w-4" /> {ar?"صورة الملف":"Profile Photo"}
-              <input type="file" accept="image/*" className="hidden" onChange={async (e) => { const f = e.target.files?.[0]; if (!f || !b) return; const reader = new FileReader(); reader.onload = () => { updateBeneficiary(b.id, { photoUrl: reader.result as string }, getCurrentUserId() || undefined, "upload_photo"); toast.success(ar?"تم تحديث الصورة":"Photo updated"); }; reader.readAsDataURL(f); }} />
+              <UploadCloud className="h-4 w-4" />{" "}
+              {ar ? "صورة الملف" : "Profile Photo"}
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={async (e) => {
+                  const f = e.target.files?.[0];
+                  if (!f || !b) return;
+                  const reader = new FileReader();
+                  reader.onload = () => {
+                    updateBeneficiary(
+                      b.id,
+                      { photoUrl: reader.result as string },
+                      getCurrentUserId() || undefined,
+                      "upload_photo",
+                    );
+                    toast.success(ar ? "تم تحديث الصورة" : "Photo updated");
+                  };
+                  reader.readAsDataURL(f);
+                }}
+              />
             </label>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button size="sm" variant="secondary"><Archive className="h-4 w-4 ml-1" /> {b.archived ? (ar?"إلغاء الأرشفة":"Unarchive") : (ar?"أرشفة":"Archive")}</Button>
+                <Button size="sm" variant="secondary">
+                  <Archive className="h-4 w-4 ml-1" />{" "}
+                  {b.archived
+                    ? ar
+                      ? "إلغاء الأرشفة"
+                      : "Unarchive"
+                    : ar
+                      ? "أرشفة"
+                      : "Archive"}
+                </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>{ar?"تأكيد":"Confirm"}</AlertDialogTitle>
-                  <AlertDialogDescription>{b.archived ? (ar?"هل تريد إلغاء أرشفة هذا الملف؟":"Unarchive this profile?") : (ar?"هل تريد أرشفة هذا الملف؟":"Archive this profile?")}</AlertDialogDescription>
+                  <AlertDialogTitle>
+                    {ar ? "تأكيد" : "Confirm"}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {b.archived
+                      ? ar
+                        ? "هل تريد إلغاء أرشفة هذا الملف؟"
+                        : "Unarchive this profile?"
+                      : ar
+                        ? "هل تريد أرشفة هذا الملف؟"
+                        : "Archive this profile?"}
+                  </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>{ar?"إلغاء":"Cancel"}</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => { if (!b) return; archiveBeneficiaries([b.id], !b.archived, getCurrentUserId() || undefined); toast.success(ar?"تم التحديث":"Updated"); }}>{ar?"تأكيد":"Confirm"}</AlertDialogAction>
+                  <AlertDialogCancel>
+                    {ar ? "إلغاء" : "Cancel"}
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => {
+                      if (!b) return;
+                      archiveBeneficiaries(
+                        [b.id],
+                        !b.archived,
+                        getCurrentUserId() || undefined,
+                      );
+                      toast.success(ar ? "تم التحديث" : "Updated");
+                    }}
+                  >
+                    {ar ? "تأكيد" : "Confirm"}
+                  </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button size="sm" variant="destructive"><Trash2 className="h-4 w-4 ml-1" /> {ar?"حذف":"Delete"}</Button>
+                <Button size="sm" variant="destructive">
+                  <Trash2 className="h-4 w-4 ml-1" /> {ar ? "حذف" : "Delete"}
+                </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>{ar?"حذف نهائي":"Permanent Delete"}</AlertDialogTitle>
-                  <AlertDialogDescription>{ar?"سيتم حذف هذا المستفيد نهائياً. لا يمكن التراجع.":"This will permanently delete this beneficiary. This action cannot be undone."}</AlertDialogDescription>
+                  <AlertDialogTitle>
+                    {ar ? "حذف نهائي" : "Permanent Delete"}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {ar
+                      ? "سيتم حذف هذا المستفيد نهائياً. لا يمكن التراجع."
+                      : "This will permanently delete this beneficiary. This action cannot be undone."}
+                  </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>{ar?"إلغاء":"Cancel"}</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => { if (!b) return; removeBeneficiary(b.id); toast.success(ar?"تم الحذف":"Deleted"); window.history.back(); }}>{ar?"حذف":"Delete"}</AlertDialogAction>
+                  <AlertDialogCancel>
+                    {ar ? "إلغاء" : "Cancel"}
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => {
+                      if (!b) return;
+                      removeBeneficiary(b.id);
+                      toast.success(ar ? "تم الحذف" : "Deleted");
+                      window.history.back();
+                    }}
+                  >
+                    {ar ? "حذف" : "Delete"}
+                  </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
@@ -274,7 +381,8 @@ export default function BeneficiaryProfile() {
             <LifeBuoy className="h-4 w-4 ml-1" /> {ar ? "الطوارئ" : "Emergency"}
           </TabsTrigger>
           <TabsTrigger value="history">
-            <ClipboardList className="h-4 w-4 ml-1" /> {ar ? "السجل" : "History"}
+            <ClipboardList className="h-4 w-4 ml-1" />{" "}
+            {ar ? "السجل" : "History"}
           </TabsTrigger>
         </TabsList>
 
@@ -293,36 +401,85 @@ export default function BeneficiaryProfile() {
             <CardContent className="grid md:grid-cols-2 gap-4">
               <div>
                 <div className="text-sm flex items-center gap-2">
-                  <span className="text-muted-foreground">{ar ? "الهاتف" : "Phone"}:</span>
+                  <span className="text-muted-foreground">
+                    {ar ? "الهاتف" : "Phone"}:
+                  </span>
                   {edit ? (
-                    <Input className="h-8" defaultValue={b.contact.phone} onChange={(e)=> (b.contact.phone = e.target.value)} />
-                  ) : b.contact.phone}
+                    <Input
+                      className="h-8"
+                      defaultValue={b.contact.phone}
+                      onChange={(e) => (b.contact.phone = e.target.value)}
+                    />
+                  ) : (
+                    b.contact.phone
+                  )}
                 </div>
                 <div className="text-sm flex items-center gap-2">
                   <span className="text-muted-foreground">Email:</span>
                   {edit ? (
-                    <Input className="h-8" defaultValue={b.contact.email} onChange={(e)=> (b.contact.email = e.target.value)} />
-                  ) : (b.contact.email || (ar ? "غير متوفر" : "Not provided"))}
+                    <Input
+                      className="h-8"
+                      defaultValue={b.contact.email}
+                      onChange={(e) => (b.contact.email = e.target.value)}
+                    />
+                  ) : (
+                    b.contact.email || (ar ? "غير متوفر" : "Not provided")
+                  )}
                 </div>
                 <div className="text-sm flex items-center gap-2">
-                  <span className="text-muted-foreground">{ar ? "العنوان" : "Address"}:</span>
+                  <span className="text-muted-foreground">
+                    {ar ? "العنوان" : "Address"}:
+                  </span>
                   {edit ? (
-                    <Input className="h-8" defaultValue={b.contact.address} onChange={(e)=> (b.contact.address = e.target.value)} />
-                  ) : (b.contact.address || (ar ? "غير متوفر" : "Not provided"))}
+                    <Input
+                      className="h-8"
+                      defaultValue={b.contact.address}
+                      onChange={(e) => (b.contact.address = e.target.value)}
+                    />
+                  ) : (
+                    b.contact.address || (ar ? "غير متوفر" : "Not provided")
+                  )}
                 </div>
               </div>
               <div>
                 <div className="text-sm flex items-center gap-2">
-                  <span className="text-muted-foreground">{ar ? "ولي الأمر" : "Guardian"}:</span>
+                  <span className="text-muted-foreground">
+                    {ar ? "ولي الأمر" : "Guardian"}:
+                  </span>
                   {edit ? (
-                    <><Input className="h-8 w-48" defaultValue={b.guardian.name} onChange={(e)=> (b.guardian.name = e.target.value)} /> (<Input className="h-8 w-40" defaultValue={b.guardian.relation} onChange={(e)=> (b.guardian.relation = e.target.value)} />)</>
-                  ) : <>{b.guardian.name} ({b.guardian.relation})</>}
+                    <>
+                      <Input
+                        className="h-8 w-48"
+                        defaultValue={b.guardian.name}
+                        onChange={(e) => (b.guardian.name = e.target.value)}
+                      />{" "}
+                      (
+                      <Input
+                        className="h-8 w-40"
+                        defaultValue={b.guardian.relation}
+                        onChange={(e) => (b.guardian.relation = e.target.value)}
+                      />
+                      )
+                    </>
+                  ) : (
+                    <>
+                      {b.guardian.name} ({b.guardian.relation})
+                    </>
+                  )}
                 </div>
                 <div className="text-sm flex items-center gap-2">
-                  <span className="text-muted-foreground">{ar ? "هاتف ولي الأمر" : "Guardian Phone"}:</span>
+                  <span className="text-muted-foreground">
+                    {ar ? "هاتف ولي الأمر" : "Guardian Phone"}:
+                  </span>
                   {edit ? (
-                    <Input className="h-8" defaultValue={b.guardian.phone} onChange={(e)=> (b.guardian.phone = e.target.value)} />
-                  ) : b.guardian.phone}
+                    <Input
+                      className="h-8"
+                      defaultValue={b.guardian.phone}
+                      onChange={(e) => (b.guardian.phone = e.target.value)}
+                    />
+                  ) : (
+                    b.guardian.phone
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -404,13 +561,33 @@ export default function BeneficiaryProfile() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-sm flex items-center gap-2 flex-wrap">
-                <span className="text-muted-foreground">{ar ? "الطبيب" : "Doctor"}:</span> {edit ? (
-                  <Input className="h-8 w-48" defaultValue={b.care.assignedDoctor} onChange={(e)=> (b.care.assignedDoctor = e.target.value)} />
-                ) : (b.care.assignedDoctor || (ar?"غير محدد":"Unassigned"))}
+                <span className="text-muted-foreground">
+                  {ar ? "الطبيب" : "Doctor"}:
+                </span>{" "}
+                {edit ? (
+                  <Input
+                    className="h-8 w-48"
+                    defaultValue={b.care.assignedDoctor}
+                    onChange={(e) => (b.care.assignedDoctor = e.target.value)}
+                  />
+                ) : (
+                  b.care.assignedDoctor || (ar ? "غير محدد" : "Unassigned")
+                )}
                 <span>·</span>
-                <span className="text-muted-foreground">{ar ? "المعالج" : "Therapist"}:</span> {edit ? (
-                  <Input className="h-8 w-48" defaultValue={b.care.assignedTherapist} onChange={(e)=> (b.care.assignedTherapist = e.target.value)} />
-                ) : (b.care.assignedTherapist || (ar?"غير محدد":"Unassigned"))}
+                <span className="text-muted-foreground">
+                  {ar ? "المعالج" : "Therapist"}:
+                </span>{" "}
+                {edit ? (
+                  <Input
+                    className="h-8 w-48"
+                    defaultValue={b.care.assignedTherapist}
+                    onChange={(e) =>
+                      (b.care.assignedTherapist = e.target.value)
+                    }
+                  />
+                ) : (
+                  b.care.assignedTherapist || (ar ? "غير محدد" : "Unassigned")
+                )}
               </div>
               <div>
                 <div className="font-medium mb-2">
@@ -549,10 +726,38 @@ export default function BeneficiaryProfile() {
               {canEdit && (
                 <div className="mb-3 flex items-center gap-2">
                   <label className="cursor-pointer">
-                    <Input type="file" accept="image/*,application/pdf" multiple onChange={async (e) => {
-                      const files = e.target.files; if (!files || !b) return; for (const f of Array.from(files)) { const reader = new FileReader(); reader.onload = () => { addDocument(b.id, { id: `${Date.now()}_${f.name}`.replace(/\s+/g, "_"), type: f.type || "Attachment", title: f.name, url: reader.result as string, issuedAt: new Date().toISOString() }, getCurrentUserId() || undefined); }; reader.readAsDataURL(f); }
-                      toast.success(ar?"تمت إضافة المرفقات":"Attachments added");
-                    }} />
+                    <Input
+                      type="file"
+                      accept="image/*,application/pdf"
+                      multiple
+                      onChange={async (e) => {
+                        const files = e.target.files;
+                        if (!files || !b) return;
+                        for (const f of Array.from(files)) {
+                          const reader = new FileReader();
+                          reader.onload = () => {
+                            addDocument(
+                              b.id,
+                              {
+                                id: `${Date.now()}_${f.name}`.replace(
+                                  /\s+/g,
+                                  "_",
+                                ),
+                                type: f.type || "Attachment",
+                                title: f.name,
+                                url: reader.result as string,
+                                issuedAt: new Date().toISOString(),
+                              },
+                              getCurrentUserId() || undefined,
+                            );
+                          };
+                          reader.readAsDataURL(f);
+                        }
+                        toast.success(
+                          ar ? "تمت إضافة المرفقات" : "Attachments added",
+                        );
+                      }}
+                    />
                   </label>
                 </div>
               )}
@@ -569,7 +774,16 @@ export default function BeneficiaryProfile() {
                   {b.documents.map((d) => (
                     <TableRow key={d.id}>
                       <TableCell>{d.type}</TableCell>
-                      <TableCell><a className="underline" href={d.url} target="_blank" rel="noreferrer">{d.title}</a></TableCell>
+                      <TableCell>
+                        <a
+                          className="underline"
+                          href={d.url}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {d.title}
+                        </a>
+                      </TableCell>
                       <TableCell>
                         {d.issuedAt
                           ? new Date(d.issuedAt).toLocaleDateString()
@@ -737,18 +951,32 @@ export default function BeneficiaryProfile() {
           <Card>
             <CardHeader>
               <CardTitle>{ar ? "سجل التعديلات" : "Edit History"}</CardTitle>
-              <CardDescription>{ar ? "تعقب التعديلات للمراجعة" : "Audit trail for accountability"}</CardDescription>
+              <CardDescription>
+                {ar
+                  ? "تعقب التعديلات للمراجعة"
+                  : "Audit trail for accountability"}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <ul className="text-sm space-y-2">
-                {(b.audit || []).slice().reverse().map((a) => (
-                  <li key={a.id} className="flex items-center justify-between">
-                    <span>{new Date(a.at).toLocaleString()} — {a.action}</span>
-                    <span className="text-muted-foreground">{a.userId}</span>
-                  </li>
-                ))}
+                {(b.audit || [])
+                  .slice()
+                  .reverse()
+                  .map((a) => (
+                    <li
+                      key={a.id}
+                      className="flex items-center justify-between"
+                    >
+                      <span>
+                        {new Date(a.at).toLocaleString()} — {a.action}
+                      </span>
+                      <span className="text-muted-foreground">{a.userId}</span>
+                    </li>
+                  ))}
                 {(b.audit || []).length === 0 && (
-                  <li className="text-muted-foreground">{ar ? "لا يوجد سجل" : "No history"}</li>
+                  <li className="text-muted-foreground">
+                    {ar ? "لا يوجد سجل" : "No history"}
+                  </li>
                 )}
               </ul>
             </CardContent>
