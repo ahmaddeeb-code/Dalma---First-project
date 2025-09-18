@@ -90,7 +90,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         </SidebarContent>
         <SidebarFooter className="mt-auto">
           <Button asChild className="w-full">
-            <Link to="/donations"><HeartHandshake className="ml-2" />تبرع الآن</Link>
+            <Link to="/donations"><HeartHandshake className="ml-2" />{t("header.donate")}</Link>
           </Button>
         </SidebarFooter>
       </Sidebar>
