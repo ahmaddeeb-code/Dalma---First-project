@@ -189,7 +189,39 @@ const messages = {
           none: "No alerts",
         },
       },
-      admin: { title: "Admin Dashboard" },
+      admin: {
+        title: "Admin Dashboard",
+        subtitle: "Real-time view over beneficiaries, staff, services and alerts.",
+        buttons: {
+          accessControl: "Access Control",
+          exportReport: "Export Report",
+          notifications: "Notification Center",
+        },
+        tiles: {
+          beneficiaries: { title: "Beneficiaries", deltaToday: "+24 today" },
+          appointments: { title: "Appointments Today" },
+          staffUtil: { title: "Staff Utilization", note: "Target 75% · Overtime 6%" },
+          quality: { title: "Quality KPI", desc: "Based on therapy completion, incident rate, and satisfaction surveys." },
+        },
+        chart: {
+          title: "Beneficiaries by Category",
+          desc: "Distribution across Residential, Daycare, and Home-based services.",
+          labels: { residential: "Residential", daycare: "Daycare", home: "Home-based" },
+        },
+        alerts: {
+          title: "Urgent Alerts",
+          desc: "Real-time critical notifications.",
+          items: {
+            missedMedication: "Missed medication (Room 203)",
+            transportDelay: "Transport delay (5 beneficiaries)",
+            therapyRescheduled: "Therapy rescheduled",
+          },
+          levels: { high: "High", medium: "Medium", info: "Info" },
+        },
+        team: { title: "Team Performance", desc: "Attendance, notes, and incident reporting.", summary: "92% on-time clock-ins · 18 field visits" },
+        reviews: { title: "Upcoming Reviews", desc: "Medical and psychological assessments this week.", summary: "54 scheduled reviews" },
+        notifSummary: { title: "Notifications Summary", desc: "Automated alerts and messages.", summary: "12 urgent · 36 normal · 128 info" },
+      },
     },
     home: {
       hero: {
@@ -360,7 +392,7 @@ const messages = {
         desc: "إضافة الموظفين وتعيين الأدوار والصلاحيات (مثل الأطباء والمعالجين)",
         addEmployee: "إضافة موظف",
         cards: { total: "إجمالي", doctors: "الأطباء", therapists: "المعالجون" },
-        table: { title: "الموظفون", desc: "انقر تعدي�� لتحديث الأدوار والصلاحيات" },
+        table: { title: "الموظفون", desc: "انقر تعديل لتحديث الأدوار والصلاحيات" },
         filters: { searchPlaceholder: "اسم، بريد، قسم..." },
         confirmDeleteTitle: "حذف الموظف؟",
         confirmDeleteMsg: "سيتم حذف هذا المستخدم من النظام.",
@@ -454,7 +486,39 @@ const messages = {
           none: "لا توجد تنبيهات",
         },
       },
-      admin: { title: "لوحة التحكم" },
+      admin: {
+        title: "لوحة التحكم",
+        subtitle: "نظرة فورية على المستفيدين والموظفين والخدمات والتنبيهات.",
+        buttons: {
+          accessControl: "ال��حكم بالصلاحيات",
+          exportReport: "تصدير تقرير",
+          notifications: "مركز التنبيهات",
+        },
+        tiles: {
+          beneficiaries: { title: "المستفيدون", deltaToday: "+٢٤ اليوم" },
+          appointments: { title: "مواعيد اليوم" },
+          staffUtil: { title: "استغلال الموظفين", note: "الهدف ٧٥٪ · وقت إضافي ٦٪" },
+          quality: { title: "مؤشر الجودة", desc: "استناداً إلى إكمال العلاج، معدل الحوادث، واستبيانات الرضا." },
+        },
+        chart: {
+          title: "المستفيدون حسب الفئة",
+          desc: "توزيع الخدمات السكنية والنهارية والمنزلية.",
+          labels: { residential: "سكنية", daycare: "نهارية", home: "منزلية" },
+        },
+        alerts: {
+          title: "تنبيهات عاجلة",
+          desc: "تنبيهات حرجة بالوقت الحقيقي.",
+          items: {
+            missedMedication: "دواء فائت (غرفة ٢٠٣)",
+            transportDelay: "تأخير النقل (٥ مستفيدين)",
+            therapyRescheduled: "إعادة جدولة علاج",
+          },
+          levels: { high: "عالي", medium: "متوسط", info: "معلومة" },
+        },
+        team: { title: "أداء الفريق", desc: "الحضور والملاحظات وتقرير الحوادث.", summary: "٩٢٪ تسجيل حضور في الوقت · ١٨ زيارة ميدانية" },
+        reviews: { title: "مراجعات قادمة", desc: "تقييمات طبية ونفسية لهذا الأسبوع.", summary: "٥٤ تقييمات مجدولة" },
+        notifSummary: { title: "ملخص الإشعارات", desc: "تنبيهات ورسائل تلقائية.", summary: "١٢ عاجلة · ٣٦ عادية · ١٢٨ معلومات" },
+      },
     },
     home: {
       hero: {
@@ -497,7 +561,7 @@ const messages = {
             "تحليلات المؤشرات",
             "الأدوار والصلاحيات",
             "الميزانيات والمالية",
-            "سجلات التدقيق",
+            "سجلات ��لتدقيق",
           ],
         },
         family: {
@@ -517,7 +581,7 @@ const messages = {
         psychological: "نفسي",
         functional: "وظيفي",
         updated:
-          "تحديثات مباشرة من تسجيلات الوص��ل وإكما�� العلاج والتكامل مع الأجهزة.",
+          "تحديثات مباشرة من تسجيلات الوص��ل وإكمال العلاج والتكامل مع الأجهزة.",
       },
       notifications: {
         title: "تنبيهات ذكية",
@@ -539,7 +603,7 @@ const messages = {
           },
           comms: {
             title: "اتصال موحد",
-            text: "رسائل داخلية، مشاركة ملفات، ��تحديثات للعائلة.",
+            text: "رسائل داخلية، مشاركة ملفات، وتحديثات للعائلة.",
           },
           schedule: {
             title: "الجدولة والتذكيرات",
