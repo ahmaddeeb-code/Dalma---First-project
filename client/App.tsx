@@ -11,6 +11,10 @@ import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/AdminDashboard";
 import AccessControl from "./pages/AccessControl";
 import Placeholder from "./pages/_Placeholder";
+import LoginAdmin from "./pages/auth/LoginAdmin";
+import LoginStaff from "./pages/auth/LoginStaff";
+import LoginFamily from "./pages/auth/LoginFamily";
+import LoginBeneficiary from "./pages/auth/LoginBeneficiary";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +29,10 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/access-control" element={<AccessControl />} />
+            <Route path="/login/admin" element={<LoginAdmin />} />
+            <Route path="/login/staff" element={<LoginStaff />} />
+            <Route path="/login/family" element={<LoginFamily />} />
+            <Route path="/login/beneficiary" element={<LoginBeneficiary />} />
             <Route
               path="/beneficiaries"
               element={
