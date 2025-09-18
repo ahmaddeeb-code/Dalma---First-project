@@ -134,7 +134,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               ) : (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="secondary"><UserCircle2 className="ml-2" /> تسجيل الدخول</Button>
+                    <Button variant="secondary"><UserCircle2 className="ml-2" /> {t("header.signIn")}</Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start">
                     <DropdownMenuLabel>{t("header.chooseRole")}</DropdownMenuLabel>
