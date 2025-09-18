@@ -16,6 +16,7 @@ import BeneficiaryProfile from "@/pages/beneficiaries/Profile";
 import Employees from "@/pages/Employees";
 import Translations from "@/pages/Translations";
 import MedicalSettings from "@/pages/MedicalSettings";
+import BeneficiarySettings from "@/pages/BeneficiarySettings";
 import Logistics from "@/pages/Logistics";
 import LoginAdmin from "./pages/auth/LoginAdmin";
 import LoginStaff from "./pages/auth/LoginStaff";
