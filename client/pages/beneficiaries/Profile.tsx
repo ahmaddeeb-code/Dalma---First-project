@@ -343,7 +343,7 @@ export default function BeneficiaryProfile() {
                   </AlertDialogTitle>
                   <AlertDialogDescription>
                     {ar
-                      ? "سيتم حذف هذا المستفيد نهائياً. لا يمكن التراجع."
+                      ? "سيتم حذف هذا المس��فيد نهائياً. لا يمكن التراجع."
                       : "This will permanently delete this beneficiary. This action cannot be undone."}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
@@ -730,6 +730,16 @@ export default function BeneficiaryProfile() {
                 <div className="font-medium mb-1">
                   {ar ? "البرامج" : "Programs"}
                 </div>
+                {edit && (
+                  <div className="flex items-center gap-2 mb-2">
+                    <Select onValueChange={(v)=>{ if(v && !b.education.programs.includes(v)) b.education.programs.push(v); }}>
+                      <SelectTrigger className="h-8 w-56"><SelectValue placeholder={ar?"إضافة برنامج":"Add program"} /></SelectTrigger>
+                      <SelectContent>
+                        {settings.lists.supportPrograms.map((p)=>(<SelectItem key={p} value={p}>{p}</SelectItem>))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
                 <ul className="list-disc pl-5 space-y-1">
                   {b.education.programs.map((p) => (
                     <li key={p}>{p}</li>
@@ -928,7 +938,7 @@ export default function BeneficiaryProfile() {
           <Card>
             <CardHeader>
               <CardTitle>
-                {ar ? "التواصل والملاحظات" : "Communication & Feedback"}
+                {ar ? "التوا��ل والملاحظات" : "Communication & Feedback"}
               </CardTitle>
               <CardDescription>
                 {ar
