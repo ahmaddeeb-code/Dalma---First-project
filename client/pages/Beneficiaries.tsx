@@ -190,6 +190,13 @@ export default function Beneficiaries() {
     sortDir,
   ]);
 
+  // pagination
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const start = (page - 1) * pageSize;
+  const pageItems = filtered.slice(start, start + pageSize);
+
   const total = data.length;
   const active = data.filter((b) => b.status === "active").length;
   const under = data.filter((b) => b.status === "under_treatment").length;
