@@ -60,9 +60,9 @@ export default function AccessControl() {
 
       <Tabs defaultValue="users">
         <TabsList>
-          <TabsTrigger value="users">المستخدمون</TabsTrigger>
-          <TabsTrigger value="roles">ا��أدوار</TabsTrigger>
-          <TabsTrigger value="privileges">الصلاحيات</TabsTrigger>
+          <TabsTrigger value="users">{t("pages.accessControl.tabs.users")}</TabsTrigger>
+          <TabsTrigger value="roles">{t("pages.accessControl.tabs.roles")}</TabsTrigger>
+          <TabsTrigger value="privileges">{t("pages.accessControl.tabs.privs")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="users" className="mt-6">
