@@ -54,16 +54,16 @@ export default function AccessControl() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">التحكم بالصلاحيات</h1>
           <p className="text-muted-foreground">
-            إدارة المستخدمين والأدوار والصلاحيات؛ وتعيينها بأمان.
+            إدارة المستخدمين والأدوار والصلاحيات؛ ��تعيينها بأمان.
           </p>
         </div>
       </header>
 
       <Tabs defaultValue="users">
         <TabsList>
-          <TabsTrigger value="users">Users</TabsTrigger>
-          <TabsTrigger value="roles">Roles</TabsTrigger>
-          <TabsTrigger value="privileges">Privileges</TabsTrigger>
+          <TabsTrigger value="users">المستخدمون</TabsTrigger>
+          <TabsTrigger value="roles">الأدوار</TabsTrigger>
+          <TabsTrigger value="privileges">الصلاحيات</TabsTrigger>
         </TabsList>
 
         <TabsContent value="users" className="mt-6">
@@ -88,7 +88,7 @@ export default function AccessControl() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>الاسم</TableHead>
-                    <TableHead>البريد الإلكتر��ني</TableHead>
+                    <TableHead>البريد الإلكتروني</TableHead>
                     <TableHead>الأدوار</TableHead>
                     <TableHead>الصلاحيات الفعلية</TableHead>
                     <TableHead className="w-[120px]">إجراءات</TableHead>
@@ -184,7 +184,7 @@ export default function AccessControl() {
                   <TableRow>
                     <TableHead>الاسم</TableHead>
                     <TableHead>الصلاحيات</TableHead>
-                    <TableHead>المستخدمون</TableHead>
+                    <TableHead>ال��ستخدمون</TableHead>
                     <TableHead className="w-[120px]">إجراءات</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -244,7 +244,7 @@ export default function AccessControl() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>الصلاح��ات</CardTitle>
+                <CardTitle>الصلاحيات</CardTitle>
                 <CardDescription>
                   Atomic permissions assigned to roles or directly to users.
                 </CardDescription>
