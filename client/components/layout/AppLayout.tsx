@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getCurrentUser, logout, subscribeAuth } from "@/store/auth";
+import { getCurrentUser, getCurrentUserId, logout, subscribeAuth } from "@/store/auth";
 import { loadACL } from "@/store/acl";
 
 const navItems = [
