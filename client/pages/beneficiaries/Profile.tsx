@@ -100,6 +100,14 @@ function statusBadgeAr(status: Beneficiary["status"]) {
   }
 }
 
+function useBeneficiarySettings(){
+  return useSyncExternalStore(
+    (cb)=>subscribeBeneficiarySettings(cb),
+    ()=>getBeneficiarySettings(),
+    ()=>getBeneficiarySettings(),
+  );
+}
+
 export default function BeneficiaryProfile() {
   const { id } = useParams();
   const b = useBeneficiary(id);
@@ -559,7 +567,7 @@ export default function BeneficiaryProfile() {
               </CardTitle>
               <CardDescription>
                 {ar
-                  ? "أ��داف مخصصة، تقدم، وجدول الجلسات"
+                  ? "أهداف مخصصة، تقدم، وجدول الجلسات"
                   : "Personalized goals, progress, session schedule"}
               </CardDescription>
             </CardHeader>
@@ -909,7 +917,7 @@ export default function BeneficiaryProfile() {
                 ))}
                 {b.communication.messages.length === 0 && (
                   <li className="text-muted-foreground">
-                    {ar ? "لا توجد ��سائل" : "No messages"}
+                    {ar ? "لا توجد رسائل" : "No messages"}
                   </li>
                 )}
               </ul>
