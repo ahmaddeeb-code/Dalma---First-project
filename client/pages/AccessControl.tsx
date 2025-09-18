@@ -255,11 +255,11 @@ export default function AccessControl() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>الاسم</TableHead>
-                    <TableHead>الفئة</TableHead>
-                    <TableHead>مستخدمة في الأدوار</TableHead>
-                    <TableHead>مستخدمة في المستخدمين</TableHead>
-                    <TableHead className="w-[120px]">إجراءات</TableHead>
+                    <TableHead>{t("pages.accessControl.privileges.headers.name")}</TableHead>
+                    <TableHead>{t("pages.accessControl.privileges.headers.category")}</TableHead>
+                    <TableHead>{t("pages.accessControl.privileges.headers.usedInRoles")}</TableHead>
+                    <TableHead>{t("pages.accessControl.privileges.headers.usedInUsers")}</TableHead>
+                    <TableHead className="w-[120px]">{t("pages.accessControl.privileges.headers.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -582,7 +582,7 @@ function PrivilegeDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {existing ? "تعديل صلاحية" : "صلاحية جديدة"}
+            {existing ? "تعديل صلاحية" : "صلاحي�� جديدة"}
           </DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-2">
