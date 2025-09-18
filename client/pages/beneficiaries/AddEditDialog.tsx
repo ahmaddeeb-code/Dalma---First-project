@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { getLocale } from "@/i18n";
 import { Beneficiary, DisabilityType, DocumentItem, newBeneficiary, upsertBeneficiary } from "@/store/beneficiaries";
+import { getCurrentUserId } from "@/store/auth";
 
 export type AddEditDialogProps = {
   open: boolean;
