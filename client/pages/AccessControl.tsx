@@ -52,7 +52,7 @@ export default function AccessControl() {
     <div className="space-y-8">
       <header className="flex items-end justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Access Control</h1>
+          <h1 className="text-3xl font-bold tracking-tight">التحكم بالصلاحيات</h1>
           <p className="text-muted-foreground">
             Manage users, roles, and privileges; assign access securely.
           </p>
