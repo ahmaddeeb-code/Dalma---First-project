@@ -11,8 +11,12 @@ export function subscribeAuth(cb: () => void) {
   return () => subscribers.delete(cb);
 }
 
+export function getCurrentUserId(): string | null {
+  return localStorage.getItem(AUTH_KEY);
+}
+
 export function getCurrentUser(): User | null {
-  const id = localStorage.getItem(AUTH_KEY);
+  const id = getCurrentUserId();
   if (!id) return null;
   const { users } = loadACL();
   return users.find((u) => u.id === id) || null;
