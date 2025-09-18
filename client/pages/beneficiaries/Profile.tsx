@@ -505,6 +505,37 @@ export default function BeneficiaryProfile() {
               </div>
             </CardContent>
           </Card>
+          <Card className="mt-4">
+            <CardHeader>
+              <CardTitle>{ar?"حقول إضافية":"Custom Fields"}</CardTitle>
+              <CardDescription>{ar?"تُدار من إعدادات المستفيد":"Managed in Beneficiary Settings"}</CardDescription>
+            </CardHeader>
+            <CardContent className="grid md:grid-cols-2 gap-4">
+              {settings.customFields.map((f)=> (
+                <div key={f.id} className="text-sm">
+                  <div className="text-muted-foreground mb-1">{f.label}</div>
+                  {f.type === "select" ? (
+                    edit ? (
+                      <Select defaultValue={String(b.extra?.[f.key]||"")} onValueChange={(v)=>{ b.extra = { ...(b.extra||{}), [f.key]: v }; }}>
+                        <SelectTrigger className="h-8"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          {(f.options||[]).map(o=>(<SelectItem key={o} value={o}>{o}</SelectItem>))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <div>{String(b.extra?.[f.key] || (ar?"—":"—"))}</div>
+                    )
+                  ) : (
+                    edit ? (
+                      <Input className="h-8" defaultValue={String(b.extra?.[f.key]||"")} onChange={(e)=>{ b.extra = { ...(b.extra||{}), [f.key]: e.target.value }; }} />
+                    ) : (
+                      <div>{String(b.extra?.[f.key] || (ar?"—":"—"))}</div>
+                    )
+                  )}
+                </div>
+              ))}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="medical" className="mt-4">
@@ -783,7 +814,7 @@ export default function BeneficiaryProfile() {
               </CardTitle>
               <CardDescription>
                 {ar
-                  ? "تقارير طبية وشهادات وإفادات"
+                  ? "تقارير طبية و��هادات وإفادات"
                   : "Medical reports, certificates, prescriptions"}
               </CardDescription>
             </CardHeader>
