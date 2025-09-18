@@ -445,7 +445,7 @@ function UserDialog({
         </div>
         <DialogFooter>
           <Button onClick={save} disabled={!name.trim() || !email.trim()}>
-            حفظ
+            {t("common.save")}
           </Button>
         </DialogFooter>
       </DialogContent>
