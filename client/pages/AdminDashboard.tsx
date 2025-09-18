@@ -101,7 +101,7 @@ export default function AdminDashboard() {
           <CardHeader>
             <CardTitle>المستفيدون حسب الفئة</CardTitle>
             <CardDescription>
-              توزيع الخدمات السكنية والنهارية والمنزلية.
+              توزيع الخدمات السكني�� والنهارية والمنزلية.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -133,28 +133,28 @@ export default function AdminDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <AlertTriangle className="text-warning" /> تنبيهات عاجلة
+              <AlertTriangle className="text-warning" /> {ar ? "تنبيهات عاجلة" : "Urgent Alerts"}
             </CardTitle>
-            <CardDescription>تنبيهات حرجة بالوقت الحقيقي.</CardDescription>
+            <CardDescription>{ar ? "تنبيهات حرجة بالوقت الحقيقي." : "Real-time critical notifications."}</CardDescription>
           </CardHeader>
           <CardContent>
             <ul className="space-y-3 text-sm">
               <li className="flex items-center justify-between">
-                <span>دواء فائت (غرفة ٢٠٣)</span>
+                <span>{ar ? "دواء فائت (غرفة ٢٠٣)" : "Missed medication (Room 203)"}</span>
                 <span className="rounded bg-warning/15 text-warning px-2 py-0.5">
-                  عالي
+                  {ar ? "عالي" : "High"}
                 </span>
               </li>
               <li className="flex items-center justify-between">
-                <span>��أخير النقل (٥ مستفيدين)</span>
+                <span>{ar ? "تأخير النقل (٥ مستفيدين)" : "Transport delay (5 beneficiaries)"}</span>
                 <span className="rounded bg-warning/15 text-warning px-2 py-0.5">
-                  متوسط
+                  {ar ? "متوسط" : "Medium"}
                 </span>
               </li>
               <li className="flex items-center justify-between">
-                <span>إعادة جدولة علاج</span>
+                <span>{ar ? "إعادة جدولة علاج" : "Therapy rescheduled"}</span>
                 <span className="rounded bg-info/15 text-info px-2 py-0.5">
-                  معلومة
+                  {ar ? "معلومة" : "Info"}
                 </span>
               </li>
             </ul>
