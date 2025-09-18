@@ -166,7 +166,7 @@ export default function AccessControl() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Roles</CardTitle>
+                <CardTitle>الأدوار</CardTitle>
                 <CardDescription>
                   Roles bundle privileges for easier assignment.
                 </CardDescription>
