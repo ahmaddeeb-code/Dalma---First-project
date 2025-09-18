@@ -8,12 +8,7 @@ function uid() {
 }
 
 export type Gender = "male" | "female";
-export type DisabilityType =
-  | "physical"
-  | "intellectual"
-  | "sensory"
-  | "autism"
-  | "multiple";
+export type DisabilityType = string;
 export type BeneficiaryStatus =
   | "active"
   | "under_treatment"
@@ -70,6 +65,7 @@ export type Beneficiary = {
   civilId: string;
   contact: Contact;
   guardian: Guardian;
+  extra?: Record<string, any>;
   medical: {
     disabilityType: DisabilityType;
     history?: string;
@@ -503,6 +499,7 @@ export function newBeneficiary(partial: Partial<Beneficiary>): Beneficiary {
     civilId: partial.civilId || "",
     contact: partial.contact || { phone: "" },
     guardian: partial.guardian || { name: "", relation: "", phone: "" },
+    extra: partial.extra || {},
     medical: partial.medical || { disabilityType: "physical" },
     care: partial.care || { goals: [], progress: 0, appointments: [] },
     education: partial.education || { programs: [], activities: [] },
