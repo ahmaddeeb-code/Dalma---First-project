@@ -67,7 +67,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         <SidebarSeparator />
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>التنقل</SidebarGroupLabel>
+            <SidebarGroupLabel>{t("nav.home")}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {navItems.map((n) => {
