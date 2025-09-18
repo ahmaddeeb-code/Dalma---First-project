@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { subscribeBeneficiarySettings, getBeneficiarySettings, previewNextBeneficiaryId, generateNextBeneficiaryId } from "@/store/beneficiary-settings";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -50,10 +51,16 @@ export default function AddEditBeneficiaryDialog({
   initial,
 }: AddEditDialogProps) {
   const ar = getLocale() === "ar";
+  const settings = useSyncExternalStore(
+    (cb) => subscribeBeneficiarySettings(cb),
+    () => getBeneficiarySettings(),
+    () => getBeneficiarySettings(),
+  );
   const [name, setName] = useState("");
   const [gender, setGender] = useState<"male" | "female">("male");
   const [dob, setDob] = useState("");
   const [beneficiaryId, setBeneficiaryId] = useState("");
+  const [custom, setCustom] = useState<Record<string,string>>({});
   const [civilId, setCivilId] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -84,6 +91,7 @@ export default function AddEditBeneficiaryDialog({
         setDob(initial.dob);
         setBeneficiaryId(initial.beneficiaryId);
         setCivilId(initial.civilId);
+        setCustom((initial as any).extra || {});
         setPhone(initial.contact.phone || "");
         setEmail(initial.contact.email || "");
         setAddress(initial.contact.address || "");
@@ -114,8 +122,9 @@ export default function AddEditBeneficiaryDialog({
         setName("");
         setGender("male");
         setDob("");
-        setBeneficiaryId("");
+        setBeneficiaryId(previewNextBeneficiaryId());
         setCivilId("");
+        setCustom({});
         setPhone("");
         setEmail("");
         setAddress("");
@@ -141,16 +150,19 @@ export default function AddEditBeneficiaryDialog({
   }, [open, initial]);
 
   const valid = useMemo(() => {
-    return (
-      name.trim().length > 0 &&
-      dob.trim().length > 0 &&
+    const r = settings.required;
+    const base = (
+      (!r.name || name.trim().length > 0) &&
+      (!r.dob || dob.trim().length > 0) &&
       beneficiaryId.trim().length > 0 &&
-      civilId.trim().length > 0 &&
-      phone.trim().length > 0 &&
-      guardianName.trim().length > 0 &&
-      guardianPhone.trim().length > 0
+      (!r.civilId || civilId.trim().length > 0) &&
+      (!r.gender || !!gender) &&
+      (!r.guardianName || guardianName.trim().length > 0) &&
+      (!r.guardianPhone || guardianPhone.trim().length > 0)
     );
-  }, [name, dob, beneficiaryId, civilId, phone, guardianName, guardianPhone]);
+    const customsOk = (settings.customFields || []).every((f:any) => !f.required || (custom[f.key] && custom[f.key]!.trim().length>0));
+    return base && customsOk;
+  }, [name, dob, beneficiaryId, civilId, phone, guardianName, guardianPhone, settings, custom, gender]);
 
   async function onPhotoChange(f: File | null) {
     if (!f) return;
@@ -187,8 +199,9 @@ export default function AddEditBeneficiaryDialog({
     base.name = name;
     base.gender = gender;
     base.dob = dob;
-    base.beneficiaryId = beneficiaryId;
+    base.beneficiaryId = initial ? beneficiaryId : (beneficiaryId || generateNextBeneficiaryId());
     base.civilId = civilId;
+    (base as any).extra = custom;
     base.contact = { phone, email, address };
     base.guardian = {
       name: guardianName,
@@ -295,8 +308,9 @@ export default function AddEditBeneficiaryDialog({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="male">{ar ? "ذكر" : "Male"}</SelectItem>
-                <SelectItem value="female">{ar ? "أنثى" : "Female"}</SelectItem>
+                {(settings.lists.gender || ["male","female"]).map((g:string)=> (
+                  <SelectItem key={g} value={g as any}>{g}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -314,6 +328,7 @@ export default function AddEditBeneficiaryDialog({
               value={beneficiaryId}
               onChange={(e) => setBeneficiaryId(e.target.value)}
             />
+            <p className="text-xs text-muted-foreground">{ar?"تلقائي حسب الإعدادات":"Auto-generated per settings"}</p>
           </div>
           <div className="space-y-2">
             <Label>{ar ? "السجل المدني" : "Civil Registry"} *</Label>
@@ -387,7 +402,7 @@ export default function AddEditBeneficiaryDialog({
             </Select>
           </div>
           <div className="space-y-2 md:col-span-2">
-            <Label>{ar ? "تاريخ طبي" : "Medical History"}</Label>
+            <Label>{ar ? "تا��يخ طبي" : "Medical History"}</Label>
             <Textarea
               value={history}
               onChange={(e) => setHistory(e.target.value)}
@@ -511,6 +526,27 @@ export default function AddEditBeneficiaryDialog({
             </ul>
           </div>
         </div>
+
+        {settings.customFields?.length ? (
+          <div className="mt-4">
+            <Label>{ar?"حقول إضافية":"Additional Fields"}</Label>
+            <div className="grid md:grid-cols-2 gap-3 mt-2">
+              {settings.customFields.map((f:any) => (
+                <div key={f.id} className="space-y-1">
+                  <Label>{f.label}{f.required?" *":""}</Label>
+                  {f.type === "select" ? (
+                    <select className="w-full h-9 rounded-md border bg-background px-3 text-sm" value={custom[f.key] || ""} onChange={(e)=>setCustom({ ...custom, [f.key]: e.target.value })}>
+                      <option value="">—</option>
+                      {(f.options || []).map((o:string)=>(<option key={o} value={o}>{o}</option>))}
+                    </select>
+                  ) : (
+                    <Input value={custom[f.key] || ""} onChange={(e)=>setCustom({ ...custom, [f.key]: e.target.value })} />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
 
         <DialogFooter className="mt-4">
           <Button variant="secondary" onClick={() => onOpenChange(false)}>
