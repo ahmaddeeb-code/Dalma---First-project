@@ -21,7 +21,7 @@ export default function AdminDashboard() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight">لوحة التحكم</h1>
           <p className="text-muted-foreground mt-1">
             Real-time view over beneficiaries, staff, services and alerts.
           </p>
