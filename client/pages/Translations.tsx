@@ -33,6 +33,7 @@ import {
 import { getCurrentUser } from "@/store/auth";
 import { effectivePrivileges, loadACL } from "@/store/acl";
 import { Download, FileUp } from "lucide-react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { exportAll, type ColumnDef } from "@/lib/export";
@@ -77,7 +78,11 @@ export default function Translations() {
   }
 
   async function scanProjectKeys(){
-    const mods = import.meta.glob(["/client/**/*.{ts,tsx}"], { as: "raw" });
+    const mods = import.meta.glob([
+      "./client/**/*.{ts,tsx}",
+      "./shared/**/*.{ts,tsx}",
+      "/client/**/*.{ts,tsx}"
+    ], { as: "raw" });
     const found = new Map<string, Set<string>>();
     const keySet = new Set<string>();
     for (const path in mods){
@@ -97,7 +102,7 @@ export default function Translations() {
     keySet.forEach(k => { if (!before.has(k)) { addDiscoveredKey(k); newlyAdded.push(k); } });
     setKeysTick(x=>x+1);
     pushLog({ action: "scan", details: `${newlyAdded.length} keys added from ${found.size} files` });
-    toast.success(ar?`تم�� إضافة ${newlyAdded.length}`:`Added ${newlyAdded.length}`);
+    toast.success(ar?`تمت إضافة ${newlyAdded.length}`:`Added ${newlyAdded.length}`);
     return { newlyAdded, byFile: found };
   }
 
