@@ -45,9 +45,9 @@ export default function AdminDashboard() {
       <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader>
-            <CardDescription>المستفيدون</CardDescription>
+            <CardDescription>{ar ? "المستفيدون" : "Beneficiaries"}</CardDescription>
             <CardTitle className="flex items-baseline gap-2">
-              1,248 <Badge variant="secondary">+٢٤ اليوم</Badge>
+              1,248 <Badge variant="secondary">{ar ? "+٢٤ اليوم" : "+24 today"}</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -55,13 +55,13 @@ export default function AdminDashboard() {
               <div className="h-full w-3/4 rounded bg-primary" />
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              سكنية ٤٥٪ · نهارية ٤٠٪ · منزلية ١٥٪
+              {ar ? "سكنية ٤٥٪ · نهارية ٤٠٪ · منزلية ١٥٪" : "Residential 45% · Daycare 40% · Home-based 15%"}
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardDescription>مواعيد اليوم</CardDescription>
+            <CardDescription>{ar ? "مواعيد اليوم" : "Appointments Today"}</CardDescription>
             <CardTitle className="flex items-baseline gap-2">342</CardTitle>
           </CardHeader>
           <CardContent className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -70,7 +70,7 @@ export default function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader>
-            <CardDescription>استغلال الموظفين</CardDescription>
+            <CardDescription>{ar ? "استغلال الموظفين" : "Staff Utilization"}</CardDescription>
             <CardTitle>72%</CardTitle>
           </CardHeader>
           <CardContent>
@@ -84,7 +84,7 @@ export default function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader>
-            <CardDescription>مؤشر الجودة</CardDescription>
+            <CardDescription>{ar ? "مؤشر الجودة" : "Quality KPI"}</CardDescription>
             <CardTitle className="flex items-center gap-2">
               96% <Activity className="h-5 w-5 text-success" />
             </CardTitle>
@@ -99,29 +99,29 @@ export default function AdminDashboard() {
       <section className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>المستفيدون حسب الفئة</CardTitle>
+            <CardTitle>{ar ? "المستفيدون حسب الفئة" : "Beneficiaries by Category"}</CardTitle>
             <CardDescription>
-              توزيع الخدمات السكنية والنهارية والمنزلية.
+              {ar ? "توزيع الخدمات السكنية والنهارية والمنزلية." : "Distribution across Residential, Daycare, and Home-based services."}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-3 gap-6">
               <div>
-                <p className="text-sm text-muted-foreground">سكنية</p>
+                <p className="text-sm text-muted-foreground">{ar ? "سكنية" : "Residential"}</p>
                 <p className="text-2xl font-semibold">560</p>
                 <div className="mt-2 h-2 rounded bg-muted">
                   <div className="h-full w-[45%] rounded bg-primary" />
                 </div>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">نهارية</p>
+                <p className="text-sm text-muted-foreground">{ar ? "نهارية" : "Daycare"}</p>
                 <p className="text-2xl font-semibold">499</p>
                 <div className="mt-2 h-2 rounded bg-muted">
                   <div className="h-full w-[40%] rounded bg-secondary" />
                 </div>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">منزلية</p>
+                <p className="text-sm text-muted-foreground">{ar ? "منزلية" : "Home-based"}</p>
                 <p className="text-2xl font-semibold">189</p>
                 <div className="mt-2 h-2 rounded bg-muted">
                   <div className="h-full w-[15%] rounded bg-info" />
