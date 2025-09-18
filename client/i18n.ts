@@ -40,6 +40,7 @@ const messages = {
       donations: "Donations",
       accessControl: "Access Control",
       medicalSettings: "Medical Settings",
+      beneficiarySettings: "Beneficiary Settings",
       logistics: "Logistics",
       translations: "Translations",
     },
@@ -469,7 +470,7 @@ const messages = {
     brand: "منصة دلما الذكية",
     nav: {
       home: "الرئيسية",
-      admin: "لوحة التحكم",
+      admin: "لوحة ��لتحكم",
       beneficiaries: "المستفيدون",
       employees: "الموظفون",
       family: "العائلة",
@@ -477,6 +478,7 @@ const messages = {
       donations: "التبرعات",
       accessControl: "التحكم بالصلاحيات",
       medicalSettings: "إعدادات طبية",
+      beneficiarySettings: "إعدادات المستفيد",
       logistics: "الخدمات اللوجستية",
       translations: "الترجمات",
     },
@@ -505,7 +507,7 @@ const messages = {
       role: "الدور",
       roles: "الأدوار",
       privilege: "الصلاحية",
-      privileges: "ا��صلاحيات",
+      privileges: "الصلاحيات",
       actions: "إجراءات",
       name: "الاسم",
       email: "البريد",
@@ -598,7 +600,7 @@ const messages = {
           form: {
             name: "الاسم",
             description: "الوصف",
-            category: "الفئة",
+            category: "��لفئة",
             placeholder: "مثل: السجلات، الإدارة، التقارير",
           },
         },
@@ -627,7 +629,7 @@ const messages = {
         },
         plans: {
           title: "قوالب خطط العلاج",
-          desc: "أهداف وتدخلات قياسي��.",
+          desc: "أهداف وتدخلات قياسية.",
           assigned: "مخصص لـ",
           doctor: "طبيب",
           therapist: "معالج",
@@ -685,7 +687,7 @@ const messages = {
       },
       beneficiaries: {
         title: "إدارة المستفيدين",
-        desc: "قائمة المستفيدين مع البحث والفلاتر وال��صول السريع للملفات",
+        desc: "قائمة المستفيدين مع البحث والفلاتر والوصول السريع للملفات",
         stats: {
           total: "إجمالي",
           active: "نشطون",
@@ -780,7 +782,7 @@ const messages = {
           summary: "٩٢٪ تسجيل حضور في الوقت · ١٨ زيارة ميدانية",
         },
         reviews: {
-          title: "مراجعات قادمة",
+          title: "مرا��عات قادمة",
           desc: "تقييمات طبية ونفسية لهذا الأسبوع.",
           summary: "٥٤ تقييمات مجدولة",
         },
@@ -806,7 +808,7 @@ const messages = {
       },
       portals: {
         title: "بوابات لجميع الأطراف",
-        desc: "بوابات المستفيد والموظف والإدارة والعائلة لتبسيط العمليات اليومية — التسجي�� والسجلات والعلاجات والحضور والتواصل الآمن.",
+        desc: "بوابات المستفيد والموظف والإدارة والعائلة لتبسيط العمليات اليومية — التسجيل والسجلات والعلاجات والحضور والتواصل الآمن.",
         open: "فتح",
         beneficiary: {
           title: "بوابة المستفيد",
@@ -870,7 +872,7 @@ const messages = {
         features: {
           advanced: {
             title: "أمان متقدم",
-            text: "تشفير أثناء السكون والنقل، مصادقة ثنائية، وصلاحيات حسب الأدوار.",
+            text: "تشفي�� أثناء السكون والنقل، مصادقة ثنائية، وصلاحيات حسب الأدوار.",
           },
           comms: {
             title: "اتصال موحد",
