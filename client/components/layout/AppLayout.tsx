@@ -27,6 +27,14 @@ function useAuthUserId() {
   );
 }
 
+function useLocale() {
+  return useSyncExternalStore(
+    (cb) => subscribeLocale(cb),
+    () => getLocale(),
+    () => getLocale(),
+  );
+}
+
 export default function AppLayout({ children }: { children: ReactNode }) {
   const userId = useAuthUserId();
   const user = useMemo(() => getCurrentUser(), [userId]);
