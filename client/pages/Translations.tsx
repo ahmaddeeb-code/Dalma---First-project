@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useMemo, useState, useSyncExternalStore } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -98,7 +97,7 @@ export default function Translations() {
     keySet.forEach(k => { if (!before.has(k)) { addDiscoveredKey(k); newlyAdded.push(k); } });
     setKeysTick(x=>x+1);
     pushLog({ action: "scan", details: `${newlyAdded.length} keys added from ${found.size} files` });
-    toast.success(ar?`تمت إضافة ${newlyAdded.length}`:`Added ${newlyAdded.length}`);
+    toast.success(ar?`تم�� إضافة ${newlyAdded.length}`:`Added ${newlyAdded.length}`);
     return { newlyAdded, byFile: found };
   }
 
