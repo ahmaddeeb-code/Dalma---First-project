@@ -247,7 +247,7 @@ export default function AccessControl() {
               <div>
                 <CardTitle>{ar ? "الصلاحيات" : "Privileges"}</CardTitle>
                 <CardDescription>
-                  Atomic permissions assigned to roles or directly to users.
+                  {ar ? "صلاحيات أساس��ة تُسند إلى الأدوار أو مباشرة للمستخدمين." : "Atomic permissions assigned to roles or directly to users."}
                 </CardDescription>
               </div>
               <PrivilegeDialog
