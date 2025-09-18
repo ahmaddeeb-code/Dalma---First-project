@@ -224,6 +224,9 @@ export default function BeneficiaryProfile() {
           <TabsTrigger value="emergency">
             <LifeBuoy className="h-4 w-4 ml-1" /> {ar ? "الطوارئ" : "Emergency"}
           </TabsTrigger>
+          <TabsTrigger value="history">
+            <ClipboardList className="h-4 w-4 ml-1" /> {ar ? "السجل" : "History"}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="personal" className="mt-4">
@@ -254,7 +257,7 @@ export default function BeneficiaryProfile() {
                   <span className="text-muted-foreground">
                     {ar ? "العنوان" : "Address"}:
                   </span>{" "}
-                  {b.contact.address || (ar ? "غير متوفر" : "Not provided")}
+                  {b.contact.address || (ar ? "غير متوف��" : "Not provided")}
                 </div>
               </div>
               <div>
@@ -380,7 +383,7 @@ export default function BeneficiaryProfile() {
               </div>
               <div>
                 <div className="font-medium mb-2">
-                  {ar ? "جدول الجلس��ت" : "Appointments"}
+                  {ar ? "جدول الجلسات" : "Appointments"}
                 </div>
                 <Table>
                   <TableHeader>
@@ -478,7 +481,7 @@ export default function BeneficiaryProfile() {
               </CardTitle>
               <CardDescription>
                 {ar
-                  ? "تقارير طبي�� وشهادات وإفادات"
+                  ? "تقارير طبية وشهادات وإفادات"
                   : "Medical reports, certificates, prescriptions"}
               </CardDescription>
             </CardHeader>
@@ -634,7 +637,7 @@ export default function BeneficiaryProfile() {
               </CardTitle>
               <CardDescription>
                 {ar
-                  ? "جهات اتصال وملاحظات ��بية حرجة"
+                  ? "جهات اتصال وملاحظات طبية حرجة"
                   : "Emergency contacts and critical notes"}
               </CardDescription>
             </CardHeader>
