@@ -699,6 +699,11 @@ export default function BeneficiaryProfile() {
                                 ? "—"
                                 : "—"}
                         </TableCell>
+                        {edit && (
+                          <TableCell className="text-right">
+                            <Button size="sm" variant="ghost" onClick={()=>{ b.care.appointments = b.care.appointments.filter(x=>x.id!==a.id); }}>{ar?"حذف":"Delete"}</Button>
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
                   </TableBody>
