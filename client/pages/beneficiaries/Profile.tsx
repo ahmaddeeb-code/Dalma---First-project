@@ -192,7 +192,7 @@ export default function BeneficiaryProfile() {
                   )}
                 </span>
                 <span className="flex items-center gap-2">
-                  <span>{ar ? "الإعاقة" : "Disability"}:</span>
+                  <span>{ar ? "الإ��اقة" : "Disability"}:</span>
                   {edit ? (
                     <Select defaultValue={b.medical.disabilityType} onValueChange={(v)=> (b.medical.disabilityType = v)}>
                       <SelectTrigger className="h-8 w-40"><SelectValue /></SelectTrigger>
@@ -384,7 +384,7 @@ export default function BeneficiaryProfile() {
           </TabsTrigger>
           <TabsTrigger value="education">
             <CalendarDays className="h-4 w-4 ml-1" />{" "}
-            {ar ? "تعليم وأنشطة" : "Education"}
+            {ar ? "تعليم ��أنشطة" : "Education"}
           </TabsTrigger>
           <TabsTrigger value="documents">
             <FileText className="h-4 w-4 ml-1" />{" "}
@@ -697,7 +697,7 @@ export default function BeneficiaryProfile() {
                                 : "Missed"
                               : ar
                                 ? "—"
-                                : "—"}
+                                : "��"}
                         </TableCell>
                         {edit && (
                           <TableCell className="text-right">
@@ -813,17 +813,19 @@ export default function BeneficiaryProfile() {
                         for (const f of Array.from(files)) {
                           const reader = new FileReader();
                           reader.onload = () => {
+                            const cat = (window as any)._docType || settings.documentCategories[0]?.name || "Attachment";
+                            const title = (window as any)._docTitle || f.name;
+                            const issued = (window as any)._docIssued ? new Date((window as any)._docIssued).toISOString() : new Date().toISOString();
+                            const exp = (window as any)._docExp ? new Date((window as any)._docExp).toISOString() : undefined;
                             addDocument(
                               b.id,
                               {
-                                id: `${Date.now()}_${f.name}`.replace(
-                                  /\s+/g,
-                                  "_",
-                                ),
-                                type: f.type || "Attachment",
-                                title: f.name,
+                                id: `${Date.now()}_${f.name}`.replace(/\s+/g, "_"),
+                                type: cat,
+                                title,
                                 url: reader.result as string,
-                                issuedAt: new Date().toISOString(),
+                                issuedAt: issued,
+                                expiresAt: exp,
                               },
                               getCurrentUserId() || undefined,
                             );
@@ -1030,7 +1032,7 @@ export default function BeneficiaryProfile() {
               <CardTitle>{ar ? "سجل التعديلات" : "Edit History"}</CardTitle>
               <CardDescription>
                 {ar
-                  ? "ت��قب التعديلات للمراجعة"
+                  ? "تعقب التعديلات للمراجعة"
                   : "Audit trail for accountability"}
               </CardDescription>
             </CardHeader>
