@@ -58,7 +58,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       <Sidebar side="right" className="border-l">
         <SidebarHeader>
           <Link to="/" className="flex items-center justify-end gap-2 px-2">
-            <span className="font-extrabold tracking-tight">منصة دلما الذكية</span>
+            <span className="font-extrabold tracking-tight">{t("brand")}</span>
             <div className="h-9 w-9 rounded-md bg-gradient-to-br from-primary to-secondary grid place-items-center text-white shadow-glow">
               <ShieldCheck className="h-5 w-5" />
             </div>
