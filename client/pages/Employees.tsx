@@ -425,132 +425,208 @@ export default function Employees() {
           <CardDescription>{t("pages.employees.table.desc")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="w-full overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t("common.name")}</TableHead>
-                  <TableHead>{t("common.email")}</TableHead>
-                  <TableHead>{ar ? "القسم" : "Department"}</TableHead>
-                  <TableHead className="hidden md:table-cell">{ar ? "تاريخ الالتحاق" : "Joined"}</TableHead>
-                  <TableHead className="hidden md:table-cell">{t("common.roles")}</TableHead>
-                                    <TableHead className="hidden md:table-cell">Login</TableHead>
-                  <TableHead className="hidden md:table-cell">Default Password</TableHead>
-                  {canManage && (
-                    <TableHead className="text-center">{t("common.actions")}</TableHead>
-                  )}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {pageItems.map((u) => (
-                  <TableRow key={u.id}>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
-                        {u.title ? <Badge variant="secondary">{u.title}</Badge> : null}
-                        <span>{u.name}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>{u.email}</TableCell>
-                    <TableCell>
-                      <div className="text-sm">{(u.department || "").toString()}</div>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {u.joinedAt ? new Date(u.joinedAt).toLocaleDateString() : "—"}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-wrap gap-1">
-                        {u.roleIds.map((rid) => {
-                          const r = roles.find((x) => x.id === rid);
-                          return (
-                            <Badge key={rid} variant="secondary">{r ? r.name : rid}</Badge>
-                          );
-                        })}
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      <span className={u.loginEnabled === false ? "text-red-600" : "text-emerald-600"}>
-                        {u.loginEnabled === false ? "Disabled" : "Enabled"}
-                      </span>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      <span className="font-mono text-xs">{u.defaultPassword || "-"}</span>
-                    </TableCell>
-                    {canManage && (
-                      <TableCell className="text-center">
-                        <div className="flex items-center justify-center gap-2">
-                          <Button size="sm" variant="secondary" onClick={() => setEditing(u)}>
-                            {t("common.edit")}
-                          </Button>
-                          <Button size="sm" variant="outline" onClick={() => setPrivUserId(u.id)}>
-                            Privileges
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={async () => {
-                              const pwd = Math.random().toString(36).slice(2, 10);
-                              // Update local (legacy) store
-                              setUserPassword(u.id, pwd);
-                              updateUser(u.id, { defaultPassword: pwd, loginEnabled: true, mustChangePassword: true });
-                              // Update server auth
-                              try {
-                                const r = await fetch("/api/auth/admin/set-password", {
-                                  method: "POST",
-                                  headers: { "Content-Type": "application/json" },
-                                  body: JSON.stringify({ identifier: u.email, password: pwd, mustChangePassword: true }),
-                                });
-                                const d = await r.json();
-                                if (!d.ok) throw new Error(d.error || "Server error");
-                                toast.success("Account generated / password set");
-                              } catch (e: any) {
-                                toast.error("Server password update failed");
-                              }
-                            }}
-                          >
-                            {u.password ? "Reset Password" : "Generate Account"}
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant={u.loginEnabled === false ? "secondary" : "destructive"}
-                            onClick={() => {
-                              const next = !(u.loginEnabled === false);
-                              updateUser(u.id, { loginEnabled: !next });
-                            }}
-                          >
-                            {u.loginEnabled === false ? "Enable Login" : "Disable Login"}
-                          </Button>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button size="sm" variant="outline">
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>{t("pages.employees.confirmDeleteTitle")}</AlertDialogTitle>
-                                <AlertDialogDescription>{t("pages.employees.confirmDeleteMsg")}</AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
-                                <AlertDialogAction
-                                  onClick={() => {
-                                    removeUser(u.id);
-                                    toast.success(t("pages.employees.deleted"));
-                                  }}
-                                >
-                                  {t("common.delete")}
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
+          <TooltipProvider>
+            <div className="w-full overflow-x-auto">
+              <div className="rounded-lg border border-border/50 bg-background/30">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="hover:bg-transparent border-border/50">
+                      <TableHead
+                        className="cursor-pointer select-none hover:bg-accent/30 transition-colors font-semibold"
+                        onClick={() => handleSort("name")}
+                      >
+                        <div className="flex items-center gap-2">
+                          {t("common.name")}
+                          {getSortIcon("name")}
                         </div>
-                      </TableCell>
-                    )}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                      </TableHead>
+                      <TableHead className="font-semibold">{t("common.email")}</TableHead>
+                      <TableHead
+                        className="cursor-pointer select-none hover:bg-accent/30 transition-colors font-semibold"
+                        onClick={() => handleSort("department")}
+                      >
+                        <div className="flex items-center gap-2">
+                          {ar ? "القسم" : "Department"}
+                          {getSortIcon("department")}
+                        </div>
+                      </TableHead>
+                      <TableHead
+                        className="hidden md:table-cell cursor-pointer select-none hover:bg-accent/30 transition-colors font-semibold"
+                        onClick={() => handleSort("joinedAt")}
+                      >
+                        <div className="flex items-center gap-2">
+                          {ar ? "تاريخ الالتحاق" : "Joined"}
+                          {getSortIcon("joinedAt")}
+                        </div>
+                      </TableHead>
+                      <TableHead className="hidden md:table-cell font-semibold">{t("common.roles")}</TableHead>
+                      <TableHead className="hidden md:table-cell font-semibold">Login</TableHead>
+                      <TableHead className="hidden md:table-cell font-semibold">Default Password</TableHead>
+                      {canManage && (
+                        <TableHead className="text-center font-semibold w-[140px]">{t("common.actions")}</TableHead>
+                      )}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {pageItems.map((u, index) => (
+                      <TableRow
+                        key={u.id}
+                        className={`hover:bg-accent/50 transition-colors border-border/40 ${
+                          index % 2 === 0 ? 'bg-background/50' : 'bg-muted/20'
+                        }`}
+                      >
+                        <TableCell className="font-medium py-3">
+                          <div className="flex items-center gap-2">
+                            {u.title ? <Badge variant="secondary" className="text-xs">{u.title}</Badge> : null}
+                            <span>{u.name}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="py-3">{u.email}</TableCell>
+                        <TableCell className="py-3">
+                          <div className="text-sm">{(u.department || "").toString()}</div>
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell py-3">
+                          {u.joinedAt ? new Date(u.joinedAt).toLocaleDateString() : "—"}
+                        </TableCell>
+                        <TableCell className="py-3">
+                          <div className="flex flex-wrap gap-1">
+                            {u.roleIds.map((rid) => {
+                              const r = roles.find((x) => x.id === rid);
+                              return (
+                                <Badge key={rid} variant="secondary" className="text-xs">{r ? r.name : rid}</Badge>
+                              );
+                            })}
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell py-3">
+                          <Badge variant={u.loginEnabled === false ? "destructive" : "default"} className="text-xs">
+                            {u.loginEnabled === false ? "Disabled" : "Enabled"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell py-3">
+                          <span className="font-mono text-xs bg-muted px-2 py-1 rounded">{u.defaultPassword || "-"}</span>
+                        </TableCell>
+                        {canManage && (
+                          <TableCell className="text-center py-3">
+                            <div className="flex items-center justify-center gap-1">
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-8 w-8 p-0 hover:bg-accent"
+                                    onClick={() => setEditing(u)}
+                                  >
+                                    <Edit3 className="h-4 w-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Edit Employee</TooltipContent>
+                              </Tooltip>
+
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-8 w-8 p-0 hover:bg-accent"
+                                    onClick={() => setPrivUserId(u.id)}
+                                  >
+                                    <Eye className="h-4 w-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Manage Privileges</TooltipContent>
+                              </Tooltip>
+
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-accent">
+                                    <MoreHorizontal className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-48">
+                                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem
+                                    onClick={async () => {
+                                      const pwd = Math.random().toString(36).slice(2, 10);
+                                      setUserPassword(u.id, pwd);
+                                      updateUser(u.id, { defaultPassword: pwd, loginEnabled: true, mustChangePassword: true });
+                                      try {
+                                        const r = await fetch("/api/auth/admin/set-password", {
+                                          method: "POST",
+                                          headers: { "Content-Type": "application/json" },
+                                          body: JSON.stringify({ identifier: u.email, password: pwd, mustChangePassword: true }),
+                                        });
+                                        const d = await r.json();
+                                        if (!d.ok) throw new Error(d.error || "Server error");
+                                        toast.success("Account generated / password set");
+                                      } catch (e: any) {
+                                        toast.error("Server password update failed");
+                                      }
+                                    }}
+                                  >
+                                    <Key className="mr-2 h-4 w-4" />
+                                    {u.password ? "Reset Password" : "Generate Account"}
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    onClick={() => {
+                                      const next = !(u.loginEnabled === false);
+                                      updateUser(u.id, { loginEnabled: !next });
+                                    }}
+                                  >
+                                    {u.loginEnabled === false ? (
+                                      <>
+                                        <UserCheck className="mr-2 h-4 w-4" />
+                                        Enable Login
+                                      </>
+                                    ) : (
+                                      <>
+                                        <UserX className="mr-2 h-4 w-4" />
+                                        Disable Login
+                                      </>
+                                    )}
+                                  </DropdownMenuItem>
+                                  <DropdownMenuSeparator />
+                                  <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                      <DropdownMenuItem
+                                        className="text-destructive focus:text-destructive"
+                                        onSelect={(e) => e.preventDefault()}
+                                      >
+                                        <Trash2 className="mr-2 h-4 w-4" />
+                                        Delete Employee
+                                      </DropdownMenuItem>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>{t("pages.employees.confirmDeleteTitle")}</AlertDialogTitle>
+                                        <AlertDialogDescription>{t("pages.employees.confirmDeleteMsg")}</AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                                        <AlertDialogAction
+                                          onClick={() => {
+                                            removeUser(u.id);
+                                            toast.success(t("pages.employees.deleted"));
+                                          }}
+                                        >
+                                          {t("common.delete")}
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          </TooltipProvider>
           <div className="mt-4">
             <Pagination>
               <PaginationContent>
