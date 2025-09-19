@@ -197,7 +197,7 @@ function TherapyTypesCard({
   const [editing, setEditing] = useState<TherapySessionType | null>(null);
   const { sortBy, sortDir, handleSort, sortData } = useTableSort<'name' | 'duration' | 'frequency'>('name');
 
-  const sortedTherapyTypes = React.useMemo(() => {
+  const sortedTherapyTypes = useMemo(() => {
     return sortData(state.therapyTypes, sortBy, sortDir, (a, b) => {
       if (sortBy === 'name') {
         const aName = L(loc, a.name) || '';
