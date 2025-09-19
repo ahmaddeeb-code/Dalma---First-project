@@ -259,6 +259,21 @@ function RolesCard({ canManage }: { canManage: boolean }) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        <div className="mb-3">
+          <TableToolbar
+            onExport={(type) => {
+              const cols = [
+                { header: 'Role', accessor: (r: any) => r.name },
+                { header: 'View', accessor: (r: any) => r.view },
+                { header: 'Edit', accessor: (r: any) => r.edit },
+                { header: 'Delete', accessor: (r: any) => r.del },
+                { header: 'Export', accessor: (r: any) => r.export },
+              ];
+              const roles = loadACL().roles;
+              import('@/lib/export').then((m) => m.exportAll(roles, cols, type, 'roles'));
+            }}
+          />
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
