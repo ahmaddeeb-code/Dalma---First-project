@@ -110,6 +110,17 @@ router.post("/verify-otp", (req, res) => {
   return res.json({ ok: true });
 });
 
+// POST /api/auth/verify-token
+router.post("/verify-token", (req, res) => {
+  const { token } = req.body;
+  if (!token) return res.json({ ok: false, error: "Missing" });
+  const resets = readJson(RESETS_FILE) || {};
+  const entry = resets[token];
+  if (!entry) return res.json({ ok: false, error: "Invalid token" });
+  if (new Date(entry.expiresAt) < new Date()) return res.json({ ok: false, error: "Expired" });
+  return res.json({ ok: true, email: entry.email });
+});
+
 // POST /api/auth/forgot
 router.post("/forgot", (req, res) => {
   const { email } = req.body;
