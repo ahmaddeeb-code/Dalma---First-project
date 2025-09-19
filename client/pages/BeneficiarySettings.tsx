@@ -54,7 +54,7 @@ import {
   removeListItem,
   uid,
 } from "@/store/beneficiary-settings";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, User, Settings, Hash, Shield, FolderOpen, FileText, UserCheck, List } from "lucide-react";
 
 function useLocaleValue() {
   return useSyncExternalStore(
@@ -178,13 +178,16 @@ function IdConfigCard({
     setWidth(String(s.id.width));
   }, [s.id]);
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Beneficiary ID</CardTitle>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Hash className="h-5 w-5 text-primary" />
+          Beneficiary ID
+        </CardTitle>
         <CardDescription>Define pattern and auto-increment</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid md:grid-cols-4 gap-3">
+        <div className="grid md:grid-cols-4 gap-4">
           <div>
             <Label>Prefix</Label>
             <Input value={prefix} onChange={(e) => setPrefix(e.target.value)} />
@@ -251,13 +254,16 @@ function RequiredFieldsCard({
     { key: "guardianPhone", label: "Guardian phone" },
   ];
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Required at registration</CardTitle>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Shield className="h-5 w-5 text-primary" />
+          Required at registration
+        </CardTitle>
         <CardDescription>Choose which fields are mandatory</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid md:grid-cols-3 gap-3">
+        <div className="grid md:grid-cols-3 gap-4">
           {items.map(({ key, label }) => (
             <label
               key={key as string}
@@ -287,9 +293,12 @@ function CategoriesCard({
 }) {
   const [val, setVal] = useState("");
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Disability Categories</CardTitle>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <FolderOpen className="h-5 w-5 text-primary" />
+          Disability Categories
+        </CardTitle>
         <CardDescription>Manage list used in registration</CardDescription>
       </CardHeader>
       <CardContent>
@@ -342,14 +351,15 @@ function CarePlansCard({
     metrics: string[];
   } | null>(null);
   return (
-    <Card>
-      <CardHeader className="flex items-center justify-between">
-        <div>
-          <CardTitle>Care Plan Templates</CardTitle>
-          <CardDescription>
-            Reusable goals, interventions and metrics
-          </CardDescription>
-        </div>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <FileText className="h-5 w-5 text-primary" />
+          Care Plan Templates
+        </CardTitle>
+        <CardDescription>
+          Reusable goals, interventions and metrics
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="mb-3">
@@ -577,14 +587,15 @@ function DocumentsCard({
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<any | null>(null);
   return (
-    <Card>
-      <CardHeader className="flex items-center justify-between">
-        <div>
-          <CardTitle>Document Categories</CardTitle>
-          <CardDescription>
-            Configure categories, expiry and alerts
-          </CardDescription>
-        </div>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <FileText className="h-5 w-5 text-primary" />
+          Document Categories
+        </CardTitle>
+        <CardDescription>
+          Configure categories, expiry and alerts
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="mb-3">
@@ -743,9 +754,12 @@ function ProfileCard({
     setEmCount(String(s.profile.emergencyContactsRequired));
   }, [s.profile]);
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Profile Configuration</CardTitle>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <UserCheck className="h-5 w-5 text-primary" />
+          Profile Configuration
+        </CardTitle>
         <CardDescription>
           Photo requirement, guardians, and emergency contacts
         </CardDescription>
@@ -814,9 +828,12 @@ function ListsCard({
     { key: "sponsorshipTypes", label: "Sponsorship Types" },
   ];
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Lists & Dropdowns</CardTitle>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <List className="h-5 w-5 text-primary" />
+          Lists & Dropdowns
+        </CardTitle>
         <CardDescription>
           Customize enumerations used across the system
         </CardDescription>
@@ -893,14 +910,15 @@ function CustomFieldsCard({
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<any | null>(null);
   return (
-    <Card>
-      <CardHeader className="flex items-center justify-between">
-        <div>
-          <CardTitle>Custom Fields</CardTitle>
-          <CardDescription>
-            Add extra fields for registration and profile
-          </CardDescription>
-        </div>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Settings className="h-5 w-5 text-primary" />
+          Custom Fields
+        </CardTitle>
+        <CardDescription>
+          Add extra fields for registration and profile
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="mb-3">
