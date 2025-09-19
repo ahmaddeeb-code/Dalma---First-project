@@ -29,6 +29,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import {
   effectivePrivileges,
   loadACL,
@@ -41,7 +43,7 @@ import {
   type Role,
   type User,
 } from "@/store/acl";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Pencil, Plus, Trash2, MoreHorizontal, ChevronDown, ChevronUp, ChevronsUpDown } from "lucide-react";
 import { t } from "@/i18n";
 
 export default function AccessControl() {
@@ -50,6 +52,60 @@ export default function AccessControl() {
   useEffect(() => saveACL(state), [state]);
 
   const usage = useMemo(() => computeUsage(state), [state]);
+
+  // Sorting states and helpers
+  const [userSortBy, setUserSortBy] = useState<"name" | "email" | "roles">("name");
+  const [userSortDir, setUserSortDir] = useState<"asc" | "desc">("asc");
+  const [roleSortBy, setRoleSortBy] = useState<"name" | "users" | "privs">("name");
+  const [roleSortDir, setRoleSortDir] = useState<"asc" | "desc">("asc");
+  const [privSortBy, setPrivSortBy] = useState<"name" | "category" | "usedInRoles" | "usedInUsers">("name");
+  const [privSortDir, setPrivSortDir] = useState<"asc" | "desc">("asc");
+
+  function sortToggle(currentBy: string, setBy: (v: any) => void, currentDir: "asc"|"desc", setDir: (v: any) => void, next: any) {
+    if (currentBy === next) setDir(currentDir === "asc" ? "desc" : "asc");
+    else { setBy(next); setDir("asc"); }
+  }
+  function getSortIcon(active: boolean, dir: "asc"|"desc") {
+    if (!active) return <ChevronsUpDown className="h-3 w-3 opacity-50" />;
+    return dir === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />;
+  }
+
+  const usersSorted = useMemo(() => {
+    const arr = [...state.users];
+    arr.sort((a, b) => {
+      let res = 0;
+      if (userSortBy === "name") res = (a.name||"").localeCompare(b.name||"");
+      else if (userSortBy === "email") res = (a.email||"").localeCompare(b.email||"");
+      else if (userSortBy === "roles") res = (a.roleIds.length)-(b.roleIds.length);
+      return userSortDir === "asc" ? res : -res;
+    });
+    return arr;
+  }, [state.users, userSortBy, userSortDir]);
+
+  const rolesSorted = useMemo(() => {
+    const arr = [...state.roles];
+    arr.sort((a, b) => {
+      let res = 0;
+      if (roleSortBy === "name") res = (a.name||"").localeCompare(b.name||"");
+      else if (roleSortBy === "users") res = (usage.roleUsers[a.id]||0) - (usage.roleUsers[b.id]||0);
+      else if (roleSortBy === "privs") res = a.privilegeIds.length - b.privilegeIds.length;
+      return roleSortDir === "asc" ? res : -res;
+    });
+    return arr;
+  }, [state.roles, roleSortBy, roleSortDir, usage.roleUsers]);
+
+  const privsSorted = useMemo(() => {
+    const arr = [...state.privileges];
+    arr.sort((a, b) => {
+      let res = 0;
+      if (privSortBy === "name") res = (a.name||"").localeCompare(b.name||"");
+      else if (privSortBy === "category") res = (a.category||"").localeCompare(b.category||"");
+      else if (privSortBy === "usedInRoles") res = (usage.privRoles[a.id]||0) - (usage.privRoles[b.id]||0);
+      else if (privSortBy === "usedInUsers") res = (usage.privUsers[a.id]||0) - (usage.privUsers[b.id]||0);
+      return privSortDir === "asc" ? res : -res;
+    });
+    return arr;
+  }, [state.privileges, privSortBy, privSortDir, usage.privRoles, usage.privUsers]);
 
   return (
     <div className="space-y-8">
@@ -91,6 +147,14 @@ export default function AccessControl() {
               <div className="mb-3">
                 <TableToolbar
                   onAdd={undefined}
+                  onExport={(type) => {
+                    const cols = [
+                      { header: t("pages.accessControl.users.headers.name") as string, accessor: (r: any) => r.name },
+                      { header: t("pages.accessControl.users.headers.email") as string, accessor: (r: any) => r.email },
+                      { header: t("pages.accessControl.users.headers.roles") as string, accessor: (r: any) => r.roleIds.length },
+                    ];
+                    import("@/lib/export").then((m) => m.exportAll(state.users, cols, type, "users"));
+                  }}
                   children={
                     <div className="flex items-center gap-2">
                       <UserDialog
@@ -107,14 +171,32 @@ export default function AccessControl() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>
-                      {t("pages.accessControl.users.headers.name")}
+                    <TableHead
+                      className="cursor-pointer select-none hover:bg-accent/30"
+                      onClick={() => sortToggle(userSortBy, setUserSortBy, userSortDir, setUserSortDir, "name")}
+                    >
+                      <div className="flex items-center gap-2">
+                        {t("pages.accessControl.users.headers.name")}
+                        {getSortIcon(userSortBy === "name", userSortDir)}
+                      </div>
                     </TableHead>
-                    <TableHead>
-                      {t("pages.accessControl.users.headers.email")}
+                    <TableHead
+                      className="cursor-pointer select-none hover:bg-accent/30"
+                      onClick={() => sortToggle(userSortBy, setUserSortBy, userSortDir, setUserSortDir, "email")}
+                    >
+                      <div className="flex items-center gap-2">
+                        {t("pages.accessControl.users.headers.email")}
+                        {getSortIcon(userSortBy === "email", userSortDir)}
+                      </div>
                     </TableHead>
-                    <TableHead>
-                      {t("pages.accessControl.users.headers.roles")}
+                    <TableHead
+                      className="cursor-pointer select-none hover:bg-accent/30"
+                      onClick={() => sortToggle(userSortBy, setUserSortBy, userSortDir, setUserSortDir, "roles")}
+                    >
+                      <div className="flex items-center gap-2">
+                        {t("pages.accessControl.users.headers.roles")}
+                        {getSortIcon(userSortBy === "roles", userSortDir)}
+                      </div>
                     </TableHead>
                     <TableHead>
                       {t("pages.accessControl.users.headers.effectivePrivs")}
@@ -125,7 +207,7 @@ export default function AccessControl() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {state.users.map((u) => {
+                  {usersSorted.map((u) => {
                     const eff = effectivePrivileges(
                       u,
                       state.roles,
@@ -160,31 +242,49 @@ export default function AccessControl() {
                             </span>
                           ) : null}
                         </TableCell>
-                        <TableCell className="flex items-center gap-2">
-                          <UserDialog
-                            existing={u}
-                            onSubmit={(nu) =>
-                              setState((s) => ({
-                                ...s,
-                                users: upsert(s.users, nu),
-                              }))
-                            }
-                            roles={state.roles}
-                            privileges={state.privileges}
-                          />
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() =>
-                              setState((s) => ({
-                                ...s,
-                                users: removeById(s.users, u.id),
-                              }))
-                            }
-                          >
-                            <Trash2 className="ml-1 h-4 w-4" />
-                            {t("common.delete")}
-                          </Button>
+                        <TableCell className="text-center">
+                          <div className="flex items-center justify-center gap-1">
+                            <UserDialog
+                              existing={u}
+                              onSubmit={(nu) =>
+                                setState((s) => ({
+                                  ...s,
+                                  users: upsert(s.users, nu),
+                                }))
+                              }
+                              roles={state.roles}
+                              privileges={state.privileges}
+                            />
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-accent">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-44">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <DropdownMenuItem className="text-destructive focus:text-destructive" onSelect={(e) => e.preventDefault()}>
+                                      <Trash2 className="mr-2 h-4 w-4" /> {t("common.delete")}
+                                    </DropdownMenuItem>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>{t("common.confirmDelete") || "Confirm delete"}</AlertDialogTitle>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => setState((s) => ({ ...s, users: removeById(s.users, u.id) }))}>
+                                        {t("common.delete")}
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
                         </TableCell>
                       </TableRow>
                     );
@@ -208,6 +308,14 @@ export default function AccessControl() {
             <CardContent>
               <div className="mb-3">
                 <TableToolbar
+                  onExport={(type) => {
+                    const cols = [
+                      { header: t("pages.accessControl.roles.headers.name") as string, accessor: (r: any) => r.name },
+                      { header: t("pages.accessControl.roles.headers.users") as string, accessor: (r: any) => (usage.roleUsers[r.id]||0) },
+                      { header: t("pages.accessControl.roles.headers.privs") as string, accessor: (r: any) => r.privilegeIds.length },
+                    ];
+                    import("@/lib/export").then((m) => m.exportAll(state.roles, cols, type, "roles"));
+                  }}
                   children={
                     <div className="flex items-center gap-2">
                       <RoleDialog
@@ -223,14 +331,26 @@ export default function AccessControl() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>
-                      {t("pages.accessControl.roles.headers.name")}
+                    <TableHead
+                      className="cursor-pointer select-none hover:bg-accent/30"
+                      onClick={() => sortToggle(roleSortBy, setRoleSortBy, roleSortDir, setRoleSortDir, "name")}
+                    >
+                      <div className="flex items-center gap-2">
+                        {t("pages.accessControl.roles.headers.name")}
+                        {getSortIcon(roleSortBy === "name", roleSortDir)}
+                      </div>
                     </TableHead>
                     <TableHead>
                       {t("pages.accessControl.roles.headers.privs")}
                     </TableHead>
-                    <TableHead>
-                      {t("pages.accessControl.roles.headers.users")}
+                    <TableHead
+                      className="cursor-pointer select-none hover:bg-accent/30"
+                      onClick={() => sortToggle(roleSortBy, setRoleSortBy, roleSortDir, setRoleSortDir, "users")}
+                    >
+                      <div className="flex items-center gap-2">
+                        {t("pages.accessControl.roles.headers.users")}
+                        {getSortIcon(roleSortBy === "users", roleSortDir)}
+                      </div>
                     </TableHead>
                     <TableHead className="w-[120px]">
                       {t("pages.accessControl.roles.headers.actions")}
@@ -238,7 +358,7 @@ export default function AccessControl() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {state.roles.map((r) => (
+                  {rolesSorted.map((r) => (
                     <TableRow key={r.id}>
                       <TableCell className="font-medium">{r.name}</TableCell>
                       <TableCell className="space-x-1">
@@ -252,34 +372,55 @@ export default function AccessControl() {
                         })}
                       </TableCell>
                       <TableCell>{usage.roleUsers[r.id] || 0}</TableCell>
-                      <TableCell className="flex items-center gap-2">
-                        <RoleDialog
-                          existing={r}
-                          onSubmit={(nr) =>
-                            setState((s) => ({
-                              ...s,
-                              roles: upsert(s.roles, nr),
-                            }))
-                          }
-                          privileges={state.privileges}
-                        />
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() =>
-                            setState((s) => ({
-                              ...s,
-                              roles: removeById(s.roles, r.id),
-                              users: s.users.map((u) => ({
-                                ...u,
-                                roleIds: u.roleIds.filter((id) => id !== r.id),
-                              })),
-                            }))
-                          }
-                        >
-                          <Trash2 className="ml-1 h-4 w-4" />
-                          {t("common.delete")}
-                        </Button>
+                      <TableCell className="text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          <RoleDialog
+                            existing={r}
+                            onSubmit={(nr) =>
+                              setState((s) => ({
+                                ...s,
+                                roles: upsert(s.roles, nr),
+                              }))
+                            }
+                            privileges={state.privileges}
+                          />
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-accent">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-44">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <DropdownMenuItem className="text-destructive focus:text-destructive" onSelect={(e) => e.preventDefault()}>
+                                    <Trash2 className="mr-2 h-4 w-4" /> {t("common.delete")}
+                                  </DropdownMenuItem>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>{t("common.confirmDelete") || "Confirm delete"}</AlertDialogTitle>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                                    <AlertDialogAction onClick={() => setState((s) => ({
+                                      ...s,
+                                      roles: removeById(s.roles, r.id),
+                                      users: s.users.map((u) => ({
+                                        ...u,
+                                        roleIds: u.roleIds.filter((id) => id !== r.id),
+                                      })),
+                                    }))}>
+                                      {t("common.delete")}
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -304,6 +445,15 @@ export default function AccessControl() {
             <CardContent>
               <div className="mb-3">
                 <TableToolbar
+                  onExport={(type) => {
+                    const cols = [
+                      { header: t("pages.accessControl.privileges.headers.name") as string, accessor: (r: any) => r.name },
+                      { header: t("pages.accessControl.privileges.headers.category") as string, accessor: (r: any) => r.category || "" },
+                      { header: t("pages.accessControl.privileges.headers.usedInRoles") as string, accessor: (r: any) => (usage.privRoles[r.id]||0) },
+                      { header: t("pages.accessControl.privileges.headers.usedInUsers") as string, accessor: (r: any) => (usage.privUsers[r.id]||0) },
+                    ];
+                    import("@/lib/export").then((m) => m.exportAll(state.privileges, cols, type, "privileges"));
+                  }}
                   children={
                     <div className="flex items-center gap-2">
                       <PrivilegeDialog
@@ -321,17 +471,41 @@ export default function AccessControl() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>
-                      {t("pages.accessControl.privileges.headers.name")}
+                    <TableHead
+                      className="cursor-pointer select-none hover:bg-accent/30"
+                      onClick={() => sortToggle(privSortBy, setPrivSortBy, privSortDir, setPrivSortDir, "name")}
+                    >
+                      <div className="flex items-center gap-2">
+                        {t("pages.accessControl.privileges.headers.name")}
+                        {getSortIcon(privSortBy === "name", privSortDir)}
+                      </div>
                     </TableHead>
-                    <TableHead>
-                      {t("pages.accessControl.privileges.headers.category")}
+                    <TableHead
+                      className="cursor-pointer select-none hover:bg-accent/30"
+                      onClick={() => sortToggle(privSortBy, setPrivSortBy, privSortDir, setPrivSortDir, "category")}
+                    >
+                      <div className="flex items-center gap-2">
+                        {t("pages.accessControl.privileges.headers.category")}
+                        {getSortIcon(privSortBy === "category", privSortDir)}
+                      </div>
                     </TableHead>
-                    <TableHead>
-                      {t("pages.accessControl.privileges.headers.usedInRoles")}
+                    <TableHead
+                      className="cursor-pointer select-none hover:bg-accent/30"
+                      onClick={() => sortToggle(privSortBy, setPrivSortBy, privSortDir, setPrivSortDir, "usedInRoles")}
+                    >
+                      <div className="flex items-center gap-2">
+                        {t("pages.accessControl.privileges.headers.usedInRoles")}
+                        {getSortIcon(privSortBy === "usedInRoles", privSortDir)}
+                      </div>
                     </TableHead>
-                    <TableHead>
-                      {t("pages.accessControl.privileges.headers.usedInUsers")}
+                    <TableHead
+                      className="cursor-pointer select-none hover:bg-accent/30"
+                      onClick={() => sortToggle(privSortBy, setPrivSortBy, privSortDir, setPrivSortDir, "usedInUsers")}
+                    >
+                      <div className="flex items-center gap-2">
+                        {t("pages.accessControl.privileges.headers.usedInUsers")}
+                        {getSortIcon(privSortBy === "usedInUsers", privSortDir)}
+                      </div>
                     </TableHead>
                     <TableHead className="w-[120px]">
                       {t("pages.accessControl.privileges.headers.actions")}
@@ -339,7 +513,7 @@ export default function AccessControl() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {state.privileges.map((p) => (
+                  {privsSorted.map((p) => (
                     <TableRow key={p.id}>
                       <TableCell className="font-medium">{p.name}</TableCell>
                       <TableCell>
@@ -347,41 +521,58 @@ export default function AccessControl() {
                       </TableCell>
                       <TableCell>{usage.privRoles[p.id] || 0}</TableCell>
                       <TableCell>{usage.privUsers[p.id] || 0}</TableCell>
-                      <TableCell className="flex items-center gap-2">
-                        <PrivilegeDialog
-                          existing={p}
-                          onSubmit={(np) =>
-                            setState((s) => ({
-                              ...s,
-                              privileges: upsert(s.privileges, np),
-                            }))
-                          }
-                        />
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() =>
-                            setState((s) => ({
-                              ...s,
-                              privileges: removeById(s.privileges, p.id),
-                              roles: s.roles.map((r) => ({
-                                ...r,
-                                privilegeIds: r.privilegeIds.filter(
-                                  (id) => id !== p.id,
-                                ),
-                              })),
-                              users: s.users.map((u) => ({
-                                ...u,
-                                privilegeIds: u.privilegeIds.filter(
-                                  (id) => id !== p.id,
-                                ),
-                              })),
-                            }))
-                          }
-                        >
-                          <Trash2 className="ml-1 h-4 w-4" />
-                          {t("common.delete")}
-                        </Button>
+                      <TableCell className="text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          <PrivilegeDialog
+                            existing={p}
+                            onSubmit={(np) =>
+                              setState((s) => ({
+                                ...s,
+                                privileges: upsert(s.privileges, np),
+                              }))
+                            }
+                          />
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-accent">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-44">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <DropdownMenuItem className="text-destructive focus:text-destructive" onSelect={(e) => e.preventDefault()}>
+                                    <Trash2 className="mr-2 h-4 w-4" /> {t("common.delete")}
+                                  </DropdownMenuItem>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>{t("common.confirmDelete") || "Confirm delete"}</AlertDialogTitle>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                                    <AlertDialogAction onClick={() => setState((s) => ({
+                                      ...s,
+                                      privileges: removeById(s.privileges, p.id),
+                                      roles: s.roles.map((r) => ({
+                                        ...r,
+                                        privilegeIds: r.privilegeIds.filter((id) => id !== p.id),
+                                      })),
+                                      users: s.users.map((u) => ({
+                                        ...u,
+                                        privilegeIds: u.privilegeIds.filter((id) => id !== p.id),
+                                      })),
+                                    }))}>
+                                      {t("common.delete")}
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -452,9 +643,8 @@ function UserDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {existing ? (
-          <Button variant="secondary" size="sm">
-            <Pencil className="ml-1 h-4 w-4" />
-            تعديل
+          <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-accent">
+            <Pencil className="h-4 w-4" />
           </Button>
         ) : (
           <Button>
@@ -566,9 +756,8 @@ function RoleDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {existing ? (
-          <Button variant="secondary" size="sm">
-            <Pencil className="ml-1 h-4 w-4" />
-            تعديل
+          <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-accent">
+            <Pencil className="h-4 w-4" />
           </Button>
         ) : (
           <Button>
@@ -660,9 +849,8 @@ function PrivilegeDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {existing ? (
-          <Button variant="secondary" size="sm">
-            <Pencil className="ml-1 h-4 w-4" />
-            تعديل
+          <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-accent">
+            <Pencil className="h-4 w-4" />
           </Button>
         ) : (
           <Button>
