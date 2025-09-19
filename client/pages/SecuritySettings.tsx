@@ -390,28 +390,25 @@ function AuditCard({
             Track actions with timestamps and actor
           </CardDescription>
         </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="secondary"
-            onClick={() => {
-              const blob = new Blob([exportAudits()], {
-                type: "application/json",
-              });
-              const url = URL.createObjectURL(blob);
-              const a = document.createElement("a");
-              a.href = url;
-              a.download = "audit-logs.json";
-              a.click();
-            }}
-          >
-            Export
-          </Button>
-          <Button variant="destructive" onClick={() => setConfirmClear(true)}>
-            Clear
-          </Button>
-        </div>
       </CardHeader>
       <CardContent>
+        <div className="mb-3">
+          <TableToolbar
+            onExport={(type) => {
+              // export audits as csv/xlsx/pdf
+              const cols = [
+                { header: 'Time', accessor: (r: any) => new Date(r.at).toLocaleString() },
+                { header: 'User', accessor: (r: any) => r.userId || 'system' },
+                { header: 'Action', accessor: (r: any) => r.action },
+                { header: 'Entity', accessor: (r: any) => r.entity || '-' },
+                { header: 'Old', accessor: (r: any) => (r.oldValue ? JSON.stringify(r.oldValue) : '-') },
+                { header: 'New', accessor: (r: any) => (r.newValue ? JSON.stringify(r.newValue) : '-') },
+              ];
+              import('@/lib/export').then((m) => m.exportAll(s.audits.slice(0,300), cols, type, `audits_${type}`));
+            }}
+            children={<div className="flex items-center gap-2"><Button variant="destructive" onClick={() => setConfirmClear(true)}>Clear</Button></div>}
+          />
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
