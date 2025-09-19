@@ -36,6 +36,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getLocale } from "@/i18n";
+import TableToolbar from "@/components/ui/table-toolbar";
 import {
   CalendarDays,
   ClipboardList,
@@ -1023,7 +1024,7 @@ export default function BeneficiaryProfile() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{ar ? "التاريخ" : "Date"}</TableHead>
+                      <TableHead>{ar ? "الت��ريخ" : "Date"}</TableHead>
                       <TableHead>{ar ? "المبلغ" : "Amount"}</TableHead>
                       <TableHead>{ar ? "الطريقة" : "Method"}</TableHead>
                       <TableHead>{ar ? "ملاحظة" : "Note"}</TableHead>
