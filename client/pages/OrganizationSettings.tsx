@@ -192,7 +192,7 @@ function BasicInfoCard({ canManage }: { canManage: boolean }) {
       <CardContent className="space-y-3">
         <div className="grid md:grid-cols-2 gap-3">
           <div>
-            <Label>Organization name</Label>
+            <Label requiredMark>Organization name</Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div>
