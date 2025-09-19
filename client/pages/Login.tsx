@@ -112,7 +112,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-emerald-50 flex items-center justify-center p-6">
-      <div className={"container max-w-5xl mx-auto transition-opacity duration-500 " + (mounted.current ? "opacity-100" : "opacity-0") }>
+      <div className={"container max-w-5xl mx-auto transition-opacity duration-500 " + (mounted ? "opacity-100" : "opacity-0") }>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="hidden md:flex flex-col items-center justify-center space-y-6">
             <img src="/placeholder.svg" alt="Illustration" className="w-64 h-64 object-contain rounded-lg shadow-lg" />
