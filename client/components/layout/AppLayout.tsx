@@ -181,8 +181,63 @@ export default function AppLayout({ children }: { children: ReactNode }) {
 
   if (hideChrome) {
     return (
-      <div className="min-h-screen">
-        <main className="container py-8">{children}</main>
+      <div className="min-h-screen flex flex-col">
+        <main className="container py-8 flex-grow">{children}</main>
+
+        <footer className="bg-sidebar border border-sidebar-border shadow mt-auto">
+          <div className="container py-6 flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-secondary grid place-items-center text-white shadow-md">
+                <ShieldCheck className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="font-medium">{t("footer.title")}</p>
+                <p className="text-xs text-muted-foreground">{t("footer.subtitle")}</p>
+                <p className="text-xs text-muted-foreground mt-1">{t("footer.copyright").replace("{{year}}", String(new Date().getFullYear()))}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-6">
+              <div className="hidden md:flex items-center gap-4">
+                <Link to="/privacy" className="hover:text-foreground transition-colors duration-200 hover:underline">{t("footer.privacy")}</Link>
+                <Link to="/security" className="hover:text-foreground transition-colors duration-200 hover:underline">{t("footer.security")}</Link>
+                <Link to="/contact" className="hover:text-foreground transition-colors duration-200 hover:underline">{t("footer.contact")}</Link>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <Button asChild variant="ghost" size="icon">
+                  <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="twitter"><Twitter className="h-4 w-4" /></a>
+                </Button>
+                <Button asChild variant="ghost" size="icon">
+                  <a href="https://github.com" target="_blank" rel="noreferrer" aria-label="github"><Github className="h-4 w-4" /></a>
+                </Button>
+                <Button asChild variant="ghost" size="icon">
+                  <a href="mailto:hello@example.com" aria-label="email"><Mail className="h-4 w-4" /></a>
+                </Button>
+              </div>
+
+              <div className="ml-2">
+                <Button asChild className="rounded-full bg-gradient-to-r from-primary to-secondary text-white px-4 py-2">
+                  <Link to="/donations">{t("donate.now")}</Link>
+                </Button>
+              </div>
+
+              <div className="ml-2">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" aria-label="Language" className="relative hover:bg-accent/50 transition-all duration-200 hover:scale-105 rounded-xl">
+                      <Languages className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="glass-card border border-border/50 shadow-xl">
+                    <DropdownMenuItem onClick={() => setLocale("ar")} className="hover:bg-accent/50 transition-all duration-200">🇸🇦 العربية</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setLocale("en")} className="hover:bg-accent/50 transition-all duration-200">🇺🇸 English</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+          </div>
+        </footer>
       </div>
     );
   }
