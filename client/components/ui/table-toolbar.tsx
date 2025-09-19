@@ -13,6 +13,7 @@ type TableToolbarProps = {
   onPageSizeChange?: (n: number) => void;
   pageSizeOptions?: number[];
   children?: React.ReactNode;
+  rightChildren?: React.ReactNode;
 };
 
 export default function TableToolbar({
