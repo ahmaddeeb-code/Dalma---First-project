@@ -1353,12 +1353,13 @@ function EmergencyCard({
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<EmergencyProtocol | null>(null);
   return (
-    <Card>
-      <CardHeader className="flex items-center justify-between">
-        <div>
-          <CardTitle>{t("pages.medical.emergency.title")}</CardTitle>
-          <CardDescription>{t("pages.medical.emergency.desc")}</CardDescription>
-        </div>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <AlertTriangle className="h-5 w-5 text-primary" />
+          {t("pages.medical.emergency.title")}
+        </CardTitle>
+        <CardDescription>{t("pages.medical.emergency.desc")}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="mb-3">
