@@ -8,6 +8,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  StatsCard,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -356,41 +357,41 @@ export default function Beneficiaries() {
       </div>
 
       <div className="grid gap-4 grid-cols-1 md:grid-cols-4">
-        <Card className="bg-gradient-to-br from-primary/10 to-primary/5">
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-2"><Users className="h-4 w-4" />{ar ? "إجمالي" : "Total"}</CardDescription>
-            <CardTitle className="text-3xl">{total}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5">
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-2"><Activity className="h-4 w-4" />{ar ? "نشطون" : "Active"}</CardDescription>
-            <CardTitle className="text-3xl">{active}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card className="bg-gradient-to-br from-blue-500/10 to-blue-500/5">
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-2"><Stethoscope className="h-4 w-4" />{ar ? "تحت العلاج" : "Under Treatment"}</CardDescription>
-            <CardTitle className="text-3xl">{under}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card className="bg-gradient-to-br from-gray-500/10 to-gray-500/5">
-          <CardHeader className="pb-2">
-            <CardDescription className="flex items-center gap-2"><GraduationCap className="h-4 w-4" />{ar ? "متخرجون" : "Graduated"}</CardDescription>
-            <CardTitle className="text-3xl">{grads}</CardTitle>
-          </CardHeader>
-        </Card>
+        <StatsCard
+          title={ar ? "إجمالي" : "Total"}
+          value={total.toString()}
+          icon={<Users className="h-5 w-5" />}
+          gradient="from-primary/10 via-primary/5 to-transparent"
+        />
+        <StatsCard
+          title={ar ? "نشطون" : "Active"}
+          value={active.toString()}
+          icon={<Activity className="h-5 w-5" />}
+          gradient="from-emerald-500/10 via-emerald-500/5 to-transparent"
+        />
+        <StatsCard
+          title={ar ? "تحت العلاج" : "Under Treatment"}
+          value={under.toString()}
+          icon={<Stethoscope className="h-5 w-5" />}
+          gradient="from-blue-500/10 via-blue-500/5 to-transparent"
+        />
+        <StatsCard
+          title={ar ? "متخرجون" : "Graduated"}
+          value={grads.toString()}
+          icon={<GraduationCap className="h-5 w-5" />}
+          gradient="from-gray-500/10 via-gray-500/5 to-transparent"
+        />
       </div>
 
-      <Card>
-        <CardHeader className="flex items-center justify-between gap-4">
+      <Card variant="modern">
+        <CardHeader className="flex items-center justify-between gap-4 pb-4">
           <div>
-            <CardTitle className="flex items-center gap-2">
-              <Filter className="h-5 w-5" /> {ar ? "الفلاتر" : "Filters"}
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Filter className="h-5 w-5 text-primary" /> {ar ? "الفلاتر" : "Filters"}
             </CardTitle>
             <CardDescription>
               {ar
-                ? "تصفية حسب النوع، الحالة، البرنامج والمعالج"
+                ? "تصفية حسب النوع، الحالة، البرنامج والمعال��"
                 : "Filter by disability, status, program and therapist"}
             </CardDescription>
           </div>
@@ -679,7 +680,7 @@ export default function Beneficiaries() {
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card className="lg:col-span-2">
+        <Card variant="modern" className="lg:col-span-2">
           {selected.length > 0 && canEdit && (
             <div className="px-6 pt-4 flex items-center justify-between gap-2">
               <div className="text-sm">
@@ -796,7 +797,7 @@ export default function Beneficiaries() {
                     </TableHead>
                     <TableHead>{ar ? "الإعاقة" : "Disability"}</TableHead>
                     <TableHead className="hidden md:table-cell">
-                      {ar ? "البرامج" : "Programs"}
+                      {ar ? "الب��امج" : "Programs"}
                     </TableHead>
                     <TableHead className="hidden md:table-cell">
                       {ar ? "المعالج" : "Therapist"}
@@ -900,10 +901,10 @@ export default function Beneficiaries() {
         </Card>
 
         <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="h-5 w-5" /> {ar ? "تنبيهات" : "Alerts"}
+          <Card variant="modern">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Bell className="h-5 w-5 text-primary" /> {ar ? "تنبيهات" : "Alerts"}
               </CardTitle>
               <CardDescription>
                 {ar
@@ -944,10 +945,10 @@ export default function Beneficiaries() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CalendarClock className="h-5 w-5" /> {ar ? "مواعيد قادمة" : "Upcoming"}
+          <Card variant="modern">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <CalendarClock className="h-5 w-5 text-primary" /> {ar ? "مواعيد قادمة" : "Upcoming"}
               </CardTitle>
               <CardDescription>
                 {ar ? "أقرب 6 مواعيد" : "Next 6 appointments"}
@@ -966,10 +967,10 @@ export default function Beneficiaries() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileWarning className="h-5 w-5" /> {ar ? "مستندات على وشك الانتهاء" : "Expiring docs"}
+          <Card variant="modern">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <FileWarning className="h-5 w-5 text-primary" /> {ar ? "مستندات على وشك الانتهاء" : "Expiring docs"}
               </CardTitle>
               <CardDescription>
                 {ar ? "خلال 30 يوماً" : "Within 30 days"}
@@ -988,10 +989,10 @@ export default function Beneficiaries() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Stethoscope className="h-5 w-5" /> {ar ? "عبء المعالجين" : "Therapist load"}
+          <Card variant="modern">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Stethoscope className="h-5 w-5 text-primary" /> {ar ? "عبء المعالجين" : "Therapist load"}
               </CardTitle>
               <CardDescription>
                 {ar ? "أكثر 6 معالجين" : "Top 6 therapists"}
