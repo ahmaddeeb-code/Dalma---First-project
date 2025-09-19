@@ -412,7 +412,7 @@ export default function BeneficiaryProfile() {
           <CardContent className="pt-0 flex flex-wrap gap-2">
             {b.education.programs.length ? b.education.programs.map((p)=> (
               <Badge key={p} variant="secondary">{p}</Badge>
-            )): <span className="text-sm text-muted-foreground">{ar?"لا يوجد":"None"}</span>}
+            )): <span className="text-sm text-muted-foreground">{ar?"��ا يوجد":"None"}</span>}
           </CardContent>
         </Card>
         <Card>
@@ -736,6 +736,17 @@ export default function BeneficiaryProfile() {
                     </>
                   )}
                 </div>
+                <TableToolbar
+                  onExport={(type) => {
+                    const cols = [
+                      { header: ar ? 'النوع' : 'Type', accessor: (r:any) => r.type },
+                      { header: ar ? 'التاريخ' : 'Date', accessor: (r:any) => new Date(r.date).toLocaleString() },
+                      { header: ar ? 'المعالج' : 'Therapist', accessor: (r:any) => r.therapist || '' },
+                      { header: ar ? 'الحضور' : 'Attendance', accessor: (r:any) => (r.attended === true ? (ar ? 'حضر' : 'Present') : r.attended === false ? (ar ? 'غاب' : 'Missed') : '-') },
+                    ];
+                    import('@/lib/export').then((m)=>m.exportAll(b.care.appointments, cols, type, 'appointments'));
+                  }}
+                />
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -1095,7 +1106,7 @@ export default function BeneficiaryProfile() {
               </CardTitle>
               <CardDescription>
                 {ar
-                  ? "جهات اتصال وملاحظات طبية حرجة"
+                  ? "جهات ا��صال وملاحظات طبية حرجة"
                   : "Emergency contacts and critical notes"}
               </CardDescription>
             </CardHeader>
@@ -1127,7 +1138,7 @@ export default function BeneficiaryProfile() {
               <CardTitle>{ar ? "سجل التعديلات" : "Edit History"}</CardTitle>
               <CardDescription>
                 {ar
-                  ? "تعقب التعديلات للمراجعة"
+                  ? "تعقب التع��يلات للمراجعة"
                   : "Audit trail for accountability"}
               </CardDescription>
             </CardHeader>
