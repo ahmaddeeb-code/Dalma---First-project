@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import TableToolbar from "@/components/ui/table-toolbar";
+import TableActions, { createEditAction, createDeleteAction } from "@/components/ui/table-actions";
+import SortableTableHead, { useTableSort } from "@/components/ui/sortable-table-head";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
