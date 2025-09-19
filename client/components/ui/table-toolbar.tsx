@@ -35,13 +35,6 @@ export default function TableToolbar({
       )}
     >
       <div className="flex items-center gap-2 flex-wrap">
-        {onAdd ? (
-          <Button onClick={onAdd} className="flex items-center" variant={"default"}>
-            <Plus className="mr-2 h-4 w-4" />
-            {addLabel}
-          </Button>
-        ) : null}
-
         {onExport ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -86,6 +79,14 @@ export default function TableToolbar({
               ))}
             </select>
           </div>
+        ) : null}
+
+        {rightChildren}
+        {onAdd ? (
+          <Button onClick={onAdd} className="flex items-center" variant={"default"}>
+            <Plus className="mr-2 h-4 w-4" />
+            {addLabel}
+          </Button>
         ) : null}
       </div>
     </div>
