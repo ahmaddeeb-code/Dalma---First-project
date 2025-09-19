@@ -407,11 +407,10 @@ export default function Employees() {
                 <TableRow>
                   <TableHead>{t("common.name")}</TableHead>
                   <TableHead>{t("common.email")}</TableHead>
-                  <TableHead>{t("common.departmentTitle")}</TableHead>
+                  <TableHead>{ar ? "القسم" : "Department"}</TableHead>
                   <TableHead className="hidden md:table-cell">{ar ? "تاريخ الالتحاق" : "Joined"}</TableHead>
                   <TableHead className="hidden md:table-cell">{t("common.roles")}</TableHead>
-                  <TableHead className="hidden md:table-cell">{t("common.privileges")}</TableHead>
-                  <TableHead className="hidden md:table-cell">Login</TableHead>
+                                    <TableHead className="hidden md:table-cell">Login</TableHead>
                   <TableHead className="hidden md:table-cell">Default Password</TableHead>
                   {canManage && (
                     <TableHead className="text-center">{t("common.actions")}</TableHead>
@@ -423,15 +422,13 @@ export default function Employees() {
                   <TableRow key={u.id}>
                     <TableCell className="font-medium">
                       <div className="flex items-center gap-2">
-                        {u.titleAbbrev ? <Badge variant="secondary">{u.titleAbbrev}</Badge> : null}
+                        {u.title ? <Badge variant="secondary">{u.title}</Badge> : null}
                         <span>{u.name}</span>
                       </div>
                     </TableCell>
                     <TableCell>{u.email}</TableCell>
                     <TableCell>
-                      <div className="text-sm">
-                        {(u.department || "").toString()} {u.title ? `• ${u.title}` : ""}
-                      </div>
+                      <div className="text-sm">{(u.department || "").toString()}</div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
                       {u.joinedAt ? new Date(u.joinedAt).toLocaleDateString() : "—"}
@@ -443,14 +440,6 @@ export default function Employees() {
                           return (
                             <Badge key={rid} variant="secondary">{r ? r.name : rid}</Badge>
                           );
-                        })}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-wrap gap-1">
-                        {u.privilegeIds.map((pid) => {
-                          const p = privileges.find((x) => x.id === pid);
-                          return <Badge key={pid}>{p ? p.name : pid}</Badge>;
                         })}
                       </div>
                     </TableCell>
