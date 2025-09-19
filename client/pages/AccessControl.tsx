@@ -155,7 +155,7 @@ export default function AccessControl() {
                     ];
                     import("@/lib/export").then((m) => m.exportAll(state.users, cols, type, "users"));
                   }}
-                  children={
+                  rightChildren={
                     <div className="flex items-center gap-2">
                       <UserDialog
                         onSubmit={(u) =>
@@ -316,7 +316,7 @@ export default function AccessControl() {
                     ];
                     import("@/lib/export").then((m) => m.exportAll(state.roles, cols, type, "roles"));
                   }}
-                  children={
+                  rightChildren={
                     <div className="flex items-center gap-2">
                       <RoleDialog
                         onSubmit={(r) =>
@@ -454,7 +454,7 @@ export default function AccessControl() {
                     ];
                     import("@/lib/export").then((m) => m.exportAll(state.privileges, cols, type, "privileges"));
                   }}
-                  children={
+                  rightChildren={
                     <div className="flex items-center gap-2">
                       <PrivilegeDialog
                         onSubmit={(p) =>
