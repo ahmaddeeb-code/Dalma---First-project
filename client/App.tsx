@@ -38,6 +38,7 @@ const queryClient = new QueryClient({
       gcTime: 5 * 60_000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
+      refetchOnMount: false,
       retry: 1,
     },
     mutations: {
