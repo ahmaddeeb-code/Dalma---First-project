@@ -87,6 +87,22 @@ export default function AccessControl() {
               </div>
               </CardHeader>
             <CardContent>
+              <div className="mb-3">
+                <TableToolbar
+                  onAdd={undefined}
+                  children={
+                    <div className="flex items-center gap-2">
+                      <UserDialog
+                        onSubmit={(u) =>
+                          setState((s) => ({ ...s, users: upsert(s.users, u) }))
+                        }
+                        roles={state.roles}
+                        privileges={state.privileges}
+                      />
+                    </div>
+                  }
+                />
+              </div>
               <Table>
                 <TableHeader>
                   <TableRow>
