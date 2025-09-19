@@ -113,6 +113,18 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
     setLoadingState(state);
   }, []);
 
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      if (delayTimerRef.current) {
+        clearTimeout(delayTimerRef.current);
+      }
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+      }
+    };
+  }, []);
+
   return (
     <LoadingContext.Provider value={{ loading, showLoading, hideLoading, setLoading }}>
       {children}
