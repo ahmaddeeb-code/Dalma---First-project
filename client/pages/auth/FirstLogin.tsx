@@ -15,12 +15,25 @@ export default function FirstLogin() {
   const [pw2, setPw2] = useState("");
   const [err, setErr] = useState<string | null>(null);
 
-  function submit() {
+  async function submit() {
     setErr(null);
     if (pw1.length < 6) { setErr("Password too short"); return; }
     if (pw1 !== pw2) { setErr("Passwords do not match"); return; }
     if (!userId) { setErr("Missing user"); return; }
-    setUserPassword(userId, pw1);
+
+    try {
+      const r = await fetch("/api/auth/first-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, password: pw1 }),
+      });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.error || "Server error");
+    } catch (e: any) {
+      // fallback to local update
+      setUserPassword(userId, pw1);
+    }
+
     updateUser(userId, { mustChangePassword: false, defaultPassword: undefined });
     const u = getUserById(userId);
     if (u) login(u, true);
