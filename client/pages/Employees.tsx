@@ -426,6 +426,25 @@ export default function Employees() {
         </CardHeader>
         <CardContent>
           <TooltipProvider>
+            <div className="w-full">
+              <div className="mb-3">
+                <TableToolbar
+                  onAdd={() => setAddOpen(true)}
+                  addLabel={t("pages.employees.addEmployee")}
+                  onExport={async (type) => {
+                    const cols = [
+                      { header: "Name", accessor: (r: any) => r.name },
+                      { header: "Email", accessor: (r: any) => r.email },
+                      { header: "Department", accessor: (r: any) => r.department },
+                      { header: "Roles", accessor: (r: any) => (r.roleIds || []).join(", ") },
+                    ];
+                    await import("@/lib/export").then((m) => m.exportAll(pageItems, cols, type, "employees"));
+                  }}
+                  pageSize={pageSize}
+                  onPageSizeChange={(n) => { setPageSize(n); setPage(1); }}
+                />
+              </div>
+            </div>
             <div className="w-full overflow-x-auto">
               <div className="rounded-lg border border-border/50 bg-background/30">
                 <Table>
