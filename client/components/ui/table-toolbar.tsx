@@ -41,32 +41,28 @@ export default function TableToolbar({
         ) : null}
 
         {onExport ? (
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={() => onExport("csv")}
-              variant="outline"
-              size="sm"
-              className="flex items-center"
-            >
-              <Download className="mr-2 h-4 w-4" /> CSV
-            </Button>
-            <Button
-              onClick={() => onExport("xlsx")}
-              variant="outline"
-              size="sm"
-              className="flex items-center"
-            >
-              <Download className="mr-2 h-4 w-4" /> XLSX
-            </Button>
-            <Button
-              onClick={() => onExport("pdf")}
-              variant="outline"
-              size="sm"
-              className="flex items-center"
-            >
-              <Download className="mr-2 h-4 w-4" /> PDF
-            </Button>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-8 px-3">
+                <Download className="h-3.5 w-3.5 mr-1.5" />
+                Export
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-32">
+              <DropdownMenuLabel className="text-xs">Format</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {["csv", "xlsx", "pdf"].map((format) => (
+                <DropdownMenuItem
+                  key={format}
+                  onClick={() => onExport(format as "csv" | "xlsx" | "pdf")}
+                  className="text-xs"
+                >
+                  <Download className="h-3 w-3 mr-2" />
+                  {format.toUpperCase()}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : null}
 
         {children}
