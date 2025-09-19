@@ -194,6 +194,7 @@ export default function RoleLogin({
               <div className="grid gap-1.5">
                 <Label htmlFor="createPassword">Password</Label>
                 <Input id="createPassword" type="password" value={createPassword} onChange={(e)=>setCreatePassword(e.target.value)} />
+                <div className="mt-2"><PasswordStrength value={createPassword} /></div>
               </div>
               <div className="flex items-center gap-2">
                 <Checkbox checked={enable2fa} onCheckedChange={(v)=>setEnable2fa(!!v)} />
