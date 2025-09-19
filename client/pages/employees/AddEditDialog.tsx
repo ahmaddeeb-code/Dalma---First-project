@@ -128,7 +128,7 @@ export default function AddEditEmployeeDialog({
             </div>
             <div className="grid md:grid-cols-3 gap-3">
               <div className="md:col-span-1">
-                <Label>{ar ? "اللقب" : "Title"} *</Label>
+                <Label requiredMark>{ar ? "اللقب" : "Title"}</Label>
                 <Select value={title} onValueChange={setTitle}>
                   <SelectTrigger className="h-9">
                     <SelectValue placeholder={ar ? "اختر اللقب" : "Choose title"} />
@@ -143,7 +143,7 @@ export default function AddEditEmployeeDialog({
                 </Select>
               </div>
               <div className="md:col-span-2">
-                <Label>{ar ? "الاسم (إنجليزي)" : "Name (English)"} *</Label>
+                <Label requiredMark>{ar ? "الاسم (إنجليزي)" : "Name (English)"}</Label>
                 <div className="grid grid-cols-5 gap-2 mt-1">
                   {nameEnParts.map((p, i) => (
                     <Input
@@ -235,7 +235,7 @@ export default function AddEditEmployeeDialog({
             </div>
             <div className="grid md:grid-cols-2 gap-3">
               <div>
-                <Label>Email</Label>
+                <Label requiredMark>Email</Label>
                 <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
               </div>
               <div>
