@@ -19,6 +19,9 @@ export type User = {
   phone?: string;
   department?: string;
   title?: string;
+  titleAbbrev?: string;
+  gender?: "male" | "female";
+  joinedAt?: string; // ISO date
   active?: boolean;
   // Names per Saudi policy (up to five parts) in both languages
   nameEnParts?: string[]; // [p1..p5]
@@ -179,6 +182,10 @@ const seed: ACLState = {
       roleIds: ["r_admin"],
       privilegeIds: [],
       active: true,
+      gender: "male",
+      title: "Administrator",
+      titleAbbrev: "Admin",
+      joinedAt: new Date().toISOString(),
       password: "UGFzc3dvcmQxMjMh", // Password123!
       failedAttempts: 0,
       lockedUntil: null,
@@ -191,6 +198,10 @@ const seed: ACLState = {
       roleIds: ["r_staff"],
       privilegeIds: [],
       active: true,
+      gender: "male",
+      title: "Staff",
+      titleAbbrev: "Staff",
+      joinedAt: new Date().toISOString(),
       password: "UGFzc3dvcmQxMjMh",
       failedAttempts: 0,
       lockedUntil: null,
@@ -203,6 +214,10 @@ const seed: ACLState = {
       roleIds: ["r_family"],
       privilegeIds: [],
       active: true,
+      gender: "female",
+      title: "Guardian",
+      titleAbbrev: "GDN",
+      joinedAt: new Date().toISOString(),
       password: "UGFzc3dvcmQxMjMh",
       failedAttempts: 0,
       lockedUntil: null,
@@ -215,6 +230,10 @@ const seed: ACLState = {
       roleIds: ["r_beneficiary"],
       privilegeIds: [],
       active: true,
+      gender: "male",
+      title: "Beneficiary",
+      titleAbbrev: "BEN",
+      joinedAt: new Date().toISOString(),
       password: "UGFzc3dvcmQxMjMh",
       failedAttempts: 0,
       lockedUntil: null,
