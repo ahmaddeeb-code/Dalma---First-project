@@ -20,6 +20,11 @@ export type User = {
   department?: string;
   title?: string;
   active?: boolean;
+  // security fields
+  password?: string; // base64-encoded password (for demo only)
+  failedAttempts?: number;
+  lockedUntil?: string | null; // ISO
+  twoFactor?: boolean;
 };
 
 export type ACLState = {
