@@ -183,18 +183,19 @@ function LoadingOverlay() {
 export function useLoadingApi() {
   const { showLoading, hideLoading } = useLoading();
 
-  const withLoading = async <T,>(
+  const withLoading = useCallback(async <T,>(
     apiCall: () => Promise<T>,
-    message?: string
+    message?: string,
+    delay?: number
   ): Promise<T> => {
     try {
-      showLoading(message || 'Processing...', 'api');
+      showLoading(message || 'Processing...', 'api', delay || 300);
       const result = await apiCall();
       return result;
     } finally {
       hideLoading();
     }
-  };
+  }, [showLoading, hideLoading]);
 
   return { withLoading };
 }
@@ -203,18 +204,19 @@ export function useLoadingApi() {
 export function useLoadingForm() {
   const { showLoading, hideLoading } = useLoading();
 
-  const withFormLoading = async <T,>(
+  const withFormLoading = useCallback(async <T,>(
     formSubmit: () => Promise<T>,
-    message?: string
+    message?: string,
+    delay?: number
   ): Promise<T> => {
     try {
-      showLoading(message || 'Saving...', 'form');
+      showLoading(message || 'Saving...', 'form', delay || 250);
       const result = await formSubmit();
       return result;
     } finally {
       hideLoading();
     }
-  };
+  }, [showLoading, hideLoading]);
 
   return { withFormLoading };
 }
