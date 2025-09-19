@@ -33,6 +33,37 @@ function hashPassword(pw: string) {
   }
 }
 
+export function setUserPassword(userId: string, password: string) {
+  const u = getUserById(userId);
+  if (!u) return false;
+  u.password = hashPassword(password);
+  u.failedAttempts = 0;
+  u.lockedUntil = null;
+  upsertUser(u);
+  return true;
+}
+
+export function sendOTP(userId: string) {
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  const expires = new Date();
+  expires.setMinutes(expires.getMinutes() + 5);
+  const map = JSON.parse(localStorage.getItem("auth_otp_v1") || "{}") as Record<string, { code:string; expiresAt:string }>;
+  map[userId] = { code, expiresAt: expires.toISOString() };
+  localStorage.setItem("auth_otp_v1", JSON.stringify(map));
+  return code;
+}
+
+export function verifyOTP(userId: string, code: string) {
+  const map = JSON.parse(localStorage.getItem("auth_otp_v1") || "{}") as Record<string, { code:string; expiresAt:string }>;
+  const entry = map[userId];
+  if (!entry) return { ok: false, error: "No OTP" };
+  if (new Date(entry.expiresAt) < new Date()) return { ok: false, error: "Expired" };
+  if (entry.code !== code) return { ok: false, error: "Invalid code" };
+  delete map[userId];
+  localStorage.setItem("auth_otp_v1", JSON.stringify(map));
+  return { ok: true };
+}
+
 export function login(user: User, remember = false) {
   // Ensure user exists in ACL store
   const acl = loadACL();
