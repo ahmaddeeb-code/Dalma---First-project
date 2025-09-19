@@ -24,7 +24,6 @@ export default function Login() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const [identifierError, setIdentifierError] = useState<string | null>(null);
@@ -37,6 +36,9 @@ export default function Login() {
   const [mfaPending, setMfaPending] = useState(false);
   const [mfaUserId, setMfaUserId] = useState<string | null>(null);
   const [mfaCode, setMfaCode] = useState("");
+
+  const { withFormLoading } = useLoadingForm();
+  const { withLoading } = useLoadingApi();
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
