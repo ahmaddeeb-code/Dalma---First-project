@@ -70,21 +70,21 @@ export default function Login() {
     setPasswordError(pwErr);
     if (idErr || pwErr) return;
 
-    setLoading(true);
-    const res = await authenticate(identifier, password, remember);
-    setLoading(false);
-    if (!res.ok) {
-      toast.error(res.error || "Invalid credentials");
-      return;
-    }
-    if ((res as any).mfa) {
-      setMfaPending(true);
-      setMfaUserId((res as any).userId || null);
-      if ((res as any).demoCode) toast.success(`OTP: ${(res as any).demoCode}`);
-      return;
-    }
-    toast.success(t("login.success") || "Welcome");
-    navigate(from, { replace: true });
+    await withFormLoading(async () => {
+      const res = await authenticate(identifier, password, remember);
+      if (!res.ok) {
+        toast.error(res.error || "Invalid credentials");
+        return;
+      }
+      if ((res as any).mfa) {
+        setMfaPending(true);
+        setMfaUserId((res as any).userId || null);
+        if ((res as any).demoCode) toast.success(`OTP: ${(res as any).demoCode}`);
+        return;
+      }
+      toast.success(t("login.success") || "Welcome");
+      navigate(from, { replace: true });
+    }, "Signing you in...");
   };
 
   const submitMfa = async () => {
