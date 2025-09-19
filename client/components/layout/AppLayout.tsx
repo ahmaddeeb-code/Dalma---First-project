@@ -155,7 +155,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     if (el.getAttribute("lang") !== wantLang) el.setAttribute("lang", wantLang);
   }, [locale]);
 
-  const hideChrome = pathname.startsWith("/login") || pathname.startsWith("/logout");
+  const hideChrome = pathname.startsWith("/login") || pathname.startsWith("/logout") || pathname.startsWith("/first-login");
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
   const toggleGroup = (k: string) =>
