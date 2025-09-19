@@ -428,7 +428,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
 
         <main className="container py-8 animate-slide-in-top">{children}</main>
 
-        <footer className="mt-12 border-t border-border/50 glass-card">
+        <footer className="mt-auto bg-sidebar border border-sidebar-border shadow">
           <div className="container py-6 flex flex-col lg:flex-row items-center justify-between gap-6 text-sm text-muted-foreground">
             <div className="flex items-center gap-3">
               <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-secondary grid place-items-center text-white shadow-md">
