@@ -6,6 +6,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  StatsCard,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -220,58 +221,37 @@ export default function Employees() {
         </div>
       </div>
 
-      <div className="grid gap-3 grid-cols-1 md:grid-cols-3">
-        <Card className="relative overflow-hidden border-0 text-white bg-gradient-to-r from-blue-500 to-indigo-500">
-          <CardHeader className="py-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardDescription className="text-white/90">{t("common.total")}</CardDescription>
-                <CardTitle className="text-xl">{total}</CardTitle>
-              </div>
-              <div className="bg-white/20 rounded-full p-2">
-                <Users className="h-5 w-5" />
-              </div>
-            </div>
-          </CardHeader>
-        </Card>
-        <Card className="relative overflow-hidden border-0 text-white bg-gradient-to-r from-emerald-500 to-teal-500">
-          <CardHeader className="py-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardDescription className="text-white/90">{t("common.doctors")}</CardDescription>
-                <CardTitle className="text-xl">{doctors}</CardTitle>
-              </div>
-              <div className="bg-white/20 rounded-full p-2">
-                <Stethoscope className="h-5 w-5" />
-              </div>
-            </div>
-          </CardHeader>
-        </Card>
-        <Card className="relative overflow-hidden border-0 text-white bg-gradient-to-r from-purple-500 to-pink-500">
-          <CardHeader className="py-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardDescription className="text-white/90">{t("common.therapists")}</CardDescription>
-                <CardTitle className="text-xl">{therapists}</CardTitle>
-              </div>
-              <div className="bg-white/20 rounded-full p-2">
-                <Activity className="h-5 w-5" />
-              </div>
-            </div>
-          </CardHeader>
-        </Card>
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
+        <StatsCard
+          title={t("common.total")}
+          value={total.toString()}
+          icon={<Users className="h-5 w-5" />}
+          gradient="from-blue-500/10 via-blue-500/5 to-transparent"
+        />
+        <StatsCard
+          title={t("common.doctors")}
+          value={doctors.toString()}
+          icon={<Stethoscope className="h-5 w-5" />}
+          gradient="from-emerald-500/10 via-emerald-500/5 to-transparent"
+        />
+        <StatsCard
+          title={t("common.therapists")}
+          value={therapists.toString()}
+          icon={<Activity className="h-5 w-5" />}
+          gradient="from-purple-500/10 via-purple-500/5 to-transparent"
+        />
       </div>
 
-      <Card>
-        <CardHeader className="flex items-center justify-between gap-4">
+      <Card variant="modern">
+        <CardHeader className="flex items-center justify-between gap-4 pb-4">
           <div>
-            <CardTitle className="flex items-center gap-2">
-              <Filter className="h-5 w-5" /> {t("common.filters")}
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Filter className="h-5 w-5 text-primary" /> {t("common.filters")}
             </CardTitle>
             <CardDescription>{t("common.search")}</CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-2">
             <Label>{t("common.search")}</Label>
             <div className="relative">
@@ -373,9 +353,12 @@ export default function Employees() {
         </CardContent>
       </Card>
 
-      <Card className="shadow-sm border-border/40 bg-card/50 backdrop-blur-sm">
-        <CardHeader>
-          <CardTitle className="text-xl font-semibold">{t("pages.employees.table.title")}</CardTitle>
+      <Card variant="modern">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Users className="h-5 w-5 text-primary" />
+            {t("pages.employees.table.title")}
+          </CardTitle>
           <CardDescription className="text-muted-foreground">{t("pages.employees.table.desc")}</CardDescription>
         </CardHeader>
         <CardContent>
