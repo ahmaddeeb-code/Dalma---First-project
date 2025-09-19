@@ -79,6 +79,7 @@ const groups = [
       { to: "/beneficiaries", key: "nav.beneficiaries", icon: Users2 },
       { to: "/employees", key: "nav.employees", icon: Users },
       { to: "/admin/families", key: "nav.families", icon: UserCircle2 },
+      { to: "/admin/departments", key: "nav.departments", icon: Building2 },
       { to: "/admin/logistics", key: "nav.logistics", icon: Building2 },
       { to: "/donations", key: "nav.donations", icon: HandHeart },
     ],
