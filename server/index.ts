@@ -19,5 +19,13 @@ export function createServer() {
 
   app.get("/api/demo", handleDemo);
 
+  // Auth routes
+  try {
+    const authRoutes = require("./routes/auth").default;
+    app.use("/api/auth", authRoutes);
+  } catch (e) {
+    console.error("Failed to load auth routes", e);
+  }
+
   return app;
 }

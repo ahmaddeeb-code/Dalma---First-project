@@ -1,0 +1,1530 @@
+import { useMemo, useSyncExternalStore, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { getLocale } from "@/i18n";
+import TableToolbar from "@/components/ui/table-toolbar";
+import {
+  CalendarDays,
+  ClipboardList,
+  FileText,
+  LifeBuoy,
+  MessagesSquare,
+  Stethoscope,
+  Trash2,
+  UploadCloud,
+  Edit3,
+  Save,
+  X,
+  Archive,
+  User2,
+  WalletMinimal,
+  CalendarClock,
+  Activity,
+  FileWarning,
+} from "lucide-react";
+import {
+  Beneficiary,
+  getAge,
+  getBeneficiary,
+  subscribe as subscribeBeneficiaries,
+  addDocument,
+  updateBeneficiary,
+  removeBeneficiary,
+  archiveBeneficiaries,
+} from "@/store/beneficiaries";
+import {
+  getBeneficiarySettings,
+  subscribeBeneficiarySettings,
+} from "@/store/beneficiary-settings";
+
+import { getCurrentUser, getCurrentUserId } from "@/store/auth";
+import { effectivePrivileges, loadACL } from "@/store/acl";
+import { toast } from "sonner";
+
+function useBeneficiary(id: string | undefined) {
+  return useSyncExternalStore(
+    (cb) => subscribeBeneficiaries(cb),
+    () => (id ? getBeneficiary(id) : null),
+    () => (id ? getBeneficiary(id) : null),
+  );
+}
+
+function statusBadgeAr(status: Beneficiary["status"]) {
+  switch (status) {
+    case "active":
+      return (
+        <Badge className="bg-emerald-600 text-white hover:bg-emerald-600">
+          نشط
+        </Badge>
+      );
+    case "under_treatment":
+      return (
+        <Badge className="bg-blue-600 text-white hover:bg-blue-600">
+          تحت العلاج
+        </Badge>
+      );
+    case "graduated":
+      return <Badge variant="secondary">متخرج</Badge>;
+    default:
+      return <Badge variant="outline">غير نشط</Badge>;
+  }
+}
+
+function useBeneficiarySettings() {
+  return useSyncExternalStore(
+    (cb) => subscribeBeneficiarySettings(cb),
+    () => getBeneficiarySettings(),
+    () => getBeneficiarySettings(),
+  );
+}
+
+export default function BeneficiaryProfile() {
+  const { id } = useParams();
+  const b = useBeneficiary(id);
+  const ar = getLocale() === "ar";
+  const settings = useBeneficiarySettings();
+  const user = useMemo(() => getCurrentUser(), []);
+  const canEdit = useMemo(() => {
+    if (!user) return false;
+    const acl = loadACL();
+    const privs = effectivePrivileges(user, acl.roles, acl.privileges);
+    return privs.some((p) => p.id === "p_edit_records");
+  }, [user]);
+
+  const age = useMemo(() => (b ? getAge(b) : 0), [b]);
+  const [edit, setEdit] = useState(false);
+
+  if (!b) {
+    return (
+      <div className="space-y-4">
+        <p className="text-muted-foreground">
+          {ar
+            ? "لا يوجد مستفيد بهذا المعرف"
+            : "No beneficiary found for this ID"}
+        </p>
+        <Button asChild>
+          <Link to="/beneficiaries">
+            {ar ? "عودة إلى القائمة" : "Back to list"}
+          </Link>
+        </Button>
+      </div>
+    );
+  }
+
+  const nextAppointment = b.care.appointments
+    .filter((a) => new Date(a.date) > new Date())
+    .sort((a, c) => +new Date(a.date) - +new Date(c.date))[0];
+  const expiringSoon = b.documents.filter(
+    (d) =>
+      d.expiresAt &&
+      new Date(d.expiresAt) < new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+  );
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-4">
+        <Button asChild variant="secondary">
+          <Link to="/beneficiaries">{ar ? "المستفيدون" : "Beneficiaries"}</Link>
+        </Button>
+        <Separator orientation="vertical" className="h-6" />
+        <h1 className="text-2xl font-bold tracking-tight">
+          {ar ? "ملف المستفيد" : "Beneficiary Profile"}
+        </h1>
+      </div>
+
+      <Card className="overflow-hidden">
+        <div className="h-28 w-full bg-gradient-to-r from-primary/20 via-blue-500/15 to-emerald-500/20" />
+        <CardContent className="-mt-10">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+            <Avatar className="h-20 w-20 ring-4 ring-background">
+              {b.photoUrl ? (
+                <AvatarImage alt={b.name} src={b.photoUrl} />
+              ) : (
+                <AvatarFallback>
+                  <User2 className="h-8 w-8" />
+                </AvatarFallback>
+              )}
+            </Avatar>
+            <div className="flex-1">
+              <div className="flex items-center flex-wrap gap-3">
+                <h2 className="text-xl font-semibold">{b.name}</h2>
+                {statusBadgeAr(b.status)}
+              </div>
+              <div className="text-sm text-muted-foreground mt-1 flex flex-wrap gap-3">
+                <span>
+                  {ar ? "الرقم" : "ID"}: {b.beneficiaryId}
+                </span>
+                <span>
+                  {ar ? "السجل المدني" : "Civil"}: {b.civilId}
+                </span>
+                <span>
+                  {ar ? "العمر" : "Age"}: {age}
+                </span>
+                <span className="flex items-center gap-2">
+                  <span>{ar ? "الجنس" : "Gender"}:</span>
+                  {edit ? (
+                    <Select
+                      defaultValue={b.gender}
+                      onValueChange={(v) => (b.gender = v as any)}
+                    >
+                      <SelectTrigger className="h-8 w-28">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {(settings.lists.gender || ["male", "female"]).map(
+                          (g) => (
+                            <SelectItem key={g} value={g}>
+                              {g}
+                            </SelectItem>
+                          ),
+                        )}
+                      </SelectContent>
+                    </Select>
+                  ) : b.gender === "male" ? (
+                    ar ? (
+                      "ذكر"
+                    ) : (
+                      "Male"
+                    )
+                  ) : ar ? (
+                    "أنثى"
+                  ) : (
+                    "Female"
+                  )}
+                </span>
+                <span className="flex items-center gap-2">
+                  <span>{ar ? "الإعاقة" : "Disability"}:</span>
+                  {edit ? (
+                    <Select
+                      defaultValue={b.medical.disabilityType}
+                      onValueChange={(v) => (b.medical.disabilityType = v)}
+                    >
+                      <SelectTrigger className="h-8 w-40">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {settings.disabilityCategories.map((d) => (
+                          <SelectItem key={d} value={d}>
+                            {d}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    b.medical.disabilityType
+                  )}
+                </span>
+              </div>
+              <div className="text-sm mt-2">
+                <span className="text-muted-foreground">
+                  {ar ? "الطبيب" : "Doctor"}:
+                </span>{" "}
+                {b.care.assignedDoctor || (ar ? "غير محدد" : "Unassigned")} ·{" "}
+                <span className="text-muted-foreground">
+                  {ar ? "المعالج" : "Therapist"}:
+                </span>{" "}
+                {b.care.assignedTherapist || (ar ? "غير محدد" : "Unassigned")}
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {canEdit && (
+        <Card>
+          <CardContent className="py-4 flex flex-wrap items-center gap-2">
+            {!edit ? (
+              <Button size="sm" variant="outline" onClick={() => setEdit(true)}>
+                <Edit3 className="h-4 w-4 ml-1" /> {ar ? "تعديل" : "Edit"}
+              </Button>
+            ) : (
+              <>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    if (!b) return;
+                    updateBeneficiary(
+                      b.id,
+                      { ...b },
+                      getCurrentUserId() || undefined,
+                      "inline_update",
+                    );
+                    setEdit(false);
+                    toast.success(ar ? "تم الحفظ" : "Saved");
+                  }}
+                >
+                  <Save className="h-4 w-4 ml-1" /> {ar ? "حفظ" : "Save"}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    window.location.reload();
+                  }}
+                >
+                  <X className="h-4 w-4 ml-1" /> {ar ? "إلغاء" : "Cancel"}
+                </Button>
+              </>
+            )}
+            <label className="cursor-pointer inline-flex items-center gap-1 text-sm bg-secondary text-secondary-foreground rounded-md px-2 py-1">
+              <UploadCloud className="h-4 w-4" />{" "}
+              {ar ? "صورة الملف" : "Profile Photo"}
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={async (e) => {
+                  const f = e.target.files?.[0];
+                  if (!f || !b) return;
+                  const reader = new FileReader();
+                  reader.onload = () => {
+                    updateBeneficiary(
+                      b.id,
+                      { photoUrl: reader.result as string },
+                      getCurrentUserId() || undefined,
+                      "upload_photo",
+                    );
+                    toast.success(ar ? "تم تحديث الصورة" : "Photo updated");
+                  };
+                  reader.readAsDataURL(f);
+                }}
+              />
+            </label>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button size="sm" variant="secondary">
+                  <Archive className="h-4 w-4 ml-1" />{" "}
+                  {b.archived
+                    ? ar
+                      ? "إلغاء الأرشفة"
+                      : "Unarchive"
+                    : ar
+                      ? "أرشفة"
+                      : "Archive"}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    {ar ? "تأكيد" : "Confirm"}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {b.archived
+                      ? ar
+                        ? "هل ��ريد إلغاء أرشفة هذا الملف؟"
+                        : "Unarchive this profile?"
+                      : ar
+                        ? "هل تريد أرشفة هذا الملف؟"
+                        : "Archive this profile?"}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>
+                    {ar ? "إلغاء" : "Cancel"}
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => {
+                      if (!b) return;
+                      archiveBeneficiaries(
+                        [b.id],
+                        !b.archived,
+                        getCurrentUserId() || undefined,
+                      );
+                      toast.success(ar ? "تم التحديث" : "Updated");
+                    }}
+                  >
+                    {ar ? "تأكيد" : "Confirm"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button size="sm" variant="destructive">
+                  <Trash2 className="h-4 w-4 ml-1" /> {ar ? "حذف" : "Delete"}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    {ar ? "حذف نهائي" : "Permanent Delete"}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {ar
+                      ? "سيتم حذف هذا المستفيد نهائياً. لا يمكن التراجع."
+                      : "This will permanently delete this beneficiary. This action cannot be undone."}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>
+                    {ar ? "إلغاء" : "Cancel"}
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => {
+                      if (!b) return;
+                      removeBeneficiary(b.id);
+                      toast.success(ar ? "تم الحذف" : "Deleted");
+                      window.history.back();
+                    }}
+                  >
+                    {ar ? "حذف" : "Delete"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardDescription>{ar ? "التقدم" : "Progress"}</CardDescription>
+            <CardTitle className="text-2xl flex items-center gap-2">
+              <Activity className="h-5 w-5 text-primary" /> {b.care.progress}%
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="w-full h-2 bg-muted rounded">
+              <div
+                className="h-2 bg-primary rounded"
+                style={{ width: `${b.care.progress}%` }}
+              />
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardDescription>
+              {ar ? "الموعد القادم" : "Next appointment"}
+            </CardDescription>
+            <CardTitle className="text-base">
+              {nextAppointment ? (
+                <span className="inline-flex items-center gap-2">
+                  <CalendarClock className="h-5 w-5" />
+                  {new Date(nextAppointment.date).toLocaleString()}
+                </span>
+              ) : (
+                <span className="text-muted-foreground">
+                  {ar ? "لا يوجد" : "None"}
+                </span>
+              )}
+            </CardTitle>
+          </CardHeader>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardDescription>{ar ? "البرامج" : "Programs"}</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-0 flex flex-wrap gap-2">
+            {b.education.programs.length ? (
+              b.education.programs.map((p) => (
+                <Badge key={p} variant="secondary">
+                  {p}
+                </Badge>
+              ))
+            ) : (
+              <span className="text-sm text-muted-foreground">
+                {ar ? "لا يوجد" : "None"}
+              </span>
+            )}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardDescription>
+              {ar ? "مستندات على وشك الانتهاء" : "Expiring docs"}
+            </CardDescription>
+            <CardTitle className="text-2xl flex items-center gap-2">
+              <FileWarning className="h-5 w-5 text-amber-500" />{" "}
+              {expiringSoon.length}
+            </CardTitle>
+          </CardHeader>
+        </Card>
+      </div>
+
+      <Tabs defaultValue="personal" className="w-full">
+        <TabsList className="flex flex-wrap gap-2">
+          <TabsTrigger value="personal">
+            {ar ? "البيانات الشخصية" : "Personal"}
+          </TabsTrigger>
+          <TabsTrigger value="medical">
+            <Stethoscope className="h-4 w-4 ml-1" />{" "}
+            {ar ? "طبي وإعاقة" : "Medical"}
+          </TabsTrigger>
+          <TabsTrigger value="care">
+            <ClipboardList className="h-4 w-4 ml-1" />{" "}
+            {ar ? "خطة ا��رعاية" : "Care Plan"}
+          </TabsTrigger>
+          <TabsTrigger value="education">
+            <CalendarDays className="h-4 w-4 ml-1" />{" "}
+            {ar ? "تعليم وأنشطة" : "Education"}
+          </TabsTrigger>
+          <TabsTrigger value="documents">
+            <FileText className="h-4 w-4 ml-1" />{" "}
+            {ar ? "المستندات" : "Documents"}
+          </TabsTrigger>
+          <TabsTrigger value="financial">
+            <WalletMinimal className="h-4 w-4 ml-1" />{" "}
+            {ar ? "مالية وإدارية" : "Financial"}
+          </TabsTrigger>
+          <TabsTrigger value="communication">
+            <MessagesSquare className="h-4 w-4 ml-1" />{" "}
+            {ar ? "تواصل وملاحظات" : "Communication"}
+          </TabsTrigger>
+          <TabsTrigger value="emergency">
+            <LifeBuoy className="h-4 w-4 ml-1" /> {ar ? "الطوارئ" : "Emergency"}
+          </TabsTrigger>
+          <TabsTrigger value="history">
+            <ClipboardList className="h-4 w-4 ml-1" />{" "}
+            {ar ? "السجل" : "History"}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="personal" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {ar ? "البيانات الشخصية والتعريف" : "Personal & Identification"}
+              </CardTitle>
+              <CardDescription>
+                {ar
+                  ? "معلومات الاتصال وولي الأمر"
+                  : "Contact and guardian details"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid md:grid-cols-2 gap-4">
+              <div>
+                <div className="text-sm flex items-center gap-2">
+                  <span className="text-muted-foreground">
+                    {ar ? "الهاتف" : "Phone"}:
+                  </span>
+                  {edit ? (
+                    <Input
+                      className="h-8"
+                      defaultValue={b.contact.phone}
+                      onChange={(e) => (b.contact.phone = e.target.value)}
+                    />
+                  ) : (
+                    b.contact.phone
+                  )}
+                </div>
+                <div className="text-sm flex items-center gap-2">
+                  <span className="text-muted-foreground">Email:</span>
+                  {edit ? (
+                    <Input
+                      className="h-8"
+                      defaultValue={b.contact.email}
+                      onChange={(e) => (b.contact.email = e.target.value)}
+                    />
+                  ) : (
+                    b.contact.email || (ar ? "غير متوفر" : "Not provided")
+                  )}
+                </div>
+                <div className="text-sm flex items-center gap-2">
+                  <span className="text-muted-foreground">
+                    {ar ? "العنوان" : "Address"}:
+                  </span>
+                  {edit ? (
+                    <Input
+                      className="h-8"
+                      defaultValue={b.contact.address}
+                      onChange={(e) => (b.contact.address = e.target.value)}
+                    />
+                  ) : (
+                    b.contact.address || (ar ? "غير متوفر" : "Not provided")
+                  )}
+                </div>
+              </div>
+              <div>
+                <div className="text-sm flex items-center gap-2">
+                  <span className="text-muted-foreground">
+                    {ar ? "ولي الأمر" : "Guardian"}:
+                  </span>
+                  {edit ? (
+                    <>
+                      <Input
+                        className="h-8 w-48"
+                        defaultValue={b.guardian.name}
+                        onChange={(e) => (b.guardian.name = e.target.value)}
+                      />{" "}
+                      (
+                      <Input
+                        className="h-8 w-40"
+                        defaultValue={b.guardian.relation}
+                        onChange={(e) => (b.guardian.relation = e.target.value)}
+                      />
+                      )
+                    </>
+                  ) : (
+                    <>
+                      {b.guardian.name} ({b.guardian.relation})
+                    </>
+                  )}
+                </div>
+                <div className="text-sm flex items-center gap-2">
+                  <span className="text-muted-foreground">
+                    {ar ? "هاتف ولي الأمر" : "Guardian Phone"}:
+                  </span>
+                  {edit ? (
+                    <Input
+                      className="h-8"
+                      defaultValue={b.guardian.phone}
+                      onChange={(e) => (b.guardian.phone = e.target.value)}
+                    />
+                  ) : (
+                    b.guardian.phone
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="mt-4">
+            <CardHeader>
+              <CardTitle>{ar ? "حقول إضافية" : "Custom Fields"}</CardTitle>
+              <CardDescription>
+                {ar
+                  ? "تُدار من إعدادات المستفيد"
+                  : "Managed in Beneficiary Settings"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid md:grid-cols-2 gap-4">
+              {settings.customFields.map((f) => (
+                <div key={f.id} className="text-sm">
+                  <div className="text-muted-foreground mb-1">{f.label}</div>
+                  {f.type === "select" ? (
+                    edit ? (
+                      <Select
+                        defaultValue={String(b.extra?.[f.key] || "")}
+                        onValueChange={(v) => {
+                          b.extra = { ...(b.extra || {}), [f.key]: v };
+                        }}
+                      >
+                        <SelectTrigger className="h-8">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {(f.options || []).map((o) => (
+                            <SelectItem key={o} value={o}>
+                              {o}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <div>{String(b.extra?.[f.key] || (ar ? "—" : "—"))}</div>
+                    )
+                  ) : edit ? (
+                    <Input
+                      className="h-8"
+                      defaultValue={String(b.extra?.[f.key] || "")}
+                      onChange={(e) => {
+                        b.extra = {
+                          ...(b.extra || {}),
+                          [f.key]: e.target.value,
+                        };
+                      }}
+                    />
+                  ) : (
+                    <div>{String(b.extra?.[f.key] || (ar ? "—" : "—"))}</div>
+                  )}
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="medical" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {ar ? "المعلومات الطبية والإعاقة" : "Medical & Disability"}
+              </CardTitle>
+              <CardDescription>
+                {ar
+                  ? "تشخيصات، علاجات، أدوية وحساسية"
+                  : "Diagnoses, treatments, medications, allergies"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <div className="text-sm">
+                  <span className="text-muted-foreground">
+                    {ar ? "التاريخ" : "History"}:
+                  </span>{" "}
+                  {b.medical.history || (ar ? "غير متوفر" : "Not provided")}
+                </div>
+                <div className="text-sm">
+                  <span className="text-muted-foreground">
+                    {ar ? "التشخيصات" : "Diagnoses"}:
+                  </span>{" "}
+                  {b.medical.diagnoses?.join(", ") || (ar ? "لا يوجد" : "None")}
+                </div>
+                <div className="text-sm">
+                  <span className="text-muted-foreground">
+                    {ar ? "العلاجات" : "Treatments"}:
+                  </span>{" "}
+                  {b.medical.treatments?.join(", ") ||
+                    (ar ? "لا يوجد" : "None")}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="text-sm">
+                  <span className="text-muted-foreground">
+                    {ar ? "الأدوية" : "Medications"}:
+                  </span>{" "}
+                  {b.medical.medications && b.medical.medications.length
+                    ? ""
+                    : ar
+                      ? "لا يوجد"
+                      : "None"}
+                </div>
+                {b.medical.medications?.map((m) => (
+                  <div key={m.name} className="text-sm pl-3">
+                    • {m.name} — {m.dosage} ({m.schedule})
+                  </div>
+                ))}
+                <div className="text-sm">
+                  <span className="text-muted-foreground">
+                    {ar ? "الحساسية" : "Allergies"}:
+                  </span>{" "}
+                  {b.medical.allergies?.join(", ") || (ar ? "لا يوجد" : "None")}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="care" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {ar ? "خطة الرعاية والخدمات" : "Care & Service Plan"}
+              </CardTitle>
+              <CardDescription>
+                {ar
+                  ? "أهداف مخصصة، تقدم، وجدول الجلسات"
+                  : "Personalized goals, progress, session schedule"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="text-sm flex items-center gap-2 flex-wrap">
+                <span className="text-muted-foreground">
+                  {ar ? "الطبيب" : "Doctor"}:
+                </span>{" "}
+                {edit ? (
+                  <Input
+                    className="h-8 w-48"
+                    defaultValue={b.care.assignedDoctor}
+                    onChange={(e) => (b.care.assignedDoctor = e.target.value)}
+                  />
+                ) : (
+                  b.care.assignedDoctor || (ar ? "غير محدد" : "Unassigned")
+                )}
+                <span>·</span>
+                <span className="text-muted-foreground">
+                  {ar ? "المعالج" : "Therapist"}:
+                </span>{" "}
+                {edit ? (
+                  <Input
+                    className="h-8 w-48"
+                    defaultValue={b.care.assignedTherapist}
+                    onChange={(e) =>
+                      (b.care.assignedTherapist = e.target.value)
+                    }
+                  />
+                ) : (
+                  b.care.assignedTherapist || (ar ? "غير محدد" : "Unassigned")
+                )}
+              </div>
+              <div>
+                <div className="font-medium mb-2 flex items-center gap-2">
+                  {ar ? "الأهداف" : "Goals"}
+                  {edit && (
+                    <>
+                      <Input
+                        className="h-8 w-56"
+                        placeholder={ar ? "أضف هدفاً" : "Add goal"}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            const v = (
+                              e.target as HTMLInputElement
+                            ).value.trim();
+                            if (v) {
+                              b.care.goals.push(v);
+                              (e.target as HTMLInputElement).value = "";
+                            }
+                          }
+                        }}
+                      />
+                      <Select
+                        onValueChange={(id) => {
+                          const tpl = settings.carePlanTemplates.find(
+                            (t) => t.id === id,
+                          );
+                          if (tpl) {
+                            tpl.goals.forEach((g) => {
+                              if (!b.care.goals.includes(g))
+                                b.care.goals.push(g);
+                            });
+                            toast.success(
+                              ar ? "تم تطبيق القالب" : "Template applied",
+                            );
+                          }
+                        }}
+                      >
+                        <SelectTrigger className="h-8 w-56">
+                          <SelectValue
+                            placeholder={ar ? "تطبيق قالب" : "Apply template"}
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {settings.carePlanTemplates.map((t) => (
+                            <SelectItem key={t.id} value={t.id}>
+                              {t.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </>
+                  )}
+                </div>
+                <ul className="list-disc pl-5 space-y-1 text-sm">
+                  {b.care.goals.map((g, idx) => (
+                    <li key={idx} className="flex items-center gap-2">
+                      <span className="flex-1">{g}</span>
+                      {edit && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            b.care.goals = b.care.goals.filter((x) => x !== g);
+                          }}
+                        >
+                          {ar ? "حذف" : "Delete"}
+                        </Button>
+                      )}
+                    </li>
+                  ))}
+                  {b.care.goals.length === 0 && (
+                    <li className="text-muted-foreground">
+                      {ar ? "لا يوجد" : "None"}
+                    </li>
+                  )}
+                </ul>
+              </div>
+              <div>
+                <div className="font-medium mb-2">
+                  {ar ? "نسبة التقدم" : "Progress"}
+                </div>
+                <div className="w-full h-3 bg-muted rounded">
+                  <div
+                    className="h-3 bg-primary rounded"
+                    style={{ width: `${b.care.progress}%` }}
+                  />
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  {b.care.progress}%
+                </div>
+              </div>
+              <div>
+                <div className="font-medium mb-2 flex items-center gap-2">
+                  {ar ? "جدول الجلسات" : "Appointments"}
+                  {edit && (
+                    <>
+                      <Input
+                        className="h-8 w-36"
+                        placeholder={ar ? "النوع" : "Type"}
+                        onChange={(e) =>
+                          ((window as any)._apType = e.target.value)
+                        }
+                      />
+                      <Input
+                        className="h-8 w-52"
+                        type="datetime-local"
+                        onChange={(e) =>
+                          ((window as any)._apDate = e.target.value)
+                        }
+                      />
+                      <Input
+                        className="h-8 w-40"
+                        placeholder={ar ? "المعالج" : "Therapist"}
+                        onChange={(e) =>
+                          ((window as any)._apTher = e.target.value)
+                        }
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          const t = (window as any)._apType || "Session";
+                          const d =
+                            (window as any)._apDate || new Date().toISOString();
+                          const th = (window as any)._apTher;
+                          b.care.appointments.push({
+                            id: String(Date.now()),
+                            type: t,
+                            date: d,
+                            therapist: th,
+                          });
+                          toast.success(ar ? "تمت الإضافة" : "Added");
+                        }}
+                      >
+                        {ar ? "إضافة" : "Add"}
+                      </Button>
+                    </>
+                  )}
+                </div>
+                <TableToolbar
+                  onExport={(type) => {
+                    const cols = [
+                      {
+                        header: ar ? "النوع" : "Type",
+                        accessor: (r: any) => r.type,
+                      },
+                      {
+                        header: ar ? "التاريخ" : "Date",
+                        accessor: (r: any) => new Date(r.date).toLocaleString(),
+                      },
+                      {
+                        header: ar ? "المعالج" : "Therapist",
+                        accessor: (r: any) => r.therapist || "",
+                      },
+                      {
+                        header: ar ? "الحضور" : "Attendance",
+                        accessor: (r: any) =>
+                          r.attended === true
+                            ? ar
+                              ? "حضر"
+                              : "Present"
+                            : r.attended === false
+                              ? ar
+                                ? "غاب"
+                                : "Missed"
+                              : "-",
+                      },
+                    ];
+                    import("@/lib/export").then((m) =>
+                      m.exportAll(
+                        b.care.appointments,
+                        cols,
+                        type,
+                        "appointments",
+                      ),
+                    );
+                  }}
+                />
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{ar ? "النوع" : "Type"}</TableHead>
+                      <TableHead>{ar ? "التاريخ" : "Date"}</TableHead>
+                      <TableHead>{ar ? "المعالج" : "Therapist"}</TableHead>
+                      <TableHead>{ar ? "الحضور" : "Attendance"}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {b.care.appointments.map((a) => (
+                      <TableRow key={a.id}>
+                        <TableCell>{a.type}</TableCell>
+                        <TableCell>
+                          {new Date(a.date).toLocaleString()}
+                        </TableCell>
+                        <TableCell>
+                          {a.therapist || (ar ? "غير محدد" : "Unassigned")}
+                        </TableCell>
+                        <TableCell>
+                          {a.attended === true
+                            ? ar
+                              ? "حضر"
+                              : "Present"
+                            : a.attended === false
+                              ? ar
+                                ? "غاب"
+                                : "Missed"
+                              : ar
+                                ? "—"
+                                : "—"}
+                        </TableCell>
+                        {edit && (
+                          <TableCell className="text-right">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => {
+                                b.care.appointments =
+                                  b.care.appointments.filter(
+                                    (x) => x.id !== a.id,
+                                  );
+                              }}
+                            >
+                              {ar ? "حذف" : "Delete"}
+                            </Button>
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="education" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {ar ? "التعليم والأنشطة" : "Education & Activities"}
+              </CardTitle>
+              <CardDescription>
+                {ar
+                  ? "البرامج الملتحق بها والأنشطة"
+                  : "Enrolled programs and activities"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <div className="font-medium mb-1">
+                  {ar ? "البرامج" : "Programs"}
+                </div>
+                {edit && (
+                  <div className="flex items-center gap-2 mb-2">
+                    <Select
+                      onValueChange={(v) => {
+                        if (v && !b.education.programs.includes(v))
+                          b.education.programs.push(v);
+                      }}
+                    >
+                      <SelectTrigger className="h-8 w-56">
+                        <SelectValue
+                          placeholder={ar ? "إضافة برنامج" : "Add program"}
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {settings.lists.supportPrograms.map((p) => (
+                          <SelectItem key={p} value={p}>
+                            {p}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                <ul className="list-disc pl-5 space-y-1">
+                  {b.education.programs.map((p) => (
+                    <li key={p}>{p}</li>
+                  ))}
+                  {b.education.programs.length === 0 && (
+                    <li className="text-muted-foreground">
+                      {ar ? "لا يوجد" : "None"}
+                    </li>
+                  )}
+                </ul>
+              </div>
+              <div>
+                <div className="font-medium mb-1">
+                  {ar ? "الأنشطة" : "Activities"}
+                </div>
+                {edit && (
+                  <div className="flex items-center gap-2 mb-2">
+                    <Input
+                      className="h-8 w-56"
+                      placeholder={ar ? "إضافة نشاط" : "Add activity"}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          const v = (e.target as HTMLInputElement).value.trim();
+                          if (v) {
+                            b.education.activities.push(v);
+                            (e.target as HTMLInputElement).value = "";
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                )}
+                <ul className="list-disc pl-5 space-y-1">
+                  {b.education.activities.map((p) => (
+                    <li key={p}>{p}</li>
+                  ))}
+                  {b.education.activities.length === 0 && (
+                    <li className="text-muted-foreground">
+                      {ar ? "لا يوجد" : "None"}
+                    </li>
+                  )}
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="documents" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {ar ? "المستندات والمرفقات" : "Documents & Attachments"}
+              </CardTitle>
+              <CardDescription>
+                {ar
+                  ? "تقارير طبية وشهادات وإفادات"
+                  : "Medical reports, certificates, prescriptions"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {canEdit && (
+                <div className="mb-3 grid gap-2">
+                  <div className="flex items-center gap-2">
+                    <Select
+                      onValueChange={(v) => ((window as any)._docType = v)}
+                    >
+                      <SelectTrigger className="h-8 w-56">
+                        <SelectValue
+                          placeholder={ar ? "نوع المستند" : "Document type"}
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {settings.documentCategories.map((c) => (
+                          <SelectItem key={c.id} value={c.name}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      className="h-8 w-56"
+                      placeholder={ar ? "العنوان" : "Title"}
+                      onChange={(e) =>
+                        ((window as any)._docTitle = e.target.value)
+                      }
+                    />
+                    <Input
+                      className="h-8"
+                      type="date"
+                      onChange={(e) =>
+                        ((window as any)._docIssued = e.target.value)
+                      }
+                    />
+                    <Input
+                      className="h-8"
+                      type="date"
+                      onChange={(e) =>
+                        ((window as any)._docExp = e.target.value)
+                      }
+                    />
+                  </div>
+                  <label className="cursor-pointer inline-flex items-center gap-2">
+                    <UploadCloud className="h-4 w-4" />{" "}
+                    {ar ? "رفع ملف" : "Upload file"}
+                    <Input
+                      type="file"
+                      accept="image/*,application/pdf"
+                      multiple
+                      onChange={async (e) => {
+                        const files = e.target.files;
+                        if (!files || !b) return;
+                        for (const f of Array.from(files)) {
+                          const reader = new FileReader();
+                          reader.onload = () => {
+                            const cat =
+                              (window as any)._docType ||
+                              settings.documentCategories[0]?.name ||
+                              "Attachment";
+                            const title = (window as any)._docTitle || f.name;
+                            const issued = (window as any)._docIssued
+                              ? new Date(
+                                  (window as any)._docIssued,
+                                ).toISOString()
+                              : new Date().toISOString();
+                            const exp = (window as any)._docExp
+                              ? new Date((window as any)._docExp).toISOString()
+                              : undefined;
+                            addDocument(
+                              b.id,
+                              {
+                                id: `${Date.now()}_${f.name}`.replace(
+                                  /\s+/g,
+                                  "_",
+                                ),
+                                type: cat,
+                                title,
+                                url: reader.result as string,
+                                issuedAt: issued,
+                                expiresAt: exp,
+                              },
+                              getCurrentUserId() || undefined,
+                            );
+                          };
+                          reader.readAsDataURL(f);
+                        }
+                        toast.success(
+                          ar ? "تمت إضافة المرفقات" : "Attachments added",
+                        );
+                      }}
+                    />
+                  </label>
+                </div>
+              )}
+              <TableToolbar
+                onExport={(type) => {
+                  const cols = [
+                    {
+                      header: ar ? "النوع" : "Type",
+                      accessor: (r: any) => r.type,
+                    },
+                    {
+                      header: ar ? "العنوان" : "Title",
+                      accessor: (r: any) => r.title,
+                    },
+                    {
+                      header: ar ? "تاريخ الإصدار" : "Issued",
+                      accessor: (r: any) => r.issuedAt || "",
+                    },
+                    {
+                      header: ar ? "تاريخ الانتهاء" : "Expires",
+                      accessor: (r: any) => r.expiresAt || "",
+                    },
+                  ];
+                  import("@/lib/export").then((m) =>
+                    m.exportAll(b.documents, cols, type, "documents"),
+                  );
+                }}
+              />
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{ar ? "النوع" : "Type"}</TableHead>
+                    <TableHead>{ar ? "العنوان" : "Title"}</TableHead>
+                    <TableHead>{ar ? "تاريخ الإصدار" : "Issued"}</TableHead>
+                    <TableHead>{ar ? "ت��ريخ الانتهاء" : "Expires"}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {b.documents.map((d) => (
+                    <TableRow key={d.id}>
+                      <TableCell>{d.type}</TableCell>
+                      <TableCell>
+                        <a
+                          className="underline"
+                          href={d.url}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {d.title}
+                        </a>
+                      </TableCell>
+                      <TableCell>
+                        {d.issuedAt
+                          ? new Date(d.issuedAt).toLocaleDateString()
+                          : ar
+                            ? "—"
+                            : "—"}
+                      </TableCell>
+                      <TableCell>
+                        {d.expiresAt ? (
+                          <span>
+                            {new Date(d.expiresAt).toLocaleDateString()}{" "}
+                            {new Date(d.expiresAt) < new Date() ? (
+                              <Badge className="ml-2 bg-destructive text-destructive-foreground">
+                                {ar ? "منتهي" : "Expired"}
+                              </Badge>
+                            ) : null}
+                          </span>
+                        ) : ar ? (
+                          "—"
+                        ) : (
+                          "—"
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="financial" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {ar ? "معلومات مالية وإدارية" : "Financial & Administrative"}
+              </CardTitle>
+              <CardDescription>
+                {ar
+                  ? "الرعايات والدفعات والبرامج"
+                  : "Sponsorships, payments, support programs"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">
+                    {ar ? "الرعاية" : "Sponsorship"}:
+                  </span>
+                  {edit ? (
+                    <Select
+                      defaultValue={b.financial.sponsorship || undefined}
+                      onValueChange={(v) => (b.financial.sponsorship = v)}
+                    >
+                      <SelectTrigger className="h-8 w-56">
+                        <SelectValue placeholder={ar ? "اختر" : "Choose"} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {settings.lists.sponsorshipTypes.map((s) => (
+                          <SelectItem key={s} value={s}>
+                            {s}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    b.financial.sponsorship || (ar ? "لا يوجد" : "None")
+                  )}
+                </div>
+                <div className="mt-2">
+                  <span className="text-muted-foreground">
+                    {ar ? "البرامج الداعمة" : "Support Programs"}:
+                  </span>{" "}
+                  {edit ? (
+                    <div className="mt-1 grid grid-cols-2 gap-2">
+                      {settings.lists.supportPrograms.map((p) => {
+                        const checked = (
+                          b.financial.supportPrograms || []
+                        ).includes(p);
+                        return (
+                          <label key={p} className="flex items-center gap-2">
+                            <Checkbox
+                              checked={checked}
+                              onCheckedChange={(v) => {
+                                const list = new Set(
+                                  b.financial.supportPrograms || [],
+                                );
+                                if (v) list.add(p);
+                                else list.delete(p);
+                                b.financial.supportPrograms = Array.from(list);
+                              }}
+                            />
+                            <span>{p}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    b.financial.supportPrograms?.join(", ") ||
+                    (ar ? "لا يوجد" : "None")
+                  )}
+                </div>
+              </div>
+              <div>
+                <div className="font-medium mb-1">
+                  {ar ? "سجل الدفعات" : "Payment History"}
+                </div>
+                <TableToolbar
+                  onExport={(type) => {
+                    const cols = [
+                      {
+                        header: ar ? "التاريخ" : "Date",
+                        accessor: (r: any) =>
+                          new Date(r.date).toLocaleDateString(),
+                      },
+                      {
+                        header: ar ? "المبلغ" : "Amount",
+                        accessor: (r: any) => r.amount,
+                      },
+                      {
+                        header: ar ? "الطريقة" : "Method",
+                        accessor: (r: any) => r.method,
+                      },
+                      {
+                        header: ar ? "ملاحظة" : "Note",
+                        accessor: (r: any) => r.note || "",
+                      },
+                    ];
+                    import("@/lib/export").then((m) =>
+                      m.exportAll(
+                        b.financial.paymentHistory,
+                        cols,
+                        type,
+                        "payments",
+                      ),
+                    );
+                  }}
+                />
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{ar ? "الت��ريخ" : "Date"}</TableHead>
+                      <TableHead>{ar ? "المبلغ" : "Amount"}</TableHead>
+                      <TableHead>{ar ? "الطريقة" : "Method"}</TableHead>
+                      <TableHead>{ar ? "ملاحظة" : "Note"}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {b.financial.paymentHistory.map((p) => (
+                      <TableRow key={p.id}>
+                        <TableCell>
+                          {new Date(p.date).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>{p.amount.toLocaleString()}</TableCell>
+                        <TableCell>{p.method}</TableCell>
+                        <TableCell>{p.note || (ar ? "—" : "—")}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="communication" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {ar ? "التواصل والملاحظات" : "Communication & Feedback"}
+              </CardTitle>
+              <CardDescription>
+                {ar
+                  ? "رسائل بين الموظفين والأوصياء"
+                  : "Messages between staff and guardians"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-sm">
+                {b.communication.messages.map((m) => (
+                  <li key={m.id} className="flex items-start gap-2">
+                    <Badge
+                      variant={m.from === "system" ? "secondary" : "outline"}
+                    >
+                      {m.from}
+                    </Badge>
+                    <div>
+                      <div>{m.content}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {new Date(m.date).toLocaleString()}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+                {b.communication.messages.length === 0 && (
+                  <li className="text-muted-foreground">
+                    {ar ? "لا توجد رسائل" : "No messages"}
+                  </li>
+                )}
+              </ul>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="emergency" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {ar ? "معلومات الطوارئ" : "Emergency Information"}
+              </CardTitle>
+              <CardDescription>
+                {ar
+                  ? "جهات اتصال وملاحظات طبية حرجة"
+                  : "Emergency contacts and critical notes"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <div className="font-medium mb-1">
+                  {ar ? "جهات ا��اتصال" : "Contacts"}
+                </div>
+                <ul className="list-disc pl-5 space-y-1">
+                  {b.emergency.contacts.map((c, i) => (
+                    <li key={i}>
+                      {c.name} ({c.relation}) — {c.phone}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <div className="font-medium mb-1">
+                  {ar ? "ملاحظات" : "Notes"}
+                </div>
+                <p>{b.emergency.notes || (ar ? "لا يوجد" : "None")}</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="history" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>{ar ? "سجل التعديلات" : "Edit History"}</CardTitle>
+              <CardDescription>
+                {ar
+                  ? "تعقب التعديلات للمراجعة"
+                  : "Audit trail for accountability"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="text-sm space-y-2">
+                {(b.audit || [])
+                  .slice()
+                  .reverse()
+                  .map((a) => (
+                    <li
+                      key={a.id}
+                      className="flex items-center justify-between"
+                    >
+                      <span>
+                        {new Date(a.at).toLocaleString()} — {a.action}
+                      </span>
+                      <span className="text-muted-foreground">{a.userId}</span>
+                    </li>
+                  ))}
+                {(b.audit || []).length === 0 && (
+                  <li className="text-muted-foreground">
+                    {ar ? "لا يوجد سجل" : "No history"}
+                  </li>
+                )}
+              </ul>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
