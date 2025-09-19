@@ -453,13 +453,21 @@ function PlanTemplatesCard({
           <CardTitle>{t("pages.medical.plans.title")}</CardTitle>
           <CardDescription>{t("pages.medical.plans.desc")}</CardDescription>
         </div>
-        {canManage && (
-          <Button onClick={() => setOpen(true)}>
-            <Plus className="ml-1 h-4 w-4" /> {t("common.add")}
-          </Button>
-        )}
       </CardHeader>
       <CardContent>
+        <div className="mb-3">
+          <TableToolbar
+            onAdd={canManage ? () => setOpen(true) : undefined}
+            addLabel={t("common.add")}
+            onExport={(type) => {
+              const cols = [
+                { header: t("common.name"), accessor: (r:any) => L(loc, r.name) },
+                { header: t("pages.medical.plans.assigned"), accessor: (r:any) => r.assignedRole },
+              ];
+              import('@/lib/export').then((m)=>m.exportAll(state.templates, cols, type, 'plan_templates'));
+            }}
+          />
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
