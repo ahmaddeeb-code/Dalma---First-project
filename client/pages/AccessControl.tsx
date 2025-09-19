@@ -6,6 +6,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  StatsCard,
 } from "@/components/ui/card";
 import {
   Table,
@@ -43,7 +44,7 @@ import {
   type Role,
   type User,
 } from "@/store/acl";
-import { Pencil, Plus, Trash2, MoreHorizontal, ChevronDown, ChevronUp, ChevronsUpDown } from "lucide-react";
+import { Pencil, Plus, Trash2, MoreHorizontal, ChevronDown, ChevronUp, ChevronsUpDown, Users, Shield, Key } from "lucide-react";
 import { t } from "@/i18n";
 
 export default function AccessControl() {
@@ -120,6 +121,27 @@ export default function AccessControl() {
         </div>
       </header>
 
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
+        <StatsCard
+          title="Total Users"
+          value={state.users.length.toString()}
+          icon={<Users className="h-5 w-5" />}
+          gradient="from-blue-500/10 via-blue-500/5 to-transparent"
+        />
+        <StatsCard
+          title="Roles"
+          value={state.roles.length.toString()}
+          icon={<Shield className="h-5 w-5" />}
+          gradient="from-emerald-500/10 via-emerald-500/5 to-transparent"
+        />
+        <StatsCard
+          title="Privileges"
+          value={state.privileges.length.toString()}
+          icon={<Key className="h-5 w-5" />}
+          gradient="from-purple-500/10 via-purple-500/5 to-transparent"
+        />
+      </div>
+
       <Tabs defaultValue="users">
         <TabsList>
           <TabsTrigger value="users">
@@ -134,15 +156,16 @@ export default function AccessControl() {
         </TabsList>
 
         <TabsContent value="users" className="mt-6">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>{t("pages.accessControl.users.title")}</CardTitle>
-                <CardDescription>
-                  {t("pages.accessControl.users.desc")}
-                </CardDescription>
-              </div>
-              </CardHeader>
+          <Card variant="modern">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Users className="h-5 w-5 text-primary" />
+                {t("pages.accessControl.users.title")}
+              </CardTitle>
+              <CardDescription>
+                {t("pages.accessControl.users.desc")}
+              </CardDescription>
+            </CardHeader>
             <CardContent>
               <div className="mb-3">
                 <TableToolbar
@@ -296,14 +319,15 @@ export default function AccessControl() {
         </TabsContent>
 
         <TabsContent value="roles" className="mt-6">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>{t("pages.accessControl.roles.title")}</CardTitle>
-                <CardDescription>
-                  {t("pages.accessControl.roles.desc")}
-                </CardDescription>
-              </div>
+          <Card variant="modern">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Shield className="h-5 w-5 text-primary" />
+                {t("pages.accessControl.roles.title")}
+              </CardTitle>
+              <CardDescription>
+                {t("pages.accessControl.roles.desc")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="mb-3">
@@ -431,16 +455,15 @@ export default function AccessControl() {
         </TabsContent>
 
         <TabsContent value="privileges" className="mt-6">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>
-                  {t("pages.accessControl.privileges.title")}
-                </CardTitle>
-                <CardDescription>
-                  {t("pages.accessControl.privileges.desc")}
-                </CardDescription>
-              </div>
+          <Card variant="modern">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Key className="h-5 w-5 text-primary" />
+                {t("pages.accessControl.privileges.title")}
+              </CardTitle>
+              <CardDescription>
+                {t("pages.accessControl.privileges.desc")}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="mb-3">
