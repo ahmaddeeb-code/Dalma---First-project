@@ -90,11 +90,28 @@ const FormLabel = React.forwardRef<
 >(({ className, ...props }, ref) => {
   const { error, formItemId } = useFormField();
 
+  // Detect required attribute on the control element (FormControl sets id=formItemId)
+  const [isRequired, setIsRequired] = React.useState(false);
+
+  React.useEffect(() => {
+    try {
+      const el = document.getElementById(formItemId);
+      if (el) {
+        if ((el as HTMLInputElement).required) setIsRequired(true);
+        if (el.getAttribute("aria-required") === "true") setIsRequired(true);
+        if (el.hasAttribute("data-required")) setIsRequired(true);
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, [formItemId]);
+
   return (
     <Label
       ref={ref}
       className={cn(error && "text-destructive", className)}
       htmlFor={formItemId}
+      requiredMark={isRequired}
       {...props}
     />
   );
