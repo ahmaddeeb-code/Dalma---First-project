@@ -155,7 +155,7 @@ export default function FamilyProfiles() {
             </CardTitle>
             <CardDescription>
               {getLocale() === "ar"
-                ? "ابحث ورتب وافتح التفا��يل"
+                ? "ابحث ورتب وافتح التفاصيل"
                 : "Search and open details"}
             </CardDescription>
           </div>
@@ -907,21 +907,27 @@ function BeneficiariesTab({
                   </option>
                 ))}
               </select>
-              <Button
-                disabled={!selectedId}
-                onClick={() => {
-                  linkBeneficiary(family.id, selectedId);
-                  setSelectedId("");
-                  toast.success(t("pages.medical.saved"));
-                }}
-              >
-                {t("common.add")}
-              </Button>
             </>
           )}
         </div>
       </CardHeader>
       <CardContent>
+        <div className="mb-3">
+          <TableToolbar
+            onAdd={canManage ? () => {
+              if(selectedId){ linkBeneficiary(family.id, selectedId); setSelectedId(""); toast.success(t("pages.medical.saved")); }
+            } : undefined}
+            addLabel={t("common.add")}
+            onExport={(type) => {
+              const cols = [
+                { header: 'Beneficiary', accessor: (r:any)=> r.beneficiaryId },
+                { header: 'Therapist', accessor: (r:any)=> r.assignedTherapist || '' },
+                { header: 'Status', accessor: (r:any)=> r.status || '' },
+              ];
+              import('@/lib/export').then((m)=>m.exportAll(links.map(l=>({beneficiaryId:l.beneficiaryId, assignedTherapist: all.find(a=>a.id===l.beneficiaryId)?.care.assignedTherapist || '', status: all.find(a=>a.id===l.beneficiaryId)?.status || ''})), cols, type, 'linked_beneficiaries'));
+            }}
+          />
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
