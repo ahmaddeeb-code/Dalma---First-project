@@ -143,13 +143,29 @@ export default function RoleLogin({
                 ))}
               </SelectContent>
             </Select>
-            <Button
-              className="w-full"
-              disabled={!selectedUserId}
-              onClick={signInSelected}
-            >
-              Sign in
-            </Button>
+            <div className="grid gap-1.5">
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" type="password" value={password} onChange={(e)=>setPassword(e.target.value)} />
+            </div>
+            <div className="mt-2">
+              <Button
+                className="w-full"
+                disabled={!selectedUserId || !password}
+                onClick={signInSelected}
+              >
+                Sign in
+              </Button>
+            </div>
+
+            {mfaPending && (
+              <div className="mt-4">
+                <p className="text-sm text-muted-foreground mb-2">Enter OTP</p>
+                <div className="flex gap-2">
+                  <Input value={mfaCode} onChange={(e)=>setMfaCode(e.target.value)} placeholder="123456" />
+                  <Button onClick={submitMfa}>Verify</Button>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="border-t pt-4">
@@ -173,6 +189,14 @@ export default function RoleLogin({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
+              </div>
+              <div className="grid gap-1.5">
+                <Label htmlFor="createPassword">Password</Label>
+                <Input id="createPassword" type="password" value={createPassword} onChange={(e)=>setCreatePassword(e.target.value)} />
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox checked={enable2fa} onCheckedChange={(v)=>setEnable2fa(!!v)} />
+                <span className="text-sm">Enable 2FA (OTP)</span>
               </div>
               <Button
                 className="w-full"
