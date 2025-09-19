@@ -11,13 +11,13 @@ export function usePageLoading(enabled: boolean = true) {
       return;
     }
 
-    // Show loading when route starts changing
-    showLoading('Loading page...', 'page');
+    // Show loading when route starts changing (with 500ms delay for page transitions)
+    showLoading('Loading page...', 'page', 500);
 
     // Hide loading after a short delay to allow page to render
     const timer = setTimeout(() => {
       hideLoading();
-    }, 500);
+    }, 800);
 
     return () => {
       clearTimeout(timer);
