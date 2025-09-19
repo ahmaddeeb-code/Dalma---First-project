@@ -2,11 +2,15 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useLoading } from '@/components/ui/loading';
 
-export function usePageLoading() {
+export function usePageLoading(enabled: boolean = true) {
   const location = useLocation();
   const { showLoading, hideLoading } = useLoading();
 
   useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
     // Show loading when route starts changing
     showLoading('Loading page...', 'page');
 
@@ -19,7 +23,7 @@ export function usePageLoading() {
       clearTimeout(timer);
       hideLoading();
     };
-  }, [location.pathname, showLoading, hideLoading]);
+  }, [location.pathname, enabled, showLoading, hideLoading]);
 
   return null;
 }
