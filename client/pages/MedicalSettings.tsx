@@ -269,7 +269,7 @@ function TherapyTypesCard({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {state.therapyTypes.map((t0) => (
+            {sortedTherapyTypes.map((t0) => (
               <TableRow key={t0.id}>
                 <TableCell>
                   {L(loc, t0.name)}
