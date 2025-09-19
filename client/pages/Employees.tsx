@@ -419,10 +419,10 @@ export default function Employees() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="shadow-sm border-border/40 bg-card/50 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle>{t("pages.employees.table.title")}</CardTitle>
-          <CardDescription>{t("pages.employees.table.desc")}</CardDescription>
+          <CardTitle className="text-xl font-semibold">{t("pages.employees.table.title")}</CardTitle>
+          <CardDescription className="text-muted-foreground">{t("pages.employees.table.desc")}</CardDescription>
         </CardHeader>
         <CardContent>
           <TooltipProvider>
