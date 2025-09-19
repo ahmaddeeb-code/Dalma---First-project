@@ -32,16 +32,16 @@ export default function DepartmentsPage() {
     <div className="space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("pages.departments.title") || "Departments"}</h1>
-          <p className="text-muted-foreground">{t("pages.departments.subtitle") || "Manage predefined departments and assignments"}</p>
+          <h1 className="text-2xl font-bold tracking-tight">Departments</h1>
+          <p className="text-muted-foreground">Manage predefined departments and assignments</p>
         </div>
         <Button onClick={() => { setEditing(null); setName(""); setOpen(true); }}>{t("common.add") || "Add"}</Button>
       </header>
 
       <Card>
         <CardHeader>
-          <CardTitle>{t("pages.departments.list") || "Department List"}</CardTitle>
-          <CardDescription>{t("pages.departments.desc") || "Edit and remove departments. Employees can be assigned in the Employees page."}</CardDescription>
+          <CardTitle>Department List</CardTitle>
+          <CardDescription>Edit and remove departments. Employees can be assigned in the Employees page.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="w-full overflow-x-auto">
@@ -73,7 +73,7 @@ export default function DepartmentsPage() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editing ? (t("common.edit") || "Edit") : (t("common.add") || "Add")} {t("pages.departments.title") || "Department"}</DialogTitle>
+            <DialogTitle>{editing ? (t("common.edit") || "Edit") : (t("common.add") || "Add")} Department</DialogTitle>
           </DialogHeader>
           <div className="space-y-2">
             <label className="text-sm">{t("common.name") || "Name"}</label>
