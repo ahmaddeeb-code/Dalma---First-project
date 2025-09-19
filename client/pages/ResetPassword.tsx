@@ -25,7 +25,9 @@ export default function ResetPassword() {
   const submit = async ()=>{
     if(!token) return;
     if(password.length < 8){ toast.error("Password too short"); return; }
-    const r = resetPassword(token, password);
+    // basic complexity
+    if(!/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) { toast.error('Password must include upper, lower, and numbers'); return; }
+    const r = await resetPassword(token, password);
     if(r.ok){ toast.success("Password reset"); navigate('/login'); }
     else toast.error(r.error||"Failed");
   };
