@@ -34,25 +34,25 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
     type: 'default'
   });
 
-  const showLoading = (message?: string, type: LoadingState['type'] = 'default') => {
+  const showLoading = useCallback((message?: string, type: LoadingState['type'] = 'default') => {
     setLoadingState({
       isLoading: true,
       message,
       type
     });
-  };
+  }, []);
 
-  const hideLoading = () => {
+  const hideLoading = useCallback(() => {
     setLoadingState({
       isLoading: false,
       message: undefined,
       type: 'default'
     });
-  };
+  }, []);
 
-  const setLoading = (state: LoadingState) => {
+  const setLoading = useCallback((state: LoadingState) => {
     setLoadingState(state);
-  };
+  }, []);
 
   return (
     <LoadingContext.Provider value={{ loading, showLoading, hideLoading, setLoading }}>
