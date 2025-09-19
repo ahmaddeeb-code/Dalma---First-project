@@ -143,11 +143,6 @@ export default function FamilyProfiles() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          {canManage && (
-            <Button onClick={() => setOpen(true)}>
-              <Plus className="ml-1 h-4 w-4" /> {t("common.add")}
-            </Button>
-          )}
         </div>
       </header>
 
