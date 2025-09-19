@@ -1,5 +1,6 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import {
   Bell,
@@ -17,6 +18,12 @@ import {
   ChevronDown,
   ChevronRight,
   Sparkles,
+  Sun,
+  Moon,
+  ArrowUp,
+  Twitter,
+  Github,
+  Mail,
 } from "lucide-react";
 import {
   ReactNode,
@@ -149,13 +156,34 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   const toggleGroup = (k: string) =>
     setOpenGroups((s) => ({ ...s, [k]: !s[k] }));
 
+  // theme toggle
+  const [isDark, setIsDark] = useState(() =>
+    document.documentElement.classList.contains("dark"),
+  );
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", isDark);
+  }, [isDark]);
+
+  // breadcrumb (nice readable path)
+  const crumbs = useMemo(() => {
+    const parts = pathname.split("/").filter(Boolean);
+    return parts.map((p, i) => ({
+      label: p.replace(/-/g, " "),
+      to: "/" + parts.slice(0, i + 1).join("/"),
+    }));
+  }, [pathname]);
+
+  function scrollTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   return (
     <SidebarProvider>
       <Sidebar
         side={locale === "ar" ? "right" : "left"}
         className={cn(
           locale === "ar" ? "border-l" : "border-r",
-          "sidebar-enhanced animate-slide-in-left"
+          "sidebar-enhanced animate-slide-in-left",
         )}
       >
         <SidebarHeader className="p-4">
@@ -164,9 +192,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               <span className="font-extrabold text-lg tracking-tight gradient-text">
                 {t("brand")}
               </span>
-              <span className="text-xs text-muted-foreground">
-                Smart Platform
-              </span>
+              <span className="text-xs text-muted-foreground">Smart Platform</span>
             </div>
             <div className="relative">
               <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary via-primary-light to-secondary grid place-items-center text-white shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
@@ -182,7 +208,10 @@ export default function AppLayout({ children }: { children: ReactNode }) {
             const isOpen = openGroups[g.labelKey] ?? true;
             return (
               <SidebarGroup key={g.labelKey} className="animate-fade-in-scale" style={{ animationDelay: `${groupIndex * 100}ms` }}>
-                <SidebarGroupLabel className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-sidebar-accent/50 transition-all duration-200 group cursor-pointer" onClick={() => toggleGroup(g.labelKey)}>
+                <SidebarGroupLabel
+                  className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-sidebar-accent/50 transition-all duration-200 group cursor-pointer"
+                  onClick={() => toggleGroup(g.labelKey)}
+                >
                   <span className="text-sm font-medium text-sidebar-foreground/80 group-hover:text-sidebar-foreground">
                     {t(g.labelKey as any)}
                   </span>
@@ -207,30 +236,27 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                               isActive={active}
                               className={cn(
                                 "rounded-lg transition-all duration-200 nav-highlight group relative overflow-hidden",
-                                active && "active bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 shadow-sm"
+                                active && "active bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 shadow-sm",
                               )}
                             >
-                              <NavLink
-                                to={n.to}
-                                className="flex items-center gap-3 px-3 py-2.5"
-                              >
-                                <div className={cn(
-                                  "p-1.5 rounded-md transition-all duration-200",
-                                  active 
-                                    ? "bg-gradient-to-br from-primary to-secondary text-white shadow-md" 
-                                    : "text-sidebar-foreground/60 group-hover:text-sidebar-foreground group-hover:bg-sidebar-accent"
-                                )}>
+                              <NavLink to={n.to} className="flex items-center gap-3 px-3 py-2.5">
+                                <div
+                                  className={cn(
+                                    "p-1.5 rounded-md transition-all duration-200",
+                                    active
+                                      ? "bg-gradient-to-br from-primary to-secondary text-white shadow-md"
+                                      : "text-sidebar-foreground/60 group-hover:text-sidebar-foreground group-hover:bg-sidebar-accent",
+                                  )}
+                                >
                                   <Icon className="h-4 w-4" />
                                 </div>
                                 <span className={cn(
                                   "truncate font-medium transition-all duration-200",
-                                  active ? "text-sidebar-foreground" : "text-sidebar-foreground/70 group-hover:text-sidebar-foreground"
+                                  active ? "text-sidebar-foreground" : "text-sidebar-foreground/70 group-hover:text-sidebar-foreground",
                                 )}>
                                   {t(n.key as any)}
                                 </span>
-                                {active && (
-                                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-secondary/5 pointer-events-none"></div>
-                                )}
+                                {active && <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-secondary/5 pointer-events-none" />}
                               </NavLink>
                             </SidebarMenuButton>
                           </SidebarMenuItem>
@@ -258,14 +284,29 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           <div className="container flex h-16 items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <SidebarTrigger className="hover:bg-accent/50 transition-all duration-200 hover:scale-105" />
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-muted-foreground font-medium">
-                  {t("header.welcome")} {user ? user.name : t("header.guest")}
-                </span>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-3">
+                  <nav aria-label="breadcrumb" className="text-sm text-muted-foreground hidden sm:flex items-center gap-2">
+                    <Link to="/" className="hover:underline">{t("home")}</Link>
+                    {crumbs.map((c, i) => (
+                      <span key={c.to} className="flex items-center gap-2">
+                        <span className="text-muted-foreground">/</span>
+                        <Link to={c.to} className="hover:underline capitalize">{c.label}</Link>
+                      </span>
+                    ))}
+                  </nav>
+                </div>
+                <div className="mt-1 hidden md:block">
+                  <h2 className="text-base font-semibold">{crumbs.length ? crumbs[crumbs.length - 1]?.label : t("dashboard")}</h2>
+                </div>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+
+            <div className="flex items-center gap-3 md:gap-4">
+              <div className="hidden md:block w-[320px]">
+                <Input placeholder={t("search.placeholder") || "Search..."} />
+              </div>
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" aria-label="Language" className="relative hover:bg-accent/50 transition-all duration-200 hover:scale-105 rounded-xl">
@@ -283,6 +324,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+
               <Button
                 variant="ghost"
                 size="icon"
@@ -290,8 +332,13 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                 className="relative hover:bg-accent/50 transition-all duration-200 hover:scale-105 rounded-xl"
               >
                 <Bell className="h-4 w-4" />
-                <div className="notification-dot"></div>
+                <div className="notification-dot" />
               </Button>
+
+              <Button variant="ghost" size="icon" onClick={() => setIsDark((s) => !s)} aria-label="Toggle theme">
+                {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </Button>
+
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -316,7 +363,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                       <>
                         <DropdownMenuItem disabled className="text-xs">
                           <div className="flex flex-wrap gap-1">
-                            {roles.map(role => (
+                            {roles.map((role) => (
                               <span key={role} className="badge-modern bg-primary/10 text-primary border border-primary/20">
                                 {role}
                               </span>
@@ -346,9 +393,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" className="glass-card border border-border/50 shadow-xl">
-                    <DropdownMenuLabel>
-                      {t("header.chooseRole")}
-                    </DropdownMenuLabel>
+                    <DropdownMenuLabel>{t("header.chooseRole")}</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild className="hover:bg-accent/50 transition-all duration-200">
                       <Link to="/login/admin">
@@ -380,30 +425,49 @@ export default function AppLayout({ children }: { children: ReactNode }) {
             </div>
           </div>
         </header>
+
         <main className="container py-8 animate-slide-in-top">{children}</main>
+
         <footer className="mt-12 border-t border-border/50 glass-card">
-          <div className="container py-8 flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <div className="h-6 w-6 rounded-lg bg-gradient-to-br from-primary to-secondary grid place-items-center text-white">
-                <ShieldCheck className="h-3 w-3" />
+          <div className="container py-6 flex flex-col lg:flex-row items-center justify-between gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-secondary grid place-items-center text-white shadow-md">
+                <ShieldCheck className="h-4 w-4" />
               </div>
-              <p className="font-medium">
-                {t("footer.copyright").replace(
-                  "{{year}}",
-                  String(new Date().getFullYear()),
-                )}
-              </p>
+              <div>
+                <p className="font-medium">{t("footer.title")}</p>
+                <p className="text-xs text-muted-foreground">{t("footer.subtitle")}</p>
+                <p className="text-xs text-muted-foreground mt-1">{t("footer.copyright").replace("{{year}}", String(new Date().getFullYear()))}</p>
+              </div>
             </div>
+
             <div className="flex items-center gap-6">
-              <Link to="/privacy" className="hover:text-foreground transition-colors duration-200 hover:underline">
-                {t("footer.privacy")}
-              </Link>
-              <Link to="/security" className="hover:text-foreground transition-colors duration-200 hover:underline">
-                {t("footer.security")}
-              </Link>
-              <Link to="/contact" className="hover:text-foreground transition-colors duration-200 hover:underline">
-                {t("footer.contact")}
-              </Link>
+              <div className="hidden md:flex items-center gap-4">
+                <Link to="/privacy" className="hover:text-foreground transition-colors duration-200 hover:underline">{t("footer.privacy")}</Link>
+                <Link to="/security" className="hover:text-foreground transition-colors duration-200 hover:underline">{t("footer.security")}</Link>
+                <Link to="/contact" className="hover:text-foreground transition-colors duration-200 hover:underline">{t("footer.contact")}</Link>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <Button asChild variant="ghost" size="icon">
+                  <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="twitter"><Twitter className="h-4 w-4" /></a>
+                </Button>
+                <Button asChild variant="ghost" size="icon">
+                  <a href="https://github.com" target="_blank" rel="noreferrer" aria-label="github"><Github className="h-4 w-4" /></a>
+                </Button>
+                <Button asChild variant="ghost" size="icon">
+                  <a href="mailto:hello@example.com" aria-label="email"><Mail className="h-4 w-4" /></a>
+                </Button>
+                <Button onClick={scrollTop} variant="ghost" size="icon" aria-label="Back to top">
+                  <ArrowUp className="h-4 w-4" />
+                </Button>
+              </div>
+
+              <div className="ml-2">
+                <Button asChild className="rounded-full bg-gradient-to-r from-primary to-secondary text-white px-4 py-2">
+                  <Link to="/donations">{t("donate.now")}</Link>
+                </Button>
+              </div>
             </div>
           </div>
         </footer>
