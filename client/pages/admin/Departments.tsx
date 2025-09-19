@@ -44,6 +44,13 @@ export default function DepartmentsPage() {
           <CardDescription>Edit and remove departments. Employees can be assigned in the Employees page.</CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="mb-3">
+            <TableToolbar
+              onAdd={() => { setEditing(null); setName(""); setOpen(true); }}
+              addLabel={t("common.add") || "Add"}
+              onPageSizeChange={undefined}
+            />
+          </div>
           <div className="w-full overflow-x-auto">
             <Table>
               <TableHeader>
