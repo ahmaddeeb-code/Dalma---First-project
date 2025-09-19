@@ -119,6 +119,16 @@ export function authenticate(emailOrUsername: string, password: string, remember
   user.failedAttempts = 0;
   user.lockedUntil = null;
   upsertUser(user);
+
+  // if 2FA enabled, send OTP and require verification before finalizing login
+  if (user.twoFactor) {
+    const code = sendOTP(user.id);
+    try {
+      // For demo, return code back so UI can show it (in real app, send via SMS/email)
+    } catch {}
+    return { ok: true, mfa: true, userId: user.id, demoCode: code };
+  }
+
   login(user, remember);
   return { ok: true, user };
 }
