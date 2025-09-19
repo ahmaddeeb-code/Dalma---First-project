@@ -126,6 +126,9 @@ export async function authenticate(
         userId: data.userId,
         demoCode: data.demoCode,
       };
+    if (data.mustChangePassword && data.userId) {
+      return { ok: true, mustChangePassword: true, userId: data.userId };
+    }
     // success: data.user contains id
     const { user } = data;
     if (user && user.id) {
