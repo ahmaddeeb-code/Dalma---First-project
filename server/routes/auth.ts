@@ -158,6 +158,32 @@ router.post("/first-login", (req, res) => {
   return res.json({ ok: true });
 });
 
+// POST /api/auth/change-password
+router.post("/change-password", (req, res) => {
+  const { userId, currentPassword, newPassword } = req.body || {};
+  if (!userId || !currentPassword || !newPassword) {
+    return res.json({ ok: false, error: "Missing" });
+  }
+  const users = loadUsers();
+  const u = users.find((x: any) => x.id === userId);
+  if (!u) return res.json({ ok: false, error: "User not found" });
+  if (!verifyPW(currentPassword, u.salt, u.hash)) {
+    return res.json({ ok: false, error: "Incorrect current password" });
+  }
+  // basic complexity: 8+ length, upper, lower, digit
+  const strong = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+  if (!strong.test(newPassword)) {
+    return res.json({ ok: false, error: "Weak password" });
+  }
+  const creds = hashPW(newPassword);
+  u.salt = creds.salt;
+  u.hash = creds.hash;
+  u.failedAttempts = 0;
+  u.lockedUntil = null;
+  saveUsers(users);
+  return res.json({ ok: true });
+});
+
 // update admin users output to include mustChangePassword
 router.get("/admin/users", (req, res) => {
   const users = loadUsers();
