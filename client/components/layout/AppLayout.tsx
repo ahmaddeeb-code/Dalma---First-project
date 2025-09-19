@@ -644,7 +644,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        <main className="container py-8 animate-slide-in-top">{children}</main>
+        <main className="container py-8">{children}</main>
 
         <footer className="mt-auto bg-sidebar border border-sidebar-border shadow">
           <div className="container py-6 flex flex-col lg:flex-row items-center justify-between gap-6 text-sm text-muted-foreground">
