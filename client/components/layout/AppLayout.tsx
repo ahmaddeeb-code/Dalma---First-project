@@ -64,6 +64,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { getLocale, setLocale, subscribeLocale, t } from "@/i18n";
+import { usePageLoading } from "@/hooks/use-page-loading";
 
 const groups = [
   {
