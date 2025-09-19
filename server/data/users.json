@@ -3,26 +3,30 @@
     "id": "u1",
     "name": "System Admin",
     "email": "admin@dalma.org",
-    "roleIds": ["r_admin"],
+    "roleIds": [
+      "r_admin"
+    ],
     "privilegeIds": [],
     "active": true,
     "failedAttempts": 0,
     "lockedUntil": null,
     "twoFactor": false,
-    "salt": "",
-    "hash": ""
+    "salt": "e025648595f0e4b8633fba29",
+    "hash": "d4c9f4ca914ce3ac4c831f9f859e57cd173e5dc1db1c2ca06fd0d199f747c191"
   },
   {
     "id": "u2",
     "name": "Field Staff",
     "email": "staff@dalma.org",
-    "roleIds": ["r_staff"],
+    "roleIds": [
+      "r_staff"
+    ],
     "privilegeIds": [],
     "active": true,
     "failedAttempts": 0,
     "lockedUntil": null,
     "twoFactor": false,
-    "salt": "",
-    "hash": ""
+    "salt": "32bfacc375a0f590d01da6a6",
+    "hash": "508c52768ba919d95c5724d61c9193d7e31b92432965f17af6d315c746bba5da"
   }
 ]

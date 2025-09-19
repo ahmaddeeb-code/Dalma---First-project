@@ -89,48 +89,47 @@ export function logout() {
   emit();
 }
 
-export function authenticate(emailOrUsername: string, password: string, remember = false) {
-  const acl = loadACL();
-  const user = acl.users.find((u) => (u.email && u.email.toLowerCase() === emailOrUsername.toLowerCase()) || u.name.toLowerCase() === emailOrUsername.toLowerCase());
-  if (!user) return { ok: false, error: "User not found" };
-
-  // locked check
-  if (user.lockedUntil) {
-    const until = new Date(user.lockedUntil);
-    if (until > new Date()) return { ok: false, error: "Account locked. Try later." };
-    // unlock
-    user.lockedUntil = null;
-    user.failedAttempts = 0;
-  }
-
-  const hashed = user.password || "";
-  if (hashPassword(password) !== hashed) {
-    user.failedAttempts = (user.failedAttempts || 0) + 1;
-    if (user.failedAttempts >= 5) {
-      const until = new Date();
-      until.setMinutes(until.getMinutes() + 15);
-      user.lockedUntil = until.toISOString();
+export async function authenticate(emailOrUsername: string, password: string, remember = false) {
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identifier: emailOrUsername, password })
+    });
+    const data = await res.json();
+    if (!data.ok) return { ok: false, error: data.error || 'Invalid' };
+    if (data.mfa) return { ok: true, mfa: true, userId: data.userId, demoCode: data.demoCode };
+    // success: data.user contains id
+    const { user } = data;
+    if (user && user.id) {
+      // set client-side session
+      localStorage.setItem(AUTH_KEY, user.id);
+      if (remember) localStorage.setItem(REMEMBER_KEY, user.id);
+      emit();
+      return { ok: true, user };
     }
-    upsertUser(user);
-    return { ok: false, error: "Invalid credentials" };
+    return { ok: false, error: 'Invalid response' };
+  } catch (e) {
+    // fallback to local mode
+    console.warn('Auth API error fallback to local', e);
+    const acl = loadACL();
+    const user = acl.users.find((u) => (u.email && u.email.toLowerCase() === emailOrUsername.toLowerCase()) || u.name.toLowerCase() === emailOrUsername.toLowerCase());
+    if (!user) return { ok: false, error: 'User not found' };
+    if (user.lockedUntil) {
+      const until = new Date(user.lockedUntil);
+      if (until > new Date()) return { ok: false, error: 'Account locked. Try later.' };
+      user.lockedUntil = null; user.failedAttempts = 0;
+    }
+    if (hashPassword(password) !== (user.password || '')) {
+      user.failedAttempts = (user.failedAttempts || 0) + 1;
+      if (user.failedAttempts >= 5) { const until = new Date(); until.setMinutes(until.getMinutes()+15); user.lockedUntil = until.toISOString(); }
+      upsertUser(user);
+      return { ok: false, error: 'Invalid credentials' };
+    }
+    user.failedAttempts = 0; user.lockedUntil = null; upsertUser(user);
+    if (user.twoFactor) { const code = sendOTP(user.id); return { ok: true, mfa: true, userId: user.id, demoCode: code }; }
+    login(user, remember);
+    return { ok: true, user };
   }
-
-  // success
-  user.failedAttempts = 0;
-  user.lockedUntil = null;
-  upsertUser(user);
-
-  // if 2FA enabled, send OTP and require verification before finalizing login
-  if (user.twoFactor) {
-    const code = sendOTP(user.id);
-    try {
-      // For demo, return code back so UI can show it (in real app, send via SMS/email)
-    } catch {}
-    return { ok: true, mfa: true, userId: user.id, demoCode: code };
-  }
-
-  login(user, remember);
-  return { ok: true, user };
 }
 
 export function ensureAuthFromRemember() {
