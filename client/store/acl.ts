@@ -172,6 +172,10 @@ const seed: ACLState = {
       roleIds: ["r_admin"],
       privilegeIds: [],
       active: true,
+      password: "UGFzc3dvcmQxMjMh", // Password123!
+      failedAttempts: 0,
+      lockedUntil: null,
+      twoFactor: false,
     },
     {
       id: "u2",
@@ -180,6 +184,10 @@ const seed: ACLState = {
       roleIds: ["r_staff"],
       privilegeIds: [],
       active: true,
+      password: "UGFzc3dvcmQxMjMh",
+      failedAttempts: 0,
+      lockedUntil: null,
+      twoFactor: false,
     },
     {
       id: "u3",
@@ -188,6 +196,10 @@ const seed: ACLState = {
       roleIds: ["r_family"],
       privilegeIds: [],
       active: true,
+      password: "UGFzc3dvcmQxMjMh",
+      failedAttempts: 0,
+      lockedUntil: null,
+      twoFactor: false,
     },
     {
       id: "u4",
@@ -196,6 +208,10 @@ const seed: ACLState = {
       roleIds: ["r_beneficiary"],
       privilegeIds: [],
       active: true,
+      password: "UGFzc3dvcmQxMjMh",
+      failedAttempts: 0,
+      lockedUntil: null,
+      twoFactor: false,
     },
   ],
 };
