@@ -869,14 +869,24 @@ function SchedulesTab({
               </option>
             ))}
           </select>
-          {canManage && (
-            <Button onClick={() => setOpen(true)}>
-              <Plus className="ml-1 h-4 w-4" /> {t("common.add")}
-            </Button>
-          )}
         </div>
       </CardHeader>
       <CardContent>
+        <div className="mb-3">
+          <TableToolbar
+            onAdd={canManage ? () => setOpen(true) : undefined}
+            addLabel={t("common.add")}
+            onExport={(type) => {
+              const cols = [
+                { header: loc === 'ar' ? 'الغرفة' : 'Room', accessor: (r:any) => rooms.find(rr=>rr.id===r.roomId)? L(loc, rooms.find(rr=>rr.id===r.roomId).name) : '' },
+                { header: t('common.name'), accessor: (r:any) => L(loc, r.title) },
+                { header: 'Start', accessor: (r:any) => r.start },
+                { header: 'End', accessor: (r:any) => r.end },
+              ];
+              import('@/lib/export').then((m)=>m.exportAll(data, cols, type, 'schedules'));
+            }}
+          />
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
