@@ -47,6 +47,7 @@ import {
   subscribeAuth,
 } from "@/store/auth";
 import { loadACL } from "@/store/acl";
+import ChangePasswordDialog from "@/components/auth/ChangePasswordDialog";
 import {
   Sidebar,
   SidebarContent,
@@ -158,6 +159,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   const hideChrome = pathname.startsWith("/login") || pathname.startsWith("/logout") || pathname.startsWith("/first-login");
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+  const [changePwOpen, setChangePwOpen] = useState(false);
   const toggleGroup = (k: string) =>
     setOpenGroups((s) => ({ ...s, [k]: !s[k] }));
 
