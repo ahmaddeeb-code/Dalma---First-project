@@ -1145,6 +1145,19 @@ function DashboardTab({ family }: { family: Family | null }) {
           <CardDescription>Linked beneficiaries and caregivers</CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="mb-3">
+            <TableToolbar
+              onExport={(type) => {
+                const cols = [
+                  { header: 'Name', accessor: (r:any) => r.name },
+                  { header: 'ID', accessor: (r:any) => r.beneficiaryId },
+                  { header: 'Therapist', accessor: (r:any) => r.care.assignedTherapist || '' },
+                  { header: 'Status', accessor: (r:any) => r.status || '' },
+                ];
+                import('@/lib/export').then((m)=>m.exportAll(items, cols, type, 'overview'));
+              }}
+            />
+          </div>
           <Table>
             <TableHeader>
               <TableRow>
