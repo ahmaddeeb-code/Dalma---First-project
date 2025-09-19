@@ -44,17 +44,25 @@ export default function Login() {
 
   const submitMfa = async () => {
     if (!mfaUserId) return;
-    const v = verifyOTP(mfaUserId, mfaCode);
+    const v = await verifyOTP(mfaUserId, mfaCode);
     if (!v.ok) {
       toast.error(v.error || "Invalid code");
       return;
     }
-    // finalize login
-    const u = require("@/store/acl").getUserById(mfaUserId);
-    const { login: doLogin } = require("@/store/auth");
-    doLogin(u, remember);
-    toast.success(t("login.success") || "Welcome");
-    navigate(from, { replace: true });
+    // finalize login by calling server-authenticate success; set client session
+    // fetch user info from admin listing or ACL
+    try {
+      const r = await fetch(`/api/auth/admin/users`);
+      const list = await r.json();
+      const user = list.find((x:any)=> x.id === mfaUserId);
+      if (user) {
+        doLogin({ id: user.id, name: user.name, email: user.email } as any, remember);
+        toast.success(t("login.success") || "Welcome");
+        navigate(from, { replace: true });
+      }
+    } catch (e) {
+      toast.error('Failed to finalize login');
+    }
   };
 
   const onForgot = async () => {
