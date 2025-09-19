@@ -33,16 +33,18 @@ export default function AddEditEmployeeDialog({
 }) {
   const ar = getLocale() === "ar";
   const [name, setName] = useState("");
+  const [nameEnParts, setNameEnParts] = useState<string[]>(["", "", "", "", ""]);
+  const [nameArParts, setNameArParts] = useState<string[]>(["", "", "", "", ""]);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [department, setDepartment] = useState("");
   const [title, setTitle] = useState("");
   const [active, setActive] = useState(true);
   const [roleIds, setRoleIds] = useState<string[]>([]);
-  const [privIds, setPrivIds] = useState<string[]>([]);
 
   const roles: Role[] = listRoles();
   const privileges: Privilege[] = listPrivileges();
+  import("@/store/departments");
 
   useEffect(() => {
     if (!open) return;
