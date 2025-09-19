@@ -72,7 +72,7 @@ import {
   removeDosageUnit,
 } from "@/store/medical";
 import { getCurrentUser, getCurrentUserId, subscribeAuth } from "@/store/auth";
-import { Plus, Pencil, Trash2, ShieldAlert } from "lucide-react";
+import { Plus, Pencil, Trash2, ShieldAlert, Stethoscope, FileText, Pill, Calendar, TrendingUp, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
@@ -214,12 +214,13 @@ function TherapyTypesCard({
     });
   }, [state.therapyTypes, sortBy, sortDir, loc]);
   return (
-    <Card>
-      <CardHeader className="flex items-center justify-between">
-        <div>
-          <CardTitle>{t("pages.medical.therapy.title")}</CardTitle>
-          <CardDescription>{t("pages.medical.therapy.desc")}</CardDescription>
-        </div>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Stethoscope className="h-5 w-5 text-primary" />
+          {t("pages.medical.therapy.title")}
+        </CardTitle>
+        <CardDescription>{t("pages.medical.therapy.desc")}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="mb-3">
@@ -461,12 +462,13 @@ function PlanTemplatesCard({
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<TreatmentPlanTemplate | null>(null);
   return (
-    <Card>
-      <CardHeader className="flex items-center justify-between">
-        <div>
-          <CardTitle>{t("pages.medical.plans.title")}</CardTitle>
-          <CardDescription>{t("pages.medical.plans.desc")}</CardDescription>
-        </div>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <FileText className="h-5 w-5 text-primary" />
+          {t("pages.medical.plans.title")}
+        </CardTitle>
+        <CardDescription>{t("pages.medical.plans.desc")}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="mb-3">
@@ -831,9 +833,12 @@ function MedicationCard({
   const [schedEn, setSchedEn] = useState("");
   const [schedAr, setSchedAr] = useState("");
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("pages.medical.medication.title")}</CardTitle>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Pill className="h-5 w-5 text-primary" />
+          {t("pages.medical.medication.title")}
+        </CardTitle>
         <CardDescription>{t("pages.medical.medication.desc")}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-6 md:grid-cols-3">
@@ -1002,9 +1007,12 @@ function SchedulingCard({
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("pages.medical.scheduling.title")}</CardTitle>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Calendar className="h-5 w-5 text-primary" />
+          {t("pages.medical.scheduling.title")}
+        </CardTitle>
         <CardDescription>{t("pages.medical.scheduling.desc")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
