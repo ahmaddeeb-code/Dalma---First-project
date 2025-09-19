@@ -24,6 +24,7 @@ const OrganizationSettings = lazy(() => import("@/pages/OrganizationSettings"));
 const SecuritySettings = lazy(() => import("@/pages/SecuritySettings"));
 const FamilyProfiles = lazy(() => import("@/pages/FamilyProfiles"));
 const Logistics = lazy(() => import("@/pages/Logistics"));
+const DepartmentsPage = lazy(() => import("@/pages/admin/Departments"));
 import LoginAdmin from "./pages/auth/LoginAdmin";
 import LoginStaff from "./pages/auth/LoginStaff";
 import LoginFamily from "./pages/auth/LoginFamily";
