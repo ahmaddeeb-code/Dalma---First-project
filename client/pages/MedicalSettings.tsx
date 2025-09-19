@@ -1126,13 +1126,21 @@ function ProgressCard({
           <CardTitle>{t("pages.medical.progress.title")}</CardTitle>
           <CardDescription>{t("pages.medical.progress.desc")}</CardDescription>
         </div>
-        {canManage && (
-          <Button onClick={() => setOpen(true)}>
-            <Plus className="ml-1 h-4 w-4" /> {t("common.add")}
-          </Button>
-        )}
       </CardHeader>
       <CardContent className="space-y-6">
+        <div className="mb-3">
+          <TableToolbar
+            onAdd={canManage ? () => setOpen(true) : undefined}
+            addLabel={t("common.add")}
+            onExport={(type) => {
+              const cols = [
+                { header: t("common.name"), accessor: (r:any) => L(loc, r.name) },
+                { header: t("pages.medical.common.description"), accessor: (r:any) => L(loc, r.description) },
+              ];
+              import('@/lib/export').then((m)=>m.exportAll(state.progress.criteria, cols, type, 'progress_criteria'));
+            }}
+          />
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
