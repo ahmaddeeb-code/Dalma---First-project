@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import TableToolbar from "@/components/ui/table-toolbar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -610,7 +611,7 @@ function PlanDialog({
               />
             </div>
             <div>
-              <Label>AR — {t("common.name")}</Label>
+              <Label>AR �� {t("common.name")}</Label>
               <Input
                 value={nameAr}
                 onChange={(e) => setNameAr(e.target.value)}
