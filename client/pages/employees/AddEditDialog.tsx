@@ -10,15 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Role,
-  Privilege,
-  User,
-  listRoles,
-  listPrivileges,
-  upsertUser,
-  uid,
-} from "@/store/acl";
+import { Role, User, listRoles, upsertUser, uid } from "@/store/acl";
+import { listDepartments } from "@/store/departments";
 import { getLocale, t } from "@/i18n";
 import { toast } from "sonner";
 
@@ -43,8 +36,7 @@ export default function AddEditEmployeeDialog({
   const [roleIds, setRoleIds] = useState<string[]>([]);
 
   const roles: Role[] = listRoles();
-  const privileges: Privilege[] = listPrivileges();
-  import("@/store/departments");
+  const departments = listDepartments();
 
   useEffect(() => {
     if (!open) return;
@@ -56,7 +48,8 @@ export default function AddEditEmployeeDialog({
       setTitle(user.title || "");
       setActive(user.active !== false);
       setRoleIds(user.roleIds || []);
-      setPrivIds(user.privilegeIds || []);
+      setNameEnParts(user.nameEnParts || ["", "", "", "", ""]);
+      setNameArParts(user.nameArParts || ["", "", "", "", ""]);
     } else {
       setName("");
       setEmail("");
@@ -65,13 +58,15 @@ export default function AddEditEmployeeDialog({
       setTitle("");
       setActive(true);
       setRoleIds([]);
-      setPrivIds([]);
+      setNameEnParts(["", "", "", "", ""]);
+      setNameArParts(["", "", "", "", ""]);
     }
   }, [open, user]);
 
   const valid = useMemo(() => {
-    return name.trim().length >= 2 && /.+@.+\..+/.test(email);
-  }, [name, email]);
+    const computed = (name || nameEnParts.join(" ")).trim();
+    return computed.length >= 2 && /.+@.+\..+/.test(email);
+  }, [name, nameEnParts, email]);
 
   function toggleRole(id: string, v: boolean | string) {
     const on = v === true;
@@ -82,28 +77,22 @@ export default function AddEditEmployeeDialog({
       return Array.from(set);
     });
   }
-  function togglePriv(id: string, v: boolean | string) {
-    const on = v === true;
-    setPrivIds((prev) => {
-      const set = new Set(prev);
-      if (on) set.add(id);
-      else set.delete(id);
-      return Array.from(set);
-    });
-  }
 
   function onSave() {
     if (!valid) return;
+    const computedName = (name || nameEnParts.join(" ")).replace(/\s+/g, " ").trim();
     const entity: User = {
       id: user?.id || uid("u"),
-      name: name.trim(),
+      name: computedName,
       email: email.trim(),
       phone: phone.trim() || undefined,
-      department: department.trim() || undefined,
+      department: department || undefined,
       title: title.trim() || undefined,
       active,
       roleIds: roleIds,
-      privilegeIds: privIds,
+      privilegeIds: user?.privilegeIds || [],
+      nameEnParts: nameEnParts.map((p) => p.trim()),
+      nameArParts: nameArParts.map((p) => p.trim()),
     };
     upsertUser(entity);
     toast.success(t("pages.translations.saved"));
@@ -123,7 +112,7 @@ export default function AddEditEmployeeDialog({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label>{t("common.name")}</Label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} />
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder={ar ? "الاسم الكامل (إنجليزي)" : "Full name (English)"} />
           </div>
           <div>
             <Label>{t("common.email")}</Label>
@@ -133,16 +122,40 @@ export default function AddEditEmployeeDialog({
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
+          <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <Label>{ar ? "الاسم (إنجليزي) - 5 أجزاء" : "Name (English) - 5 parts"}</Label>
+              <div className="grid grid-cols-5 gap-2">
+                {nameEnParts.map((p, i) => (
+                  <Input key={i} value={p} onChange={(e) => {
+                    const arr = [...nameEnParts]; arr[i] = e.target.value; setNameEnParts(arr);
+                  }} placeholder={["Given","Father","Grandfather","Family","Extra"][i]} />
+                ))}
+              </div>
+            </div>
+            <div>
+              <Label>{ar ? "الاسم (عربي) - 5 أجزاء" : "Name (Arabic) - 5 parts"}</Label>
+              <div className="grid grid-cols-5 gap-2">
+                {nameArParts.map((p, i) => (
+                  <Input dir="rtl" key={i} value={p} onChange={(e) => {
+                    const arr = [...nameArParts]; arr[i] = e.target.value; setNameArParts(arr);
+                  }} placeholder={["الاسم","اسم الأب","اسم الجد","العائلة","إضافي"][i]} />
+                ))}
+              </div>
+            </div>
+          </div>
           <div>
             <Label>{ar ? "الهاتف" : "Phone"}</Label>
             <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
           </div>
           <div>
             <Label>{ar ? "القسم" : "Department"}</Label>
-            <Input
-              value={department}
-              onChange={(e) => setDepartment(e.target.value)}
-            />
+            <select className="w-full h-9 rounded-md border bg-background px-3 text-sm" value={department} onChange={(e) => setDepartment(e.target.value)}>
+              <option value="">{t("common.select") || "Select"}</option>
+              {departments.map((d) => (
+                <option key={d.id} value={d.name}>{d.name}</option>
+              ))}
+            </select>
           </div>
           <div>
             <Label>{ar ? "المسمى الوظيفي" : "Title"}</Label>
@@ -167,22 +180,6 @@ export default function AddEditEmployeeDialog({
                     onCheckedChange={(v) => toggleRole(r.id, v)}
                   />
                   <span>{r.name}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-          <div>
-            <Label className="mb-2 inline-block">
-              {t("pages.accessControl.users.form.directPrivs")}
-            </Label>
-            <div className="border rounded-md p-2 max-h-48 overflow-auto space-y-2">
-              {privileges.map((p) => (
-                <label key={p.id} className="flex items-center gap-2 text-sm">
-                  <Checkbox
-                    checked={privIds.includes(p.id)}
-                    onCheckedChange={(v) => togglePriv(p.id, v)}
-                  />
-                  <span>{p.name}</span>
                 </label>
               ))}
             </div>
