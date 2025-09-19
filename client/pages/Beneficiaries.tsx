@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import TableToolbar from "@/components/ui/table-toolbar";
 import {
   Select,
   SelectContent,
