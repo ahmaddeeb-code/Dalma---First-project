@@ -302,6 +302,22 @@ export default function AccessControl() {
               </div>
             </CardHeader>
             <CardContent>
+              <div className="mb-3">
+                <TableToolbar
+                  children={
+                    <div className="flex items-center gap-2">
+                      <PrivilegeDialog
+                        onSubmit={(p) =>
+                          setState((s) => ({
+                            ...s,
+                            privileges: upsert(s.privileges, p),
+                          }))
+                        }
+                      />
+                    </div>
+                  }
+                />
+              </div>
               <Table>
                 <TableHeader>
                   <TableRow>
