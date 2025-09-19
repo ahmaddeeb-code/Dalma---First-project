@@ -300,14 +300,6 @@ export default function AccessControl() {
                   {t("pages.accessControl.privileges.desc")}
                 </CardDescription>
               </div>
-              <PrivilegeDialog
-                onSubmit={(p) =>
-                  setState((s) => ({
-                    ...s,
-                    privileges: upsert(s.privileges, p),
-                  }))
-                }
-              />
             </CardHeader>
             <CardContent>
               <Table>
