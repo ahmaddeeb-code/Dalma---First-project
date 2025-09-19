@@ -195,7 +195,24 @@ function TherapyTypesCard({
 }) {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<TherapySessionType | null>(null);
-  const [confirmId, setConfirmId] = useState<string | null>(null);
+  const { sortBy, sortDir, handleSort, sortData } = useTableSort<'name' | 'duration' | 'frequency'>('name');
+
+  const sortedTherapyTypes = React.useMemo(() => {
+    return sortData(state.therapyTypes, sortBy, sortDir, (a, b) => {
+      if (sortBy === 'name') {
+        const aName = L(loc, a.name) || '';
+        const bName = L(loc, b.name) || '';
+        return aName.localeCompare(bName);
+      }
+      if (sortBy === 'duration') {
+        return a.durationMin - b.durationMin;
+      }
+      if (sortBy === 'frequency') {
+        return a.defaultFrequency.localeCompare(b.defaultFrequency);
+      }
+      return 0;
+    });
+  }, [state.therapyTypes, sortBy, sortDir, loc]);
   return (
     <Card>
       <CardHeader className="flex items-center justify-between">
