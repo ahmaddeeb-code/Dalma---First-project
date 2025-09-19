@@ -105,6 +105,11 @@ export default function Login() {
         const list = await r.json();
         const user = list.find((x: any) => x.id === mfaUserId);
         if (user) {
+          // If user is flagged to change password, send to first-login
+          if ((user as any).mustChangePassword) {
+            navigate("/first-login", { replace: true, state: { userId: user.id } });
+            return;
+          }
           doLogin(
             { id: user.id, name: user.name, email: user.email } as any,
             remember,
