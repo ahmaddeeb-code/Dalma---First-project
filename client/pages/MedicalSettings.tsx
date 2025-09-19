@@ -394,7 +394,7 @@ function TherapyDialog({
               />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>{t("pages.medical.therapy.duration")}</Label>
               <Input
@@ -1015,8 +1015,8 @@ function SchedulingCard({
         </CardTitle>
         <CardDescription>{t("pages.medical.scheduling.desc")}</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <CardContent className="space-y-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div>
             <Label>{t("pages.medical.scheduling.sessionLength")}</Label>
             <Input
@@ -1142,14 +1142,15 @@ function ProgressCard({
     setFreqs((prev) => ({ ...prev, [key]: on }));
   }
   return (
-    <Card>
-      <CardHeader className="flex items-center justify-between">
-        <div>
-          <CardTitle>{t("pages.medical.progress.title")}</CardTitle>
-          <CardDescription>{t("pages.medical.progress.desc")}</CardDescription>
-        </div>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <TrendingUp className="h-5 w-5 text-primary" />
+          {t("pages.medical.progress.title")}
+        </CardTitle>
+        <CardDescription>{t("pages.medical.progress.desc")}</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4">
         <div className="mb-3">
           <TableToolbar
             onAdd={canManage ? () => setOpen(true) : undefined}
