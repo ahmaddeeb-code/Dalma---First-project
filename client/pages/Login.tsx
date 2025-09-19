@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import { authenticate, forgotPassword } from "@/store/auth";
+import { authenticate, forgotPassword, verifyOTP, login as doLogin } from "@/store/auth";
 import { t } from "@/i18n";
 
 export default function Login() {
