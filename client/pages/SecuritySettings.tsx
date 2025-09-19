@@ -5,6 +5,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  StatsCard,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -46,6 +47,7 @@ import {
   clearAudits,
 } from "@/store/security";
 import { toast } from "sonner";
+import { Lock, Users, FileText, Shield, Eye, Settings } from "lucide-react";
 
 function useSecurity() {
   return useSyncExternalStore(
@@ -74,6 +76,14 @@ export default function SecuritySettings() {
   }, [me]);
   const [confirmClear, setConfirmClear] = useState(false);
 
+  const stats = useMemo(() => {
+    const activeUsers = s.auth.twoFactor ? "2FA Enabled" : "2FA Disabled";
+    const auditCount = s.audits.length;
+    const complianceStatus = s.compliance.gdpr || s.compliance.hipaa ? "Compliant" : "Basic";
+    const dataProtection = s.data.encryptSensitive ? "Encrypted" : "Standard";
+    return { activeUsers, auditCount, complianceStatus, dataProtection };
+  }, [s]);
+
   return (
     <div className="space-y-6">
       <header>
@@ -84,6 +94,33 @@ export default function SecuritySettings() {
           Authentication, permissions, audits, data protection, and compliance
         </p>
       </header>
+
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-4">
+        <StatsCard
+          title="Authentication"
+          value={stats.activeUsers}
+          icon={<Lock className="h-5 w-5" />}
+          gradient="from-blue-500/10 via-blue-500/5 to-transparent"
+        />
+        <StatsCard
+          title="Audit Logs"
+          value={stats.auditCount.toString()}
+          icon={<FileText className="h-5 w-5" />}
+          gradient="from-emerald-500/10 via-emerald-500/5 to-transparent"
+        />
+        <StatsCard
+          title="Compliance"
+          value={stats.complianceStatus}
+          icon={<Shield className="h-5 w-5" />}
+          gradient="from-purple-500/10 via-purple-500/5 to-transparent"
+        />
+        <StatsCard
+          title="Data Protection"
+          value={stats.dataProtection}
+          icon={<Eye className="h-5 w-5" />}
+          gradient="from-rose-500/10 via-rose-500/5 to-transparent"
+        />
+      </div>
 
       <Tabs defaultValue="auth">
         <TabsList>
@@ -132,9 +169,12 @@ function AuthCard({ canManage }: { canManage: boolean }) {
   const [special, setSpecial] = useState(a.passwordPolicy.requireSpecial);
   const [expiry, setExpiry] = useState(String(a.passwordPolicy.expirationDays));
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>User Access & Authentication</CardTitle>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Lock className="h-5 w-5 text-primary" />
+          User Access & Authentication
+        </CardTitle>
         <CardDescription>2FA, password policy, session timeout</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -252,9 +292,12 @@ function RolesCard({ canManage }: { canManage: boolean }) {
     set(target.includes(id) ? target.filter((x) => x !== id) : [...target, id]);
   }
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Role-Based Permissions</CardTitle>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Users className="h-5 w-5 text-primary" />
+          Role-Based Permissions
+        </CardTitle>
         <CardDescription>
           Per-role actions and sensitive field visibility
         </CardDescription>
