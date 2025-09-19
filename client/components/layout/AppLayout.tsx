@@ -280,7 +280,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
-        <header className="bg-sidebar border border-sidebar-border sticky top-0 z-50">
+        <header className="bg-sidebar border border-sidebar-border shadow sticky top-0 z-50 group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow">
           <div className="flex h-16 items-center justify-between gap-4 px-4">
             <div className="flex items-center gap-4">
               <SidebarTrigger className="hover:bg-accent/50 transition-all duration-200 hover:scale-105" />
