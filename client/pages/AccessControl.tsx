@@ -204,12 +204,6 @@ export default function AccessControl() {
                   {t("pages.accessControl.roles.desc")}
                 </CardDescription>
               </div>
-              <RoleDialog
-                onSubmit={(r) =>
-                  setState((s) => ({ ...s, roles: upsert(s.roles, r) }))
-                }
-                privileges={state.privileges}
-              />
             </CardHeader>
             <CardContent>
               <Table>
