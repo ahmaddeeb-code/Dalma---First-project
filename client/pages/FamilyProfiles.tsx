@@ -727,7 +727,7 @@ function GuardianDialog({
         <div className="grid gap-3">
           <div className="grid md:grid-cols-2 gap-3">
             <div>
-              <Label>Full name</Label>
+              <Label requiredMark>Full name</Label>
               <Input
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
