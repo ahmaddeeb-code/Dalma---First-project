@@ -6,7 +6,7 @@ import TableActions, { createEditAction, createDeleteAction } from "@/components
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ChevronDown, ChevronUp, ChevronsUpDown, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import SortableTableHead from "@/components/ui/sortable-table-head";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { listDepartments, subscribeDepartments, upsertDepartment, removeDepartment, uid, type Department } from "@/store/departments";
 import { t } from "@/i18n";
@@ -64,15 +64,7 @@ export default function DepartmentsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead
-                    className="cursor-pointer select-none hover:bg-accent/30"
-                    onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
-                  >
-                    <div className="flex items-center gap-2">
-                      {t("common.name") || "Name"}
-                      {sortDir === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-                    </div>
-                  </TableHead>
+                  <SortableTableHead sortable={false}>{t("common.name") || "Name"}</SortableTableHead>
                   <TableHead className="w-[160px] text-center">{t("common.actions") || "Actions"}</TableHead>
                 </TableRow>
               </TableHeader>
