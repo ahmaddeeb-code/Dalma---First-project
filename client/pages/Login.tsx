@@ -399,31 +399,23 @@ export default function Login() {
                           <Button
                             type="submit"
                             className="w-full h-12 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 hover:from-blue-700 hover:via-purple-700 hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 border-0"
-                            disabled={loading}
                             aria-live="polite"
                           >
-                            {loading ? (
-                              <div className="flex items-center gap-2">
-                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                Signing in...
-                              </div>
-                            ) : (
-                              <div className="flex items-center gap-2">
-                                <svg
-                                  width="20"
-                                  height="20"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                >
-                                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-                                  <polyline points="10,17 15,12 10,7"></polyline>
-                                  <line x1="15" y1="12" x2="3" y2="12"></line>
-                                </svg>
-                                {t("login.login")}
-                              </div>
-                            )}
+                            <div className="flex items-center gap-2">
+                              <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                              >
+                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                <polyline points="10,17 15,12 10,7"></polyline>
+                                <line x1="15" y1="12" x2="3" y2="12"></line>
+                              </svg>
+                              {t("login.login")}
+                            </div>
                           </Button>
                         </div>
                       </>
