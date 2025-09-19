@@ -526,59 +526,66 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               </Button>
 
               {user ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="secondary"
-                      className="rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 bg-gradient-to-r from-accent to-accent/80 hover:from-accent hover:to-accent/60 border border-border/50"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="h-6 w-6 rounded-lg bg-gradient-to-br from-primary to-secondary grid place-items-center text-white text-xs font-bold">
-                          {user.name.charAt(0).toUpperCase()}
-                        </div>
-                        <span className="font-medium">{user.name}</span>
-                      </div>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align="start"
-                    className="glass-card border border-border/50 shadow-xl min-w-56"
-                  >
-                    <DropdownMenuLabel className="font-normal">
-                      <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">
-                          {user.name}
-                        </p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                          {user.email}
-                        </p>
-                      </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    {roles.length ? (
-                      <>
-                        <DropdownMenuItem disabled className="text-xs">
-                          <div className="flex flex-wrap gap-1">
-                            {roles.map((role) => (
-                              <span
-                                key={role}
-                                className="badge-modern bg-primary/10 text-primary border border-primary/20"
-                              >
-                                {role}
-                              </span>
-                            ))}
+                <>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="secondary"
+                        className="rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 bg-gradient-to-r from-accent to-accent/80 hover:from-accent hover:to-accent/60 border border-border/50"
+                      >
+                        <div className="flex items-center gap-2">
+                          <div className="h-6 w-6 rounded-lg bg-gradient-to-br from-primary to-secondary grid place-items-center text-white text-xs font-bold">
+                            {user.name.charAt(0).toUpperCase()}
                           </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                      </>
-                    ) : null}
-                    <DropdownMenuItem asChild className="hover:bg-destructive/10 hover:text-destructive transition-all duration-200">
-                      <Link to="/logout">
-                        <LogOut className="mr-2 h-4 w-4" /> {t("header.signOut")}
-                      </Link>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                          <span className="font-medium">{user.name}</span>
+                        </div>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="start"
+                      className="glass-card border border-border/50 shadow-xl min-w-56"
+                    >
+                      <DropdownMenuLabel className="font-normal">
+                        <div className="flex flex-col space-y-1">
+                          <p className="text-sm font-medium leading-none">
+                            {user.name}
+                          </p>
+                          <p className="text-xs leading-none text-muted-foreground">
+                            {user.email}
+                          </p>
+                        </div>
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      {roles.length ? (
+                        <>
+                          <DropdownMenuItem disabled className="text-xs">
+                            <div className="flex flex-wrap gap-1">
+                              {roles.map((role) => (
+                                <span
+                                  key={role}
+                                  className="badge-modern bg-primary/10 text-primary border border-primary/20"
+                                >
+                                  {role}
+                                </span>
+                              ))}
+                            </div>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                        </>
+                      ) : null}
+                      <DropdownMenuItem onClick={()=>setChangePwOpen(true)} className="hover:bg-accent/50 transition-all duration-200">
+                        Change Password
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild className="hover:bg-destructive/10 hover:text-destructive transition-all duration-200">
+                        <Link to="/logout">
+                          <LogOut className="mr-2 h-4 w-4" /> {t("header.signOut")}
+                        </Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <ChangePasswordDialog open={changePwOpen} onOpenChange={setChangePwOpen} />
+                </>
               ) : (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
