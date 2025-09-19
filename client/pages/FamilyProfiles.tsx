@@ -244,7 +244,7 @@ export default function FamilyProfiles() {
                         {
                           header:
                             getLocale() === "ar"
-                              ? "المستفيدون"
+                              ? "��لمستفيدون"
                               : "Beneficiaries",
                           accessor: (r) => r.links.length,
                         },
@@ -261,6 +261,24 @@ export default function FamilyProfiles() {
           </div>
         </CardHeader>
         <CardContent>
+        <div className="mb-3">
+          <TableToolbar
+            onAdd={canManage ? () => setOpen(true) : undefined}
+            addLabel={t("common.add")}
+            onExport={(type) => {
+              const cols = [
+                { header: 'ID', accessor: (r:any) => r.familyId },
+                { header: t("common.name") as string, accessor: (r:any) => r.name || '' },
+                { header: getLocale() === 'ar' ? 'الهاتف' : 'Phone', accessor: (r:any) => r.contact.phone || '' },
+                { header: getLocale() === 'ar' ? 'البريد' : 'Email', accessor: (r:any) => r.contact.email || '' },
+                { header: getLocale() === 'ar' ? 'المست��يدون' : 'Beneficiaries', accessor: (r:any) => r.links.length },
+              ];
+              import('@/lib/export').then((m)=>m.exportAll(filtered, cols, type, 'families'));
+            }}
+            pageSize={pageSize}
+            onPageSizeChange={(n)=>{ setPageSize(n); setPage(1); }}
+          />
+        </div>
           <div className="w-full overflow-x-auto">
             <Table>
               <TableHeader>
