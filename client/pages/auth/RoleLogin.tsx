@@ -50,12 +50,40 @@ export default function RoleLogin({
   );
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [createPassword, setCreatePassword] = useState("");
+  const [enable2fa, setEnable2fa] = useState(false);
+  const [mfaPending, setMfaPending] = useState(false);
+  const [mfaCode, setMfaCode] = useState("");
+  const [mfaUserId, setMfaUserId] = useState<string | null>(null);
 
   const signInSelected = () => {
     const user = acl.users.find((u) => u.id === selectedUserId);
     if (!user) return;
+    const { authenticate } = require("@/store/auth");
+    const res = authenticate(user.email || user.name, password, true);
+    if (!res.ok) {
+      alert(res.error || "Invalid credentials");
+      return;
+    }
+    if ((res as any).mfa) {
+      setMfaPending(true);
+      setMfaUserId((res as any).userId);
+      // show demo code in alert for development
+      if ((res as any).demoCode) alert(`OTP: ${(res as any).demoCode}`);
+      return;
+    }
     login(user);
     window.location.assign(redirectPath);
+  };
+
+  const submitMfa = () => {
+    if (!mfaUserId) return;
+    const { verifyOTP } = require("@/store/auth");
+    const v = verifyOTP(mfaUserId, mfaCode);
+    if (!v.ok) { alert(v.error); return; }
+    const u = acl.users.find((x) => x.id === mfaUserId);
+    if (u) { login(u); window.location.assign(redirectPath); }
   };
 
   const createAndSignIn = () => {
@@ -65,10 +93,18 @@ export default function RoleLogin({
       email: email.trim(),
       roleIds: [roleId],
       privilegeIds: [],
+      active: true,
+      failedAttempts: 0,
+      lockedUntil: null,
+      twoFactor: enable2fa,
     };
     const updated = { ...acl, users: upsert(acl.users, u) };
     saveACL(updated);
     setAcl(updated);
+    if (createPassword) {
+      const { setUserPassword } = require("@/store/auth");
+      setUserPassword(u.id, createPassword);
+    }
     login(u);
     window.location.assign(redirectPath);
   };
