@@ -16,11 +16,13 @@ export default function ResetPassword() {
   const navigate = useNavigate();
 
   useEffect(()=>{
-    if(token){
-      const r = verifyResetToken(token);
-      if(r.ok){ setOk(true); setEmail(r.email); }
-      else { toast.error(r.error||"Invalid token"); }
+    async function check(){
+      if(!token) return;
+      const r = await verifyResetToken(token);
+      if((r as any).ok){ setOk(true); setEmail((r as any).email); }
+      else { toast.error((r as any).error||"Invalid token"); }
     }
+    check();
   },[token]);
 
   const submit = async ()=>{
