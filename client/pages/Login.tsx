@@ -17,6 +17,10 @@ export default function Login() {
   const loc = useLocation();
   const from = (loc.state as any)?.from || "/admin";
 
+  const [mfaPending, setMfaPending] = useState(false);
+  const [mfaUserId, setMfaUserId] = useState<string | null>(null);
+  const [mfaCode, setMfaCode] = useState("");
+
   const onSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
     setLoading(true);
@@ -26,6 +30,29 @@ export default function Login() {
       toast.error(res.error || "Invalid credentials");
       return;
     }
+    if ((res as any).mfa) {
+      // prompt for code
+      setMfaPending(true);
+      setMfaUserId((res as any).userId || null);
+      // show demo code in toast
+      if ((res as any).demoCode) toast.success(`OTP: ${(res as any).demoCode}`);
+      return;
+    }
+    toast.success(t("login.success") || "Welcome");
+    navigate(from, { replace: true });
+  };
+
+  const submitMfa = async () => {
+    if (!mfaUserId) return;
+    const v = verifyOTP(mfaUserId, mfaCode);
+    if (!v.ok) {
+      toast.error(v.error || "Invalid code");
+      return;
+    }
+    // finalize login
+    const u = require("@/store/acl").getUserById(mfaUserId);
+    const { login: doLogin } = require("@/store/auth");
+    doLogin(u, remember);
     toast.success(t("login.success") || "Welcome");
     navigate(from, { replace: true });
   };
