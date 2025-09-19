@@ -1218,14 +1218,23 @@ function ResourcesTab({
               {loc === "ar" ? "قيد الاستخدام" : "In use"}
             </option>
           </select>
-          {canManage && (
-            <Button onClick={() => setOpen(true)}>
-              <Plus className="ml-1 h-4 w-4" /> {t("common.add")}
-            </Button>
-          )}
         </div>
       </CardHeader>
       <CardContent>
+        <div className="mb-3">
+          <TableToolbar
+            onAdd={canManage ? () => setOpen(true) : undefined}
+            addLabel={t("common.add")}
+            onExport={(type) => {
+              const cols = [
+                { header: t('common.name'), accessor: (r:any)=> r.name },
+                { header: 'Status', accessor: (r:any)=> r.status },
+                { header: 'Location', accessor: (r:any)=> r.location || '' },
+              ];
+              import('@/lib/export').then((m)=>m.exportAll(list, cols, type, 'equipment'));
+            }}
+          />
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
