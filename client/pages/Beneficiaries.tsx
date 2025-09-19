@@ -511,6 +511,23 @@ export default function Beneficiaries() {
           </div>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-7 gap-3">
+          <div className="md:col-span-7">
+            <TableToolbar
+              onAdd={canEdit ? () => setAddOpen(true) : undefined}
+              addLabel={ar ? "إضافة مستفيد" : "Add Beneficiary"}
+              onExport={async (type) => {
+                const cols = [
+                  { header: ar ? "المستفيد" : "Name", accessor: (r: any) => r.name },
+                  { header: "ID", accessor: (r: any) => r.beneficiaryId },
+                  { header: ar ? "الإعاقة" : "Disability", accessor: (r: any) => r.medical.disabilityType },
+                  { header: ar ? "الحالة" : "Status", accessor: (r: any) => r.status },
+                ];
+                await import("@/lib/export").then((m) => m.exportAll(pageItems, cols, type, "beneficiaries"));
+              }}
+              pageSize={pageSize}
+              onPageSizeChange={(n) => { setPageSize(n); setPage(1); }}
+            />
+          </div>
           <div className="md:col-span-2">
             <Label>{ar ? "بحث" : "Search"}</Label>
             <div className="relative">
