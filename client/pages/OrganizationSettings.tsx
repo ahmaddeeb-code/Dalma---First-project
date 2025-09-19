@@ -309,13 +309,23 @@ function BranchesCard({ canManage }: { canManage: boolean }) {
           <CardTitle>Branches / Locations</CardTitle>
           <CardDescription>Manage locations and contacts</CardDescription>
         </div>
-        {canManage && (
-          <Button onClick={() => setOpen(true)}>
-            <Plus className="ml-1 h-4 w-4" /> Add
-          </Button>
-        )}
       </CardHeader>
       <CardContent>
+        <div className="mb-3">
+          <TableToolbar
+            onAdd={canManage ? () => setOpen(true) : undefined}
+            addLabel="Add"
+            onExport={(type) => {
+              const cols = [
+                { header: 'Name', accessor: (r:any) => r.name },
+                { header: 'Address', accessor: (r:any) => r.address },
+                { header: 'Phone', accessor: (r:any) => r.phone },
+                { header: 'Contact', accessor: (r:any) => r.contactPerson },
+              ];
+              import('@/lib/export').then((m)=>m.exportAll(st.branches, cols, type, 'branches'));
+            }}
+          />
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
