@@ -356,7 +356,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                   </div>
                 </SidebarGroupLabel>
                 {isOpen && (
-                  <SidebarGroupContent className="animate-slide-in-top">
+                  <SidebarGroupContent>
                     <SidebarMenu>
                       {g.items.map((n, itemIndex) => {
                         const Icon = n.icon;
@@ -489,7 +489,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                     className="hover:bg-accent/50 transition-all duration-200"
                   >
                     <span className="mr-2">🇸🇦</span>
-                    العر��ية
+                    العربية
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => setLocale("en")}
