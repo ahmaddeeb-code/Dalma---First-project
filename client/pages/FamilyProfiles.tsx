@@ -121,7 +121,7 @@ export default function FamilyProfiles() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const { sortBy, sortDir, handleSort, sortData } = useTableSort<'name' | 'phone' | 'beneficiaries'>('name');
-  const sortedFiltered = React.useMemo(() => {
+  const sortedFiltered = useMemo(() => {
     return sortData(filtered, sortBy, sortDir, (a, b) => {
       if (sortBy === 'name') return (a.name || '').localeCompare(b.name || '');
       if (sortBy === 'phone') return (a.contact.phone || '').localeCompare(b.contact.phone || '');
@@ -231,7 +231,7 @@ export default function FamilyProfiles() {
                       exportAll(filtered, cols, fmt, `families_${fmt}`);
                     }}
                   >
-                    {getLocale() === "ar" ? "المجموعة المفلترة" : "Filtered"} –{" "}
+                    {getLocale() === "ar" ? "المجموعة ��لمفلترة" : "Filtered"} –{" "}
                     {fmt.toUpperCase()}
                   </DropdownMenuItem>
                 ))}
@@ -925,7 +925,7 @@ function BeneficiariesTab({
                 value={selectedId}
                 onChange={(e) => setSelectedId(e.target.value)}
               >
-                <option value="">—</option>
+                <option value="">��</option>
                 {all.map((b) => (
                   <option key={b.id} value={b.id}>
                     {b.name} ({b.beneficiaryId})
