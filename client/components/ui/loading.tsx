@@ -147,29 +147,29 @@ export function LoadingSpinner({ size = 'default', className = '' }: { size?: 's
 function LoadingOverlay() {
   const { loading } = useLoading();
 
-  if (!loading.isLoading) return null;
+  if (!loading.isVisible) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/20 backdrop-blur-sm animate-in fade-in duration-300">
-      <div className="bg-white/95 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/50 flex flex-col items-center space-y-4 animate-in zoom-in-95 duration-300">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/20 backdrop-blur-sm transition-all duration-300 ease-in-out animate-in fade-in">
+      <div className="bg-white/95 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/50 flex flex-col items-center space-y-4 transition-all duration-300 ease-out animate-in zoom-in-95 slide-in-from-bottom-4">
         <LoadingSpinner size="large" />
-        
+
         {loading.message && (
-          <div className="text-center">
+          <div className="text-center animate-in fade-in slide-in-from-bottom-2 duration-300 delay-150">
             <p className="text-lg font-medium text-slate-800">{loading.message}</p>
             <p className="text-sm text-slate-600 mt-1">Please wait...</p>
           </div>
         )}
-        
+
         {!loading.message && (
-          <div className="text-center">
+          <div className="text-center animate-in fade-in slide-in-from-bottom-2 duration-300 delay-150">
             <p className="text-lg font-medium text-slate-800">Loading</p>
             <p className="text-sm text-slate-600 mt-1">Please wait...</p>
           </div>
         )}
 
         {/* Animated dots */}
-        <div className="flex space-x-1">
+        <div className="flex space-x-1 animate-in fade-in duration-300 delay-300">
           <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
           <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
           <div className="w-2 h-2 bg-cyan-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
