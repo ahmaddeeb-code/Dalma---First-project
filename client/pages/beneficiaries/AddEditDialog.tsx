@@ -473,7 +473,7 @@ export default function AddEditBeneficiaryDialog({
           <TabsContent value="identity" className="space-y-4 mt-4">
             <div className="grid md:grid-cols-2 gap-3">
               <div className="space-y-2">
-                <Label>{ar ? "رقم المستفيد" : "Beneficiary ID"} *</Label>
+                <Label requiredMark>{ar ? "رقم المستفيد" : "Beneficiary ID"}</Label>
                 <Input
                   value={beneficiaryId}
                   onChange={(e) => setBeneficiaryId(e.target.value)}
@@ -483,7 +483,7 @@ export default function AddEditBeneficiaryDialog({
                 </p>
               </div>
               <div className="space-y-2">
-                <Label>{ar ? "السجل المدني" : "Civil Registry"} *</Label>
+                <Label requiredMark>{ar ? "السجل المدني" : "Civil Registry"}</Label>
                 <Input
                   value={civilId}
                   onChange={(e) => setCivilId(e.target.value)}
@@ -493,7 +493,7 @@ export default function AddEditBeneficiaryDialog({
 
             <div className="grid md:grid-cols-2 gap-3">
               <div className="space-y-2">
-                <Label>{ar ? "الجنس" : "Gender"}</Label>
+                <Label requiredMark={settings.required?.gender}>{ar ? "الجنس" : "Gender"}</Label>
                 <select
                   className="w-full h-9 rounded-md border bg-background px-3 text-sm"
                   value={gender}
@@ -509,7 +509,7 @@ export default function AddEditBeneficiaryDialog({
                 </select>
               </div>
               <div className="space-y-2">
-                <Label>{ar ? "تاريخ الميلاد" : "Date of Birth"} *</Label>
+                <Label requiredMark={settings.required?.dob}>{ar ? "تاريخ الميلاد" : "Date of Birth"}</Label>
                 <Input
                   type="date"
                   value={dob}
@@ -645,7 +645,7 @@ export default function AddEditBeneficiaryDialog({
           <TabsContent value="contact" className="space-y-3 mt-4">
             <div className="grid md:grid-cols-2 gap-3">
               <div className="space-y-2">
-                <Label>{ar ? "الهاتف" : "Phone"} *</Label>
+                <Label requiredMark={settings.required?.phone}>{ar ? "الهاتف" : "Phone"}</Label>
                 <Input
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
@@ -668,7 +668,7 @@ export default function AddEditBeneficiaryDialog({
             </div>
             <div className="grid md:grid-cols-3 gap-3">
               <div className="space-y-2">
-                <Label>{ar ? "اسم ولي الأمر" : "Guardian Name"} *</Label>
+                <Label requiredMark={settings.required?.guardianName}>{ar ? "اسم ولي الأمر" : "Guardian Name"}</Label>
                 <Input
                   value={guardianName}
                   onChange={(e) => setGuardianName(e.target.value)}
@@ -682,7 +682,7 @@ export default function AddEditBeneficiaryDialog({
                 />
               </div>
               <div className="space-y-2">
-                <Label>{ar ? "هاتف ولي الأمر" : "Guardian Phone"} *</Label>
+                <Label requiredMark={settings.required?.guardianPhone}>{ar ? "هاتف ولي الأمر" : "Guardian Phone"}</Label>
                 <Input
                   value={guardianPhone}
                   onChange={(e) => setGuardianPhone(e.target.value)}
@@ -706,7 +706,7 @@ export default function AddEditBeneficiaryDialog({
                   </option>
                   <option value="sensory">{ar ? "حسية" : "Sensory"}</option>
                   <option value="autism">{ar ? "توحد" : "Autism"}</option>
-                  <option value="multiple">{ar ? "متعددة" : "Multiple"}</option>
+                  <option value="multiple">{ar ? "متع��دة" : "Multiple"}</option>
                 </select>
               </div>
               <div className="space-y-2">
@@ -941,7 +941,7 @@ function QuickCreateFamilyDialog({
           </DialogTitle>
           <DialogDescription>
             {ar
-              ? "أدخل معلومات أساس��ة لملف العائلة"
+              ? "أدخل معلومات أساسية لملف العائلة"
               : "Enter basic info for the family profile"}
           </DialogDescription>
         </DialogHeader>
