@@ -15,27 +15,43 @@ export default function ResetPassword() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  useEffect(()=>{
-    async function check(){
-      if(!token) return;
+  useEffect(() => {
+    async function check() {
+      if (!token) return;
       const r = await verifyResetToken(token);
-      if((r as any).ok){ setOk(true); setEmail((r as any).email); }
-      else { toast.error((r as any).error||"Invalid token"); }
+      if ((r as any).ok) {
+        setOk(true);
+        setEmail((r as any).email);
+      } else {
+        toast.error((r as any).error || "Invalid token");
+      }
     }
     check();
-  },[token]);
+  }, [token]);
 
-  const submit = async ()=>{
-    if(!token) return;
-    if(password.length < 8){ toast.error("Password too short"); return; }
+  const submit = async () => {
+    if (!token) return;
+    if (password.length < 8) {
+      toast.error("Password too short");
+      return;
+    }
     // basic complexity
-    if(!/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) { toast.error('Password must include upper, lower, and numbers'); return; }
+    if (
+      !/[A-Z]/.test(password) ||
+      !/[a-z]/.test(password) ||
+      !/[0-9]/.test(password)
+    ) {
+      toast.error("Password must include upper, lower, and numbers");
+      return;
+    }
     const r = await resetPassword(token, password);
-    if(r.ok){ toast.success("Password reset"); navigate('/login'); }
-    else toast.error(r.error||"Failed");
+    if (r.ok) {
+      toast.success("Password reset");
+      navigate("/login");
+    } else toast.error(r.error || "Failed");
   };
 
-  if(!token) return <div className="p-6">No token provided.</div>;
+  if (!token) return <div className="p-6">No token provided.</div>;
 
   return (
     <div className="min-h-[70vh] flex items-center justify-center p-6">
@@ -46,13 +62,26 @@ export default function ResetPassword() {
         <CardContent>
           {ok ? (
             <div className="space-y-4">
-              <div className="text-sm text-muted-foreground">Resetting password for {email}</div>
-              <Input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="New password" />
-              <div className="mt-2"><PasswordStrength value={password} /></div>
-              <Button className="w-full" onClick={submit}>Set new password</Button>
+              <div className="text-sm text-muted-foreground">
+                Resetting password for {email}
+              </div>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="New password"
+              />
+              <div className="mt-2">
+                <PasswordStrength value={password} />
+              </div>
+              <Button className="w-full" onClick={submit}>
+                Set new password
+              </Button>
             </div>
           ) : (
-            <div className="text-sm text-muted-foreground">Invalid or expired token.</div>
+            <div className="text-sm text-muted-foreground">
+              Invalid or expired token.
+            </div>
           )}
         </CardContent>
       </Card>

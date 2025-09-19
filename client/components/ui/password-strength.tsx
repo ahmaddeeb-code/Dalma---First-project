@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 function scorePassword(pw: string) {
   let score = 0;
@@ -17,7 +17,12 @@ function scorePassword(pw: string) {
 export default function PasswordStrength({ value }: { value: string }) {
   const score = scorePassword(value);
   const percent = Math.round((score / 6) * 100);
-  const color = score <= 2 ? 'bg-destructive' : score <= 4 ? 'bg-amber-500' : 'bg-emerald-500';
+  const color =
+    score <= 2
+      ? "bg-destructive"
+      : score <= 4
+        ? "bg-amber-500"
+        : "bg-emerald-500";
   return (
     <div className="space-y-1">
       <div className="h-2 w-full bg-muted rounded overflow-hidden">
@@ -25,9 +30,7 @@ export default function PasswordStrength({ value }: { value: string }) {
       </div>
       <div className="text-xs text-muted-foreground flex items-center justify-between">
         <span>{percent}%</span>
-        <span>
-          {score <= 2 ? 'Weak' : score <= 4 ? 'Medium' : 'Strong'}
-        </span>
+        <span>{score <= 2 ? "Weak" : score <= 4 ? "Medium" : "Strong"}</span>
       </div>
     </div>
   );

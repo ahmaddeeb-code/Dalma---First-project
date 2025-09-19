@@ -152,7 +152,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     if (el.getAttribute("lang") !== wantLang) el.setAttribute("lang", wantLang);
   }, [locale]);
 
-  const hideChrome = pathname.startsWith('/login');
+  const hideChrome = pathname.startsWith("/login");
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
   const toggleGroup = (k: string) =>
@@ -192,32 +192,73 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               </div>
               <div>
                 <p className="font-medium">{t("footer.title")}</p>
-                <p className="text-xs text-muted-foreground">{t("footer.subtitle")}</p>
-                <p className="text-xs text-muted-foreground mt-1">{t("footer.copyright").replace("{{year}}", String(new Date().getFullYear()))}</p>
+                <p className="text-xs text-muted-foreground">
+                  {t("footer.subtitle")}
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t("footer.copyright").replace(
+                    "{{year}}",
+                    String(new Date().getFullYear()),
+                  )}
+                </p>
               </div>
             </div>
 
             <div className="flex items-center gap-6">
               <div className="hidden md:flex items-center gap-4">
-                <Link to="/privacy" className="hover:text-foreground transition-colors duration-200 hover:underline">{t("footer.privacy")}</Link>
-                <Link to="/security" className="hover:text-foreground transition-colors duration-200 hover:underline">{t("footer.security")}</Link>
-                <Link to="/contact" className="hover:text-foreground transition-colors duration-200 hover:underline">{t("footer.contact")}</Link>
+                <Link
+                  to="/privacy"
+                  className="hover:text-foreground transition-colors duration-200 hover:underline"
+                >
+                  {t("footer.privacy")}
+                </Link>
+                <Link
+                  to="/security"
+                  className="hover:text-foreground transition-colors duration-200 hover:underline"
+                >
+                  {t("footer.security")}
+                </Link>
+                <Link
+                  to="/contact"
+                  className="hover:text-foreground transition-colors duration-200 hover:underline"
+                >
+                  {t("footer.contact")}
+                </Link>
               </div>
 
               <div className="flex items-center gap-3">
                 <Button asChild variant="ghost" size="icon">
-                  <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="twitter"><Twitter className="h-4 w-4" /></a>
+                  <a
+                    href="https://twitter.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="twitter"
+                  >
+                    <Twitter className="h-4 w-4" />
+                  </a>
                 </Button>
                 <Button asChild variant="ghost" size="icon">
-                  <a href="https://github.com" target="_blank" rel="noreferrer" aria-label="github"><Github className="h-4 w-4" /></a>
+                  <a
+                    href="https://github.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="github"
+                  >
+                    <Github className="h-4 w-4" />
+                  </a>
                 </Button>
                 <Button asChild variant="ghost" size="icon">
-                  <a href="mailto:hello@example.com" aria-label="email"><Mail className="h-4 w-4" /></a>
+                  <a href="mailto:hello@example.com" aria-label="email">
+                    <Mail className="h-4 w-4" />
+                  </a>
                 </Button>
               </div>
 
               <div className="ml-2">
-                <Button asChild className="rounded-full bg-gradient-to-r from-primary to-secondary text-white px-4 py-2">
+                <Button
+                  asChild
+                  className="rounded-full bg-gradient-to-r from-primary to-secondary text-white px-4 py-2"
+                >
                   <Link to="/donations">{t("donate.now")}</Link>
                 </Button>
               </div>
@@ -225,13 +266,31 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               <div className="ml-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" aria-label="Language" className="relative hover:bg-accent/50 transition-all duration-200 hover:scale-105 rounded-xl">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label="Language"
+                      className="relative hover:bg-accent/50 transition-all duration-200 hover:scale-105 rounded-xl"
+                    >
                       <Languages className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="glass-card border border-border/50 shadow-xl">
-                    <DropdownMenuItem onClick={() => setLocale("ar")} className="hover:bg-accent/50 transition-all duration-200">🇸🇦 العربية</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setLocale("en")} className="hover:bg-accent/50 transition-all duration-200">🇺🇸 English</DropdownMenuItem>
+                  <DropdownMenuContent
+                    align="start"
+                    className="glass-card border border-border/50 shadow-xl"
+                  >
+                    <DropdownMenuItem
+                      onClick={() => setLocale("ar")}
+                      className="hover:bg-accent/50 transition-all duration-200"
+                    >
+                      🇸🇦 العربية
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => setLocale("en")}
+                      className="hover:bg-accent/50 transition-all duration-200"
+                    >
+                      🇺🇸 English
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -257,7 +316,9 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               <span className="font-extrabold text-lg tracking-tight gradient-text">
                 {t("brand")}
               </span>
-              <span className="text-xs text-muted-foreground">Smart Platform</span>
+              <span className="text-xs text-muted-foreground">
+                Smart Platform
+              </span>
             </div>
             <div className="relative">
               <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary via-primary-light to-secondary grid place-items-center text-white shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
@@ -272,7 +333,11 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           {groups.map((g, groupIndex) => {
             const isOpen = openGroups[g.labelKey] ?? true;
             return (
-              <SidebarGroup key={g.labelKey} className="animate-fade-in-scale" style={{ animationDelay: `${groupIndex * 100}ms` }}>
+              <SidebarGroup
+                key={g.labelKey}
+                className="animate-fade-in-scale"
+                style={{ animationDelay: `${groupIndex * 100}ms` }}
+              >
                 <SidebarGroupLabel
                   className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-sidebar-accent/50 transition-all duration-200 group cursor-pointer"
                   onClick={() => toggleGroup(g.labelKey)}
@@ -295,16 +360,26 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                         const Icon = n.icon;
                         const active = pathname === n.to;
                         return (
-                          <SidebarMenuItem key={n.to} className="animate-fade-in-scale" style={{ animationDelay: `${(groupIndex * 100) + (itemIndex * 50)}ms` }}>
+                          <SidebarMenuItem
+                            key={n.to}
+                            className="animate-fade-in-scale"
+                            style={{
+                              animationDelay: `${groupIndex * 100 + itemIndex * 50}ms`,
+                            }}
+                          >
                             <SidebarMenuButton
                               asChild
                               isActive={active}
                               className={cn(
                                 "rounded-lg transition-all duration-200 nav-highlight group relative overflow-hidden",
-                                active && "active bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 shadow-sm",
+                                active &&
+                                  "active bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 shadow-sm",
                               )}
                             >
-                              <NavLink to={n.to} className="flex items-center gap-3 px-3 py-2.5">
+                              <NavLink
+                                to={n.to}
+                                className="flex items-center gap-3 px-3 py-2.5"
+                              >
                                 <div
                                   className={cn(
                                     "p-1.5 rounded-md transition-all duration-200",
@@ -315,13 +390,19 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                                 >
                                   <Icon className="h-4 w-4" />
                                 </div>
-                                <span className={cn(
-                                  "truncate font-medium transition-all duration-200",
-                                  active ? "text-sidebar-foreground" : "text-sidebar-foreground/70 group-hover:text-sidebar-foreground",
-                                )}>
+                                <span
+                                  className={cn(
+                                    "truncate font-medium transition-all duration-200",
+                                    active
+                                      ? "text-sidebar-foreground"
+                                      : "text-sidebar-foreground/70 group-hover:text-sidebar-foreground",
+                                  )}
+                                >
                                   {t(n.key as any)}
                                 </span>
-                                {active && <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-secondary/5 pointer-events-none" />}
+                                {active && (
+                                  <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-secondary/5 pointer-events-none" />
+                                )}
                               </NavLink>
                             </SidebarMenuButton>
                           </SidebarMenuItem>
@@ -335,7 +416,10 @@ export default function AppLayout({ children }: { children: ReactNode }) {
           })}
         </SidebarContent>
         <SidebarFooter className="p-4">
-          <Button asChild className="w-full rounded-xl shadow-lg btn-modern bg-gradient-to-r from-primary to-secondary hover:from-primary-light hover:to-secondary-light border-0 text-white font-medium">
+          <Button
+            asChild
+            className="w-full rounded-xl shadow-lg btn-modern bg-gradient-to-r from-primary to-secondary hover:from-primary-light hover:to-secondary-light border-0 text-white font-medium"
+          >
             <Link to="/donations" className="flex items-center gap-2">
               <HeartHandshake className="h-4 w-4" />
               {t("header.donate")}
@@ -351,18 +435,29 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               <SidebarTrigger className="hover:bg-accent/50 transition-all duration-200 hover:scale-105" />
               <div className="flex flex-col">
                 <div className="flex items-center gap-3">
-                  <nav aria-label="breadcrumb" className="text-sm text-muted-foreground hidden sm:flex items-center gap-2">
-                    <Link to="/" className="hover:underline">{t("home")}</Link>
+                  <nav
+                    aria-label="breadcrumb"
+                    className="text-sm text-muted-foreground hidden sm:flex items-center gap-2"
+                  >
+                    <Link to="/" className="hover:underline">
+                      {t("home")}
+                    </Link>
                     {crumbs.map((c, i) => (
                       <span key={c.to} className="flex items-center gap-2">
                         <span className="text-muted-foreground">/</span>
-                        <Link to={c.to} className="hover:underline capitalize">{c.label}</Link>
+                        <Link to={c.to} className="hover:underline capitalize">
+                          {c.label}
+                        </Link>
                       </span>
                     ))}
                   </nav>
                 </div>
                 <div className="mt-1 hidden md:block">
-                  <h2 className="text-base font-semibold">{crumbs.length ? crumbs[crumbs.length - 1]?.label : t("dashboard")}</h2>
+                  <h2 className="text-base font-semibold">
+                    {crumbs.length
+                      ? crumbs[crumbs.length - 1]?.label
+                      : t("dashboard")}
+                  </h2>
                 </div>
               </div>
             </div>
@@ -374,16 +469,30 @@ export default function AppLayout({ children }: { children: ReactNode }) {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" aria-label="Language" className="relative hover:bg-accent/50 transition-all duration-200 hover:scale-105 rounded-xl">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Language"
+                    className="relative hover:bg-accent/50 transition-all duration-200 hover:scale-105 rounded-xl"
+                  >
                     <Languages className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="glass-card border border-border/50 shadow-xl">
-                  <DropdownMenuItem onClick={() => setLocale("ar")} className="hover:bg-accent/50 transition-all duration-200">
+                <DropdownMenuContent
+                  align="start"
+                  className="glass-card border border-border/50 shadow-xl"
+                >
+                  <DropdownMenuItem
+                    onClick={() => setLocale("ar")}
+                    className="hover:bg-accent/50 transition-all duration-200"
+                  >
                     <span className="mr-2">🇸🇦</span>
                     العربية
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setLocale("en")} className="hover:bg-accent/50 transition-all duration-200">
+                  <DropdownMenuItem
+                    onClick={() => setLocale("en")}
+                    className="hover:bg-accent/50 transition-all duration-200"
+                  >
                     <span className="mr-2">🇺🇸</span>
                     English
                   </DropdownMenuItem>
@@ -400,14 +509,26 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                 <div className="notification-dot" />
               </Button>
 
-              <Button variant="ghost" size="icon" onClick={() => setIsDark((s) => !s)} aria-label="Toggle theme">
-                {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsDark((s) => !s)}
+                aria-label="Toggle theme"
+              >
+                {isDark ? (
+                  <Sun className="h-4 w-4" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                )}
               </Button>
 
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="secondary" className="rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 bg-gradient-to-r from-accent to-accent/80 hover:from-accent hover:to-accent/60 border border-border/50">
+                    <Button
+                      variant="secondary"
+                      className="rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 bg-gradient-to-r from-accent to-accent/80 hover:from-accent hover:to-accent/60 border border-border/50"
+                    >
                       <div className="flex items-center gap-2">
                         <div className="h-6 w-6 rounded-lg bg-gradient-to-br from-primary to-secondary grid place-items-center text-white text-xs font-bold">
                           {user.name.charAt(0).toUpperCase()}
@@ -416,11 +537,18 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="glass-card border border-border/50 shadow-xl min-w-56">
+                  <DropdownMenuContent
+                    align="start"
+                    className="glass-card border border-border/50 shadow-xl min-w-56"
+                  >
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{user.name}</p>
-                        <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                        <p className="text-sm font-medium leading-none">
+                          {user.name}
+                        </p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {user.email}
+                        </p>
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
@@ -429,7 +557,10 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                         <DropdownMenuItem disabled className="text-xs">
                           <div className="flex flex-wrap gap-1">
                             {roles.map((role) => (
-                              <span key={role} className="badge-modern bg-primary/10 text-primary border border-primary/20">
+                              <span
+                                key={role}
+                                className="badge-modern bg-primary/10 text-primary border border-primary/20"
+                              >
                                 {role}
                               </span>
                             ))}
@@ -452,33 +583,53 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               ) : (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="secondary" className="rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 bg-gradient-to-r from-accent to-accent/80 hover:from-accent hover:to-accent/60 border border-border/50">
+                    <Button
+                      variant="secondary"
+                      className="rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 bg-gradient-to-r from-accent to-accent/80 hover:from-accent hover:to-accent/60 border border-border/50"
+                    >
                       <UserCircle2 className="mr-2 h-4 w-4" />
                       {t("header.signIn")}
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="glass-card border border-border/50 shadow-xl">
-                    <DropdownMenuLabel>{t("header.chooseRole")}</DropdownMenuLabel>
+                  <DropdownMenuContent
+                    align="start"
+                    className="glass-card border border-border/50 shadow-xl"
+                  >
+                    <DropdownMenuLabel>
+                      {t("header.chooseRole")}
+                    </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild className="hover:bg-accent/50 transition-all duration-200">
+                    <DropdownMenuItem
+                      asChild
+                      className="hover:bg-accent/50 transition-all duration-200"
+                    >
                       <Link to="/login/admin">
                         <ShieldCheck className="mr-2 h-4 w-4" />
                         {t("header.administrator")}
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild className="hover:bg-accent/50 transition-all duration-200">
+                    <DropdownMenuItem
+                      asChild
+                      className="hover:bg-accent/50 transition-all duration-200"
+                    >
                       <Link to="/login/staff">
                         <Users className="mr-2 h-4 w-4" />
                         {t("header.staff")}
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild className="hover:bg-accent/50 transition-all duration-200">
+                    <DropdownMenuItem
+                      asChild
+                      className="hover:bg-accent/50 transition-all duration-200"
+                    >
                       <Link to="/login/family">
                         <UserCircle2 className="mr-2 h-4 w-4" />
                         {t("header.family")}
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild className="hover:bg-accent/50 transition-all duration-200">
+                    <DropdownMenuItem
+                      asChild
+                      className="hover:bg-accent/50 transition-all duration-200"
+                    >
                       <Link to="/login/beneficiary">
                         <Users2 className="mr-2 h-4 w-4" />
                         {t("header.beneficiary")}
@@ -501,35 +652,81 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               </div>
               <div>
                 <p className="font-medium">{t("footer.title")}</p>
-                <p className="text-xs text-muted-foreground">{t("footer.subtitle")}</p>
-                <p className="text-xs text-muted-foreground mt-1">{t("footer.copyright").replace("{{year}}", String(new Date().getFullYear()))}</p>
+                <p className="text-xs text-muted-foreground">
+                  {t("footer.subtitle")}
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t("footer.copyright").replace(
+                    "{{year}}",
+                    String(new Date().getFullYear()),
+                  )}
+                </p>
               </div>
             </div>
 
             <div className="flex items-center gap-6">
               <div className="hidden md:flex items-center gap-4">
-                <Link to="/privacy" className="hover:text-foreground transition-colors duration-200 hover:underline">{t("footer.privacy")}</Link>
-                <Link to="/security" className="hover:text-foreground transition-colors duration-200 hover:underline">{t("footer.security")}</Link>
-                <Link to="/contact" className="hover:text-foreground transition-colors duration-200 hover:underline">{t("footer.contact")}</Link>
+                <Link
+                  to="/privacy"
+                  className="hover:text-foreground transition-colors duration-200 hover:underline"
+                >
+                  {t("footer.privacy")}
+                </Link>
+                <Link
+                  to="/security"
+                  className="hover:text-foreground transition-colors duration-200 hover:underline"
+                >
+                  {t("footer.security")}
+                </Link>
+                <Link
+                  to="/contact"
+                  className="hover:text-foreground transition-colors duration-200 hover:underline"
+                >
+                  {t("footer.contact")}
+                </Link>
               </div>
 
               <div className="flex items-center gap-3">
                 <Button asChild variant="ghost" size="icon">
-                  <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="twitter"><Twitter className="h-4 w-4" /></a>
+                  <a
+                    href="https://twitter.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="twitter"
+                  >
+                    <Twitter className="h-4 w-4" />
+                  </a>
                 </Button>
                 <Button asChild variant="ghost" size="icon">
-                  <a href="https://github.com" target="_blank" rel="noreferrer" aria-label="github"><Github className="h-4 w-4" /></a>
+                  <a
+                    href="https://github.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="github"
+                  >
+                    <Github className="h-4 w-4" />
+                  </a>
                 </Button>
                 <Button asChild variant="ghost" size="icon">
-                  <a href="mailto:hello@example.com" aria-label="email"><Mail className="h-4 w-4" /></a>
+                  <a href="mailto:hello@example.com" aria-label="email">
+                    <Mail className="h-4 w-4" />
+                  </a>
                 </Button>
-                <Button onClick={scrollTop} variant="ghost" size="icon" aria-label="Back to top">
+                <Button
+                  onClick={scrollTop}
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Back to top"
+                >
                   <ArrowUp className="h-4 w-4" />
                 </Button>
               </div>
 
               <div className="ml-2">
-                <Button asChild className="rounded-full bg-gradient-to-r from-primary to-secondary text-white px-4 py-2">
+                <Button
+                  asChild
+                  className="rounded-full bg-gradient-to-r from-primary to-secondary text-white px-4 py-2"
+                >
                   <Link to="/donations">{t("donate.now")}</Link>
                 </Button>
               </div>

@@ -54,22 +54,85 @@ const App = () => (
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/access-control" element={<AccessControl />} />
               <Route path="/admin/translations" element={<Translations />} />
-              <Route path="/admin/medical-settings" element={<MedicalSettings />} />
-              <Route path="/admin/beneficiary-settings" element={<BeneficiarySettings />} />
-              <Route path="/admin/organization-settings" element={<OrganizationSettings />} />
-              <Route path="/admin/security-settings" element={<SecuritySettings />} />
+              <Route
+                path="/admin/medical-settings"
+                element={<MedicalSettings />}
+              />
+              <Route
+                path="/admin/beneficiary-settings"
+                element={<BeneficiarySettings />}
+              />
+              <Route
+                path="/admin/organization-settings"
+                element={<OrganizationSettings />}
+              />
+              <Route
+                path="/admin/security-settings"
+                element={<SecuritySettings />}
+              />
               <Route path="/admin/families" element={<FamilyProfiles />} />
               <Route path="/admin/logistics" element={<Logistics />} />
               <Route path="/admin/users" element={<AdminUsers />} />
               <Route path="/beneficiaries" element={<Beneficiaries />} />
-              <Route path="/beneficiaries/:id" element={<BeneficiaryProfile />} />
+              <Route
+                path="/beneficiaries/:id"
+                element={<BeneficiaryProfile />}
+              />
               <Route path="/employees" element={<Employees />} />
-              <Route path="/family" element={<Placeholder title="Family System" description="Track health status, attendance, and communicate with specialists." />} />
-              <Route path="/reports" element={<Placeholder title="Evaluation & Reports" description="Generate KPIs, compare performance, and export to Excel/PDF." />} />
-              <Route path="/donations" element={<Placeholder title="Payments & Donations" description="Secure donations, receipts, and financial transparency." />} />
-              <Route path="/privacy" element={<Placeholder title="Privacy" description="Our commitment to protecting personal and health information." />} />
-              <Route path="/security" element={<Placeholder title="Security" description="Encryption, access controls, and audit logging details." />} />
-              <Route path="/contact" element={<Placeholder title="Contact" description="Reach our technical support and administration team." />} />
+              <Route
+                path="/family"
+                element={
+                  <Placeholder
+                    title="Family System"
+                    description="Track health status, attendance, and communicate with specialists."
+                  />
+                }
+              />
+              <Route
+                path="/reports"
+                element={
+                  <Placeholder
+                    title="Evaluation & Reports"
+                    description="Generate KPIs, compare performance, and export to Excel/PDF."
+                  />
+                }
+              />
+              <Route
+                path="/donations"
+                element={
+                  <Placeholder
+                    title="Payments & Donations"
+                    description="Secure donations, receipts, and financial transparency."
+                  />
+                }
+              />
+              <Route
+                path="/privacy"
+                element={
+                  <Placeholder
+                    title="Privacy"
+                    description="Our commitment to protecting personal and health information."
+                  />
+                }
+              />
+              <Route
+                path="/security"
+                element={
+                  <Placeholder
+                    title="Security"
+                    description="Encryption, access controls, and audit logging details."
+                  />
+                }
+              />
+              <Route
+                path="/contact"
+                element={
+                  <Placeholder
+                    title="Contact"
+                    description="Reach our technical support and administration team."
+                  />
+                }
+              />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

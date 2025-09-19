@@ -3,9 +3,7 @@
     "id": "u1",
     "name": "System Admin",
     "email": "admin@dalma.org",
-    "roleIds": [
-      "r_admin"
-    ],
+    "roleIds": ["r_admin"],
     "privilegeIds": [],
     "active": true,
     "failedAttempts": 0,
@@ -18,9 +16,7 @@
     "id": "u2",
     "name": "Field Staff",
     "email": "staff@dalma.org",
-    "roleIds": [
-      "r_staff"
-    ],
+    "roleIds": ["r_staff"],
     "privilegeIds": [],
     "active": true,
     "failedAttempts": 0,

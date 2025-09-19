@@ -47,7 +47,10 @@ export function sendOTP(userId: string) {
   const code = Math.floor(100000 + Math.random() * 900000).toString();
   const expires = new Date();
   expires.setMinutes(expires.getMinutes() + 5);
-  const map = JSON.parse(localStorage.getItem("auth_otp_v1") || "{}") as Record<string, { code:string; expiresAt:string }>;
+  const map = JSON.parse(localStorage.getItem("auth_otp_v1") || "{}") as Record<
+    string,
+    { code: string; expiresAt: string }
+  >;
   map[userId] = { code, expiresAt: expires.toISOString() };
   localStorage.setItem("auth_otp_v1", JSON.stringify(map));
   return code;
@@ -55,15 +58,22 @@ export function sendOTP(userId: string) {
 
 export async function verifyOTP(userId: string, code: string) {
   try {
-    const r = await fetch('/api/auth/verify-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId, code }) });
+    const r = await fetch("/api/auth/verify-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId, code }),
+    });
     const d = await r.json();
     return d;
   } catch (e) {
     // fallback local
-    const map = JSON.parse(localStorage.getItem("auth_otp_v1") || "{}") as Record<string, { code:string; expiresAt:string }>;
+    const map = JSON.parse(
+      localStorage.getItem("auth_otp_v1") || "{}",
+    ) as Record<string, { code: string; expiresAt: string }>;
     const entry = map[userId];
     if (!entry) return { ok: false, error: "No OTP" };
-    if (new Date(entry.expiresAt) < new Date()) return { ok: false, error: "Expired" };
+    if (new Date(entry.expiresAt) < new Date())
+      return { ok: false, error: "Expired" };
     if (entry.code !== code) return { ok: false, error: "Invalid code" };
     delete map[userId];
     localStorage.setItem("auth_otp_v1", JSON.stringify(map));
@@ -96,15 +106,26 @@ export function logout() {
   emit();
 }
 
-export async function authenticate(emailOrUsername: string, password: string, remember = false) {
+export async function authenticate(
+  emailOrUsername: string,
+  password: string,
+  remember = false,
+) {
   try {
-    const res = await fetch('/api/auth/login', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ identifier: emailOrUsername, password })
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identifier: emailOrUsername, password }),
     });
     const data = await res.json();
-    if (!data.ok) return { ok: false, error: data.error || 'Invalid' };
-    if (data.mfa) return { ok: true, mfa: true, userId: data.userId, demoCode: data.demoCode };
+    if (!data.ok) return { ok: false, error: data.error || "Invalid" };
+    if (data.mfa)
+      return {
+        ok: true,
+        mfa: true,
+        userId: data.userId,
+        demoCode: data.demoCode,
+      };
     // success: data.user contains id
     const { user } = data;
     if (user && user.id) {
@@ -114,26 +135,41 @@ export async function authenticate(emailOrUsername: string, password: string, re
       emit();
       return { ok: true, user };
     }
-    return { ok: false, error: 'Invalid response' };
+    return { ok: false, error: "Invalid response" };
   } catch (e) {
     // fallback to local mode
-    console.warn('Auth API error fallback to local', e);
+    console.warn("Auth API error fallback to local", e);
     const acl = loadACL();
-    const user = acl.users.find((u) => (u.email && u.email.toLowerCase() === emailOrUsername.toLowerCase()) || u.name.toLowerCase() === emailOrUsername.toLowerCase());
-    if (!user) return { ok: false, error: 'User not found' };
+    const user = acl.users.find(
+      (u) =>
+        (u.email && u.email.toLowerCase() === emailOrUsername.toLowerCase()) ||
+        u.name.toLowerCase() === emailOrUsername.toLowerCase(),
+    );
+    if (!user) return { ok: false, error: "User not found" };
     if (user.lockedUntil) {
       const until = new Date(user.lockedUntil);
-      if (until > new Date()) return { ok: false, error: 'Account locked. Try later.' };
-      user.lockedUntil = null; user.failedAttempts = 0;
+      if (until > new Date())
+        return { ok: false, error: "Account locked. Try later." };
+      user.lockedUntil = null;
+      user.failedAttempts = 0;
     }
-    if (hashPassword(password) !== (user.password || '')) {
+    if (hashPassword(password) !== (user.password || "")) {
       user.failedAttempts = (user.failedAttempts || 0) + 1;
-      if (user.failedAttempts >= 5) { const until = new Date(); until.setMinutes(until.getMinutes()+15); user.lockedUntil = until.toISOString(); }
+      if (user.failedAttempts >= 5) {
+        const until = new Date();
+        until.setMinutes(until.getMinutes() + 15);
+        user.lockedUntil = until.toISOString();
+      }
       upsertUser(user);
-      return { ok: false, error: 'Invalid credentials' };
+      return { ok: false, error: "Invalid credentials" };
     }
-    user.failedAttempts = 0; user.lockedUntil = null; upsertUser(user);
-    if (user.twoFactor) { const code = sendOTP(user.id); return { ok: true, mfa: true, userId: user.id, demoCode: code }; }
+    user.failedAttempts = 0;
+    user.lockedUntil = null;
+    upsertUser(user);
+    if (user.twoFactor) {
+      const code = sendOTP(user.id);
+      return { ok: true, mfa: true, userId: user.id, demoCode: code };
+    }
     login(user, remember);
     return { ok: true, user };
   }
@@ -149,7 +185,11 @@ export function ensureAuthFromRemember() {
 
 export async function forgotPassword(email: string) {
   try {
-    const r = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+    const r = await fetch("/api/auth/forgot", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
     const d = await r.json();
     return d;
   } catch (e) {
@@ -158,7 +198,9 @@ export async function forgotPassword(email: string) {
     const user = acl.users.find((u) => u.email === email);
     if (!user) return { ok: false };
     const token = Math.random().toString(36).slice(2, 10);
-    const resets = JSON.parse(localStorage.getItem(RESET_KEY) || "{}") as Record<string, { email: string; expiresAt: string }>;
+    const resets = JSON.parse(
+      localStorage.getItem(RESET_KEY) || "{}",
+    ) as Record<string, { email: string; expiresAt: string }>;
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 1);
     resets[token] = { email, expiresAt: expiresAt.toISOString() };
@@ -169,29 +211,42 @@ export async function forgotPassword(email: string) {
 
 export async function verifyResetToken(token: string) {
   try {
-    const r = await fetch('/api/auth/verify-token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token }) });
+    const r = await fetch("/api/auth/verify-token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    });
     const d = await r.json();
     return d;
   } catch (e) {
     // fallback to local
-    const resets = JSON.parse(localStorage.getItem(RESET_KEY) || "{}") as Record<string, { email: string; expiresAt: string }>;
+    const resets = JSON.parse(
+      localStorage.getItem(RESET_KEY) || "{}",
+    ) as Record<string, { email: string; expiresAt: string }>;
     const entry = resets[token];
     if (!entry) return { ok: false, error: "Invalid token" };
-    if (new Date(entry.expiresAt) < new Date()) return { ok: false, error: "Expired" };
+    if (new Date(entry.expiresAt) < new Date())
+      return { ok: false, error: "Expired" };
     return { ok: true, email: entry.email };
   }
 }
 
 export async function resetPassword(token: string, newPassword: string) {
   try {
-    const r = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token, password: newPassword }) });
+    const r = await fetch("/api/auth/reset", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, password: newPassword }),
+    });
     const d = await r.json();
     return d;
   } catch (e) {
     // fallback local
     const data = verifyResetToken(token);
     if (!(data as any).ok) return data as any;
-    const resets = JSON.parse(localStorage.getItem(RESET_KEY) || "{}") as Record<string, { email: string; expiresAt: string }>;
+    const resets = JSON.parse(
+      localStorage.getItem(RESET_KEY) || "{}",
+    ) as Record<string, { email: string; expiresAt: string }>;
     const entry = resets[token];
     const acl = loadACL();
     const user = acl.users.find((u) => u.email === entry.email);

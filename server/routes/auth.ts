@@ -24,12 +24,16 @@ function writeJson(file: string, data: any) {
 
 function hashPW(password: string, salt?: string) {
   salt = salt || crypto.randomBytes(12).toString("hex");
-  const hash = crypto.pbkdf2Sync(password, salt, 310000, 32, "sha256").toString("hex");
+  const hash = crypto
+    .pbkdf2Sync(password, salt, 310000, 32, "sha256")
+    .toString("hex");
   return { salt, hash };
 }
 
 function verifyPW(password: string, salt: string, hash: string) {
-  const h = crypto.pbkdf2Sync(password, salt, 310000, 32, "sha256").toString("hex");
+  const h = crypto
+    .pbkdf2Sync(password, salt, 310000, 32, "sha256")
+    .toString("hex");
   return h === hash;
 }
 
@@ -62,39 +66,53 @@ if (changed) saveUsers(users);
 // POST /api/auth/login
 router.post("/login", (req, res) => {
   const { identifier, password } = req.body;
-  if (!identifier || !password) return res.json({ ok: false, error: "Missing" });
+  if (!identifier || !password)
+    return res.json({ ok: false, error: "Missing" });
   const users = loadUsers();
-  const u = users.find((x: any) => (x.email && x.email.toLowerCase() === identifier.toLowerCase()) || x.name.toLowerCase() === identifier.toLowerCase());
+  const u = users.find(
+    (x: any) =>
+      (x.email && x.email.toLowerCase() === identifier.toLowerCase()) ||
+      x.name.toLowerCase() === identifier.toLowerCase(),
+  );
   if (!u) return res.json({ ok: false, error: "User not found" });
 
   if (u.lockedUntil) {
     const until = new Date(u.lockedUntil);
     if (until > new Date()) return res.json({ ok: false, error: "Locked" });
-    u.lockedUntil = null; u.failedAttempts = 0;
+    u.lockedUntil = null;
+    u.failedAttempts = 0;
   }
 
   if (!verifyPW(password, u.salt, u.hash)) {
     u.failedAttempts = (u.failedAttempts || 0) + 1;
     if (u.failedAttempts >= 5) {
-      const until = new Date(); until.setMinutes(until.getMinutes() + 15); u.lockedUntil = until.toISOString();
+      const until = new Date();
+      until.setMinutes(until.getMinutes() + 15);
+      u.lockedUntil = until.toISOString();
     }
     saveUsers(users);
     return res.json({ ok: false, error: "Invalid credentials" });
   }
 
   // success
-  u.failedAttempts = 0; u.lockedUntil = null; saveUsers(users);
+  u.failedAttempts = 0;
+  u.lockedUntil = null;
+  saveUsers(users);
   if (u.twoFactor) {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const otps = readJson(OTPS_FILE) || {};
-    const expires = new Date(); expires.setMinutes(expires.getMinutes() + 5);
+    const expires = new Date();
+    expires.setMinutes(expires.getMinutes() + 5);
     otps[u.id] = { code, expiresAt: expires.toISOString() };
     writeJson(OTPS_FILE, otps);
     // For demo return code
     return res.json({ ok: true, mfa: true, userId: u.id, demoCode: code });
   }
 
-  return res.json({ ok: true, user: { id: u.id, name: u.name, email: u.email } });
+  return res.json({
+    ok: true,
+    user: { id: u.id, name: u.name, email: u.email },
+  });
 });
 
 // POST /api/auth/verify-otp
@@ -104,9 +122,11 @@ router.post("/verify-otp", (req, res) => {
   const otps = readJson(OTPS_FILE) || {};
   const entry = otps[userId];
   if (!entry) return res.json({ ok: false, error: "No OTP" });
-  if (new Date(entry.expiresAt) < new Date()) return res.json({ ok: false, error: "Expired" });
+  if (new Date(entry.expiresAt) < new Date())
+    return res.json({ ok: false, error: "Expired" });
   if (entry.code !== code) return res.json({ ok: false, error: "Invalid" });
-  delete otps[userId]; writeJson(OTPS_FILE, otps);
+  delete otps[userId];
+  writeJson(OTPS_FILE, otps);
   return res.json({ ok: true });
 });
 
@@ -117,7 +137,8 @@ router.post("/verify-token", (req, res) => {
   const resets = readJson(RESETS_FILE) || {};
   const entry = resets[token];
   if (!entry) return res.json({ ok: false, error: "Invalid token" });
-  if (new Date(entry.expiresAt) < new Date()) return res.json({ ok: false, error: "Expired" });
+  if (new Date(entry.expiresAt) < new Date())
+    return res.json({ ok: false, error: "Expired" });
   return res.json({ ok: true, email: entry.email });
 });
 
@@ -126,11 +147,12 @@ router.post("/forgot", (req, res) => {
   const { email } = req.body;
   if (!email) return res.json({ ok: false });
   const users = loadUsers();
-  const u = users.find((x:any)=> x.email === email);
-  if (!u) return res.json({ ok:false });
-  const token = Math.random().toString(36).slice(2,10);
+  const u = users.find((x: any) => x.email === email);
+  if (!u) return res.json({ ok: false });
+  const token = Math.random().toString(36).slice(2, 10);
   const resets = readJson(RESETS_FILE) || {};
-  const expires = new Date(); expires.setHours(expires.getHours()+1);
+  const expires = new Date();
+  expires.setHours(expires.getHours() + 1);
   resets[token] = { email, expiresAt: expires.toISOString() };
   writeJson(RESETS_FILE, resets);
   return res.json({ ok: true, token });
@@ -143,21 +165,33 @@ router.post("/reset", (req, res) => {
   const resets = readJson(RESETS_FILE) || {};
   const entry = resets[token];
   if (!entry) return res.json({ ok: false, error: "Invalid" });
-  if (new Date(entry.expiresAt) < new Date()) return res.json({ ok: false, error: "Expired" });
+  if (new Date(entry.expiresAt) < new Date())
+    return res.json({ ok: false, error: "Expired" });
   const users = loadUsers();
-  const u = users.find((x:any)=> x.email === entry.email);
+  const u = users.find((x: any) => x.email === entry.email);
   if (!u) return res.json({ ok: false, error: "User not found" });
   const creds = hashPW(password);
-  u.salt = creds.salt; u.hash = creds.hash; u.failedAttempts = 0; u.lockedUntil = null;
+  u.salt = creds.salt;
+  u.hash = creds.hash;
+  u.failedAttempts = 0;
+  u.lockedUntil = null;
   saveUsers(users);
-  delete resets[token]; writeJson(RESETS_FILE, resets);
+  delete resets[token];
+  writeJson(RESETS_FILE, resets);
   return res.json({ ok: true });
 });
 
 // Admin endpoints
 router.get("/admin/users", (req, res) => {
   const users = loadUsers();
-  const out = users.map((u:any)=> ({ id: u.id, name: u.name, email: u.email, failedAttempts: u.failedAttempts||0, lockedUntil: u.lockedUntil||null, twoFactor: !!u.twoFactor }));
+  const out = users.map((u: any) => ({
+    id: u.id,
+    name: u.name,
+    email: u.email,
+    failedAttempts: u.failedAttempts || 0,
+    lockedUntil: u.lockedUntil || null,
+    twoFactor: !!u.twoFactor,
+  }));
   res.json(out);
 });
 
@@ -165,10 +199,13 @@ router.patch("/admin/users/:id", (req, res) => {
   const id = req.params.id;
   const { twoFactor, resetLock } = req.body;
   const users = loadUsers();
-  const u = users.find((x:any)=> x.id === id);
+  const u = users.find((x: any) => x.id === id);
   if (!u) return res.json({ ok: false, error: "User not found" });
   if (typeof twoFactor === "boolean") u.twoFactor = twoFactor;
-  if (resetLock) { u.failedAttempts = 0; u.lockedUntil = null; }
+  if (resetLock) {
+    u.failedAttempts = 0;
+    u.lockedUntil = null;
+  }
   saveUsers(users);
   res.json({ ok: true });
 });

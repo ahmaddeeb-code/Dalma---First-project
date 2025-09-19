@@ -83,9 +83,15 @@ export default function RoleLogin({
     if (!mfaUserId) return;
     const { verifyOTP } = require("@/store/auth");
     const v = await verifyOTP(mfaUserId, mfaCode);
-    if (!v.ok) { alert(v.error); return; }
+    if (!v.ok) {
+      alert(v.error);
+      return;
+    }
     const u = acl.users.find((x) => x.id === mfaUserId);
-    if (u) { login(u); window.location.assign(redirectPath); }
+    if (u) {
+      login(u);
+      window.location.assign(redirectPath);
+    }
   };
 
   const createAndSignIn = () => {
@@ -147,7 +153,12 @@ export default function RoleLogin({
             </Select>
             <div className="grid gap-1.5">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" value={password} onChange={(e)=>setPassword(e.target.value)} />
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
             <div className="mt-2">
               <Button
@@ -163,7 +174,11 @@ export default function RoleLogin({
               <div className="mt-4">
                 <p className="text-sm text-muted-foreground mb-2">Enter OTP</p>
                 <div className="flex gap-2">
-                  <Input value={mfaCode} onChange={(e)=>setMfaCode(e.target.value)} placeholder="123456" />
+                  <Input
+                    value={mfaCode}
+                    onChange={(e) => setMfaCode(e.target.value)}
+                    placeholder="123456"
+                  />
                   <Button onClick={submitMfa}>Verify</Button>
                 </div>
               </div>
@@ -194,11 +209,21 @@ export default function RoleLogin({
               </div>
               <div className="grid gap-1.5">
                 <Label htmlFor="createPassword">Password</Label>
-                <Input id="createPassword" type="password" value={createPassword} onChange={(e)=>setCreatePassword(e.target.value)} />
-                <div className="mt-2"><PasswordStrength value={createPassword} /></div>
+                <Input
+                  id="createPassword"
+                  type="password"
+                  value={createPassword}
+                  onChange={(e) => setCreatePassword(e.target.value)}
+                />
+                <div className="mt-2">
+                  <PasswordStrength value={createPassword} />
+                </div>
               </div>
               <div className="flex items-center gap-2">
-                <Checkbox checked={enable2fa} onCheckedChange={(v)=>setEnable2fa(!!v)} />
+                <Checkbox
+                  checked={enable2fa}
+                  onCheckedChange={(v) => setEnable2fa(!!v)}
+                />
                 <span className="text-sm">Enable 2FA (OTP)</span>
               </div>
               <Button
