@@ -153,6 +153,9 @@ export async function authenticate(
       user.lockedUntil = null;
       user.failedAttempts = 0;
     }
+    if (user.loginEnabled === false) {
+      return { ok: false, error: "Login disabled" };
+    }
     if (hashPassword(password) !== (user.password || "")) {
       user.failedAttempts = (user.failedAttempts || 0) + 1;
       if (user.failedAttempts >= 5) {
@@ -169,6 +172,9 @@ export async function authenticate(
     if (user.twoFactor) {
       const code = sendOTP(user.id);
       return { ok: true, mfa: true, userId: user.id, demoCode: code };
+    }
+    if (user.mustChangePassword) {
+      return { ok: true, mustChangePassword: true, userId: user.id };
     }
     login(user, remember);
     return { ok: true, user };
