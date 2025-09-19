@@ -155,7 +155,7 @@ export default function FamilyProfiles() {
             </CardTitle>
             <CardDescription>
               {getLocale() === "ar"
-                ? "ابحث ورتب وافتح التفاصيل"
+                ? "ابحث ورتب وافتح التفا��يل"
                 : "Search and open details"}
             </CardDescription>
           </div>
@@ -621,13 +621,23 @@ function GuardiansTab({
           <CardTitle>Parents/Guardians</CardTitle>
           <CardDescription>Add and manage guardians</CardDescription>
         </div>
-        {canManage && (
-          <Button onClick={() => setOpen(true)}>
-            <Plus className="ml-1 h-4 w-4" /> {t("common.add")}
-          </Button>
-        )}
       </CardHeader>
       <CardContent>
+        <div className="mb-3">
+          <TableToolbar
+            onAdd={canManage ? () => setOpen(true) : undefined}
+            addLabel={t("common.add")}
+            onExport={(type) => {
+              const cols = [
+                { header: 'Name', accessor: (r:any) => r.fullName },
+                { header: 'Relation', accessor: (r:any) => r.relation },
+                { header: 'Contact', accessor: (r:any) => (r.contact.phone || '') + (r.contact.email ? ' • ' + r.contact.email : '') },
+                { header: 'Status', accessor: (r:any) => r.status },
+              ];
+              import('@/lib/export').then((m)=>m.exportAll(family.guardians, cols, type, 'guardians'));
+            }}
+          />
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
