@@ -598,11 +598,14 @@ function DocumentsCard({
             Configure categories, expiry and alerts
           </CardDescription>
         </div>
-        <Button onClick={() => setOpen(true)}>
-          <Plus className="ml-1 h-4 w-4" /> Add
-        </Button>
       </CardHeader>
       <CardContent>
+        <div className="mb-3">
+          <TableToolbar
+            onAdd={() => setOpen(true)}
+            addLabel="Add"
+          />
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
