@@ -447,7 +447,7 @@ function UserDialog({
         </DialogHeader>
         <div className="grid gap-4 py-2">
           <div className="grid gap-2">
-            <Label htmlFor="name">
+            <Label htmlFor="name" requiredMark>
               {t("pages.accessControl.users.form.name")}
             </Label>
             <Input
@@ -457,7 +457,7 @@ function UserDialog({
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="email">
+            <Label htmlFor="email" requiredMark>
               {t("pages.accessControl.users.form.email")}
             </Label>
             <Input
