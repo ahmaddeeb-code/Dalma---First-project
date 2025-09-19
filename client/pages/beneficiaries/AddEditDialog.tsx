@@ -862,10 +862,7 @@ export default function AddEditBeneficiaryDialog({
               <div className="grid md:grid-cols-2 gap-3 mt-2">
                 {settings.customFields.map((f: any) => (
                   <div key={f.id} className="space-y-1">
-                    <Label>
-                      {f.label}
-                      {f.required ? " *" : ""}
-                    </Label>
+                    <Label requiredMark={!!f.required}>{f.label}</Label>
                     {f.type === "select" ? (
                       <select
                         className="w-full h-9 rounded-md border bg-background px-3 text-sm"
@@ -944,7 +941,7 @@ function QuickCreateFamilyDialog({
           </DialogTitle>
           <DialogDescription>
             {ar
-              ? "أدخل معلومات أساسية لملف العائلة"
+              ? "أدخل معلومات أساس��ة لملف العائلة"
               : "Enter basic info for the family profile"}
           </DialogDescription>
         </DialogHeader>
