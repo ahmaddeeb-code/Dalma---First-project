@@ -17,6 +17,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import TableToolbar from "@/components/ui/table-toolbar";
+import TableActions, { createEditAction, createDeleteAction } from "@/components/ui/table-actions";
+import SortableTableHead, { useTableSort } from "@/components/ui/sortable-table-head";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -118,9 +120,19 @@ export default function FamilyProfiles() {
   );
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const { sortBy, sortDir, handleSort, sortData } = useTableSort<'name' | 'phone' | 'beneficiaries'>('name');
+  const sortedFiltered = React.useMemo(() => {
+    return sortData(filtered, sortBy, sortDir, (a, b) => {
+      if (sortBy === 'name') return (a.name || '').localeCompare(b.name || '');
+      if (sortBy === 'phone') return (a.contact.phone || '').localeCompare(b.contact.phone || '');
+      if (sortBy === 'beneficiaries') return a.links.length - b.links.length;
+      return 0;
+    });
+  }, [filtered, sortBy, sortDir]);
+
   const start = (page - 1) * pageSize;
-  const pageItems = filtered.slice(start, start + pageSize);
+  const pageItems = sortedFiltered.slice(start, start + pageSize);
+  const totalPages = Math.max(1, Math.ceil(sortedFiltered.length / pageSize));
 
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Family | null>(null);
@@ -284,18 +296,37 @@ export default function FamilyProfiles() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>{t("common.name")}</TableHead>
-                  <TableHead>
+                  <SortableTableHead sortable={false}>ID</SortableTableHead>
+                  <SortableTableHead
+                    sortKey="name"
+                    currentSortBy={sortBy}
+                    currentSortDir={sortDir}
+                    onSort={handleSort}
+                  >
+                    {t("common.name")}
+                  </SortableTableHead>
+                  <SortableTableHead
+                    sortKey="phone"
+                    currentSortBy={sortBy}
+                    currentSortDir={sortDir}
+                    onSort={handleSort}
+                  >
                     {getLocale() === "ar" ? "الهاتف" : "Phone"}
-                  </TableHead>
-                  <TableHead className="hidden md:table-cell">
+                  </SortableTableHead>
+                  <SortableTableHead sortable={false} className="hidden md:table-cell">
                     {getLocale() === "ar" ? "البريد" : "Email"}
-                  </TableHead>
-                  <TableHead>
+                  </SortableTableHead>
+                  <SortableTableHead
+                    sortKey="beneficiaries"
+                    currentSortBy={sortBy}
+                    currentSortDir={sortDir}
+                    onSort={handleSort}
+                  >
                     {getLocale() === "ar" ? "المستفيدون" : "Beneficiaries"}
-                  </TableHead>
-                  <TableHead>{t("common.actions")}</TableHead>
+                  </SortableTableHead>
+                  <SortableTableHead sortable={false} align="center">
+                    {t("common.actions")}
+                  </SortableTableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -308,29 +339,23 @@ export default function FamilyProfiles() {
                       {f.contact.email || "—"}
                     </TableCell>
                     <TableCell>{f.links.length}</TableCell>
-                    <TableCell className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        onClick={() => {
-                          setEditing(f);
-                          setOpen(true);
-                        }}
-                      >
-                        <Pencil className="ml-1 h-4 w-4" /> {t("common.edit")}
-                      </Button>
-                      {canManage && (
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => {
-                            removeFamily(f.id);
-                            toast.success(t("pages.medical.saved"));
-                          }}
-                        >
-                          {t("common.delete")}
-                        </Button>
-                      )}
+                    <TableCell className="text-center">
+                      <TableActions
+                        actions={[
+                          createEditAction(() => {
+                            setEditing(f);
+                            setOpen(true);
+                          }),
+                          ...(canManage ? [createDeleteAction(
+                            () => {
+                              removeFamily(f.id);
+                              toast.success(t("pages.medical.saved"));
+                            },
+                            t("common.delete"),
+                            `Delete family "${f.name}"?`
+                          )] : []),
+                        ]}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
