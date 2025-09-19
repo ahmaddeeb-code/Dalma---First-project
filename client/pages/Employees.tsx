@@ -118,6 +118,20 @@ export default function Employees() {
   const [sortBy, setSortBy] = useState<"name" | "department" | "joinedAt">("name");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
+  function handleSort(column: "name" | "department" | "joinedAt") {
+    if (sortBy === column) {
+      setSortDir(sortDir === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(column);
+      setSortDir("asc");
+    }
+  }
+
+  function getSortIcon(column: "name" | "department" | "joinedAt") {
+    if (sortBy !== column) return <ChevronsUpDown className="h-3 w-3 opacity-50" />;
+    return sortDir === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />;
+  }
+
   const filtered = useMemo(() => {
     const s = searchText.trim().toLowerCase();
     const acl = loadACL();
