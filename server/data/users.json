@@ -23,7 +23,7 @@
     ],
     "privilegeIds": [],
     "active": true,
-    "failedAttempts": 2,
+    "failedAttempts": 0,
     "lockedUntil": null,
     "twoFactor": false,
     "salt": "32bfacc375a0f590d01da6a6",
