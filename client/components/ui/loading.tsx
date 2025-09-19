@@ -31,23 +31,81 @@ interface LoadingProviderProps {
 export function LoadingProvider({ children }: LoadingProviderProps) {
   const [loading, setLoadingState] = useState<LoadingState>({
     isLoading: false,
+    isVisible: false,
     message: undefined,
     type: 'default'
   });
 
-  const showLoading = useCallback((message?: string, type: LoadingState['type'] = 'default') => {
+  const delayTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const hideTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const showLoading = useCallback((message?: string, type: LoadingState['type'] = 'default', delay: number = 400) => {
+    // Clear any existing timers
+    if (delayTimerRef.current) {
+      clearTimeout(delayTimerRef.current);
+    }
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+    }
+
+    // Set loading state immediately but don't show spinner yet
     setLoadingState({
       isLoading: true,
+      isVisible: false,
       message,
       type
     });
+
+    // Start delay timer to show spinner only if operation takes longer than threshold
+    delayTimerRef.current = setTimeout(() => {
+      setLoadingState(prev => ({
+        ...prev,
+        isVisible: prev.isLoading // Only show if still loading
+      }));
+    }, delay);
   }, []);
 
   const hideLoading = useCallback(() => {
-    setLoadingState({
-      isLoading: false,
-      message: undefined,
-      type: 'default'
+    // Clear delay timer if still pending
+    if (delayTimerRef.current) {
+      clearTimeout(delayTimerRef.current);
+      delayTimerRef.current = null;
+    }
+
+    // Set loading to false immediately
+    setLoadingState(prev => ({
+      ...prev,
+      isLoading: false
+    }));
+
+    // If spinner is visible, hide it with a small delay for smooth transition
+    setLoadingState(prev => {
+      if (prev.isVisible) {
+        // Clear any existing hide timer
+        if (hideTimerRef.current) {
+          clearTimeout(hideTimerRef.current);
+        }
+
+        // Hide after a brief moment to ensure smooth fade-out
+        hideTimerRef.current = setTimeout(() => {
+          setLoadingState(current => ({
+            isLoading: false,
+            isVisible: false,
+            message: undefined,
+            type: 'default'
+          }));
+        }, 100);
+
+        return prev;
+      } else {
+        // If not visible, hide immediately
+        return {
+          isLoading: false,
+          isVisible: false,
+          message: undefined,
+          type: 'default'
+        };
+      }
     });
   }, []);
 
