@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { verifyResetToken, resetPassword } from "@/store/auth";
+import PasswordStrength from "@/components/ui/password-strength";
 import { toast } from "sonner";
 
 export default function ResetPassword() {
