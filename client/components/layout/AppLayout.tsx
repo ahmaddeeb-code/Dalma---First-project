@@ -309,7 +309,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         side={locale === "ar" ? "right" : "left"}
         className={cn(
           locale === "ar" ? "border-l" : "border-r",
-          "sidebar-enhanced animate-slide-in-left",
+          "sidebar-enhanced",
         )}
       >
         <SidebarHeader className="p-4">
