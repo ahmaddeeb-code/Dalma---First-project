@@ -71,6 +71,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { exportAll, type ColumnDef } from "@/lib/export";
+import { listDepartments } from "@/store/departments";
 
 function useACLUsers() {
   return useSyncExternalStore(
@@ -84,6 +85,7 @@ export default function Employees() {
   const users = useACLUsers();
   const roles = listRoles();
   const privileges = listPrivileges();
+  const departments = listDepartments();
   const me = useMemo(() => getCurrentUser(), []);
   const ar = getLocale() === "ar";
   const canManage = useMemo(() => {
@@ -99,24 +101,77 @@ export default function Employees() {
   const [privUserId, setPrivUserId] = useState<string | null>(null);
   const [searchText, setSearchText] = useState("");
   const [roleFilter, setRoleFilter] = useState<string | "all">("all");
+  const [departmentFilter, setDepartmentFilter] = useState<string | "all">("all");
+  const [loginFilter, setLoginFilter] = useState<"all" | "enabled" | "disabled">("all");
+  const [privilegeFilter, setPrivilegeFilter] = useState<string | "all">("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
+  const [sortBy, setSortBy] = useState<"name" | "department" | "joinedAt">("name");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
   const filtered = useMemo(() => {
     const s = searchText.trim().toLowerCase();
-    return users
-      .filter((u) => u.active !== false)
+    const acl = loadACL();
+    const withFilters = users
+      .filter((u) => (roleFilter === "all" ? true : u.roleIds.includes(roleFilter)))
+      .filter((u) => (departmentFilter === "all" ? true : (u.department || "") === departmentFilter))
       .filter((u) =>
-        roleFilter === "all" ? true : u.roleIds.includes(roleFilter),
+        loginFilter === "all"
+          ? true
+          : loginFilter === "enabled"
+            ? u.loginEnabled !== false
+            : u.loginEnabled === false,
+      )
+      .filter((u) =>
+        statusFilter === "all"
+          ? true
+          : statusFilter === "active"
+            ? u.active !== false
+            : u.active === false,
       )
       .filter((u) => {
+        if (privilegeFilter === "all") return true;
+        const eff = effectivePrivileges(u, acl.roles, acl.privileges);
+        return eff.some((p) => p.id === privilegeFilter);
+      })
+      .filter((u) => {
         if (!s) return true;
-        const hay = [u.name, u.email, u.title, u.department]
+        const statusText = u.active === false ? "inactive" : "active";
+        const loginText = u.loginEnabled === false ? "disabled" : "enabled";
+        const arName = (u.nameArParts || []).join(" ");
+        const enName = (u.nameEnParts || []).join(" ");
+        const hay = [
+          u.name,
+          enName,
+          arName,
+          u.email,
+          u.title,
+          u.titleAbbrev,
+          u.department,
+          statusText,
+          loginText,
+        ]
           .filter(Boolean)
           .join(" ")
           .toLowerCase();
         return hay.includes(s);
-      })
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }, [users, searchText, roleFilter]);
+      });
+
+    const cmp = (a: User, b: User) => {
+      let res = 0;
+      if (sortBy === "name") {
+        res = (a.name || "").localeCompare(b.name || "");
+      } else if (sortBy === "department") {
+        res = (a.department || "").localeCompare(b.department || "");
+      } else if (sortBy === "joinedAt") {
+        const da = a.joinedAt ? +new Date(a.joinedAt) : 0;
+        const db = b.joinedAt ? +new Date(b.joinedAt) : 0;
+        res = da - db;
+      }
+      return sortDir === "asc" ? res : -res;
+    };
+
+    return withFilters.sort(cmp);
+  }, [users, searchText, roleFilter, departmentFilter, loginFilter, privilegeFilter, statusFilter, sortBy, sortDir]);
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -126,20 +181,14 @@ export default function Employees() {
 
   const total = users.filter((u) => u.active !== false).length;
   const doctors = users.filter((u) => u.roleIds.includes("r_doctor")).length;
-  const therapists = users.filter((u) =>
-    u.roleIds.includes("r_therapist"),
-  ).length;
+  const therapists = users.filter((u) => u.roleIds.includes("r_therapist")).length;
 
   return (
     <div className="space-y-6">
       <div className="flex items-end justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            {t("pages.employees.title")}
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            {t("pages.employees.desc")}
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight">{t("pages.employees.title")}</h1>
+          <p className="text-muted-foreground mt-1">{t("pages.employees.desc")}</p>
         </div>
         {canManage && (
           <Button onClick={() => setAddOpen(true)}>
@@ -203,52 +252,32 @@ export default function Employees() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>{t("common.format")}</DropdownMenuLabel>
-                {(["csv", "xlsx", "pdf"] as const).map((fmt) => (
+                {["csv", "xlsx", "pdf"].map((fmt) => (
                   <DropdownMenuItem
                     key={fmt}
                     onClick={() => {
                       const cols: ColumnDef<User>[] = [
-                        {
-                          header: t("common.name") as string,
-                          accessor: (r) => r.name,
-                        },
-                        {
-                          header: t("common.email") as string,
-                          accessor: (r) => r.email || "",
-                        },
-                        {
-                          header: t("common.departmentTitle") as string,
-                          accessor: (r) =>
-                            `${r.department || ""} ${r.title ? `• ${r.title}` : ""}`,
-                        },
+                        { header: t("common.name") as string, accessor: (r) => r.name },
+                        { header: t("common.email") as string, accessor: (r) => r.email || "" },
+                        { header: t("common.departmentTitle") as string, accessor: (r) => `${r.department || ""} ${r.title ? `• ${r.title}` : ""}` },
                       ];
-                      exportAll(filtered, cols, fmt, `employees_${fmt}`);
+                      exportAll(filtered, cols, fmt as any, `employees_${fmt}`);
                     }}
                   >
                     {t("common.filtered")} – {fmt.toUpperCase()}
                   </DropdownMenuItem>
                 ))}
                 <DropdownMenuSeparator />
-                {(["csv", "xlsx", "pdf"] as const).map((fmt) => (
+                {["csv", "xlsx", "pdf"].map((fmt) => (
                   <DropdownMenuItem
                     key={fmt}
                     onClick={() => {
                       const cols: ColumnDef<User>[] = [
-                        {
-                          header: t("common.name") as string,
-                          accessor: (r) => r.name,
-                        },
-                        {
-                          header: t("common.email") as string,
-                          accessor: (r) => r.email || "",
-                        },
-                        {
-                          header: t("common.departmentTitle") as string,
-                          accessor: (r) =>
-                            `${r.department || ""} ${r.title ? `• ${r.title}` : ""}`,
-                        },
+                        { header: t("common.name") as string, accessor: (r) => r.name },
+                        { header: t("common.email") as string, accessor: (r) => r.email || "" },
+                        { header: t("common.departmentTitle") as string, accessor: (r) => `${r.department || ""} ${r.title ? `• ${r.title}` : ""}` },
                       ];
-                      exportAll(users, cols, fmt, `employees_${fmt}`);
+                      exportAll(users, cols, fmt as any, `employees_${fmt}`);
                     }}
                   >
                     {t("common.fullDataset")} – {fmt.toUpperCase()}
@@ -268,10 +297,7 @@ export default function Employees() {
           <div className="md:col-span-2">
             <Label>{t("common.search")}</Label>
             <div className="relative">
-              <Search
-                className="absolute top-2.5 text-muted-foreground"
-                style={{ [ar ? "right" : "left"]: "0.5rem" }}
-              />
+              <Search className="absolute top-2.5 text-muted-foreground" style={{ [ar ? "right" : "left"]: "0.5rem" }} />
               <Input
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
@@ -289,10 +315,81 @@ export default function Employees() {
             >
               <option value="all">{t("common.all")}</option>
               {roles.map((r) => (
-                <option key={r.id} value={r.id}>
-                  {r.name}
-                </option>
+                <option key={r.id} value={r.id}>{r.name}</option>
               ))}
+            </select>
+          </div>
+          <div>
+            <Label>{ar ? "القسم" : "Department"}</Label>
+            <select
+              value={departmentFilter}
+              onChange={(e) => setDepartmentFilter(e.target.value as any)}
+              className="w-full h-9 rounded-md border bg-background px-3 text-sm"
+            >
+              <option value="all">{t("common.all")}</option>
+              {departments.map((d) => (
+                <option key={d.id} value={d.name}>{d.name}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <Label>{ar ? "تسجيل الدخول" : "Login"}</Label>
+            <select
+              value={loginFilter}
+              onChange={(e) => setLoginFilter(e.target.value as any)}
+              className="w-full h-9 rounded-md border bg-background px-3 text-sm"
+            >
+              <option value="all">{t("common.all")}</option>
+              <option value="enabled">Enabled</option>
+              <option value="disabled">Disabled</option>
+            </select>
+          </div>
+          <div>
+            <Label>{ar ? "الصلاحية" : "Privilege"}</Label>
+            <select
+              value={privilegeFilter}
+              onChange={(e) => setPrivilegeFilter(e.target.value as any)}
+              className="w-full h-9 rounded-md border bg-background px-3 text-sm"
+            >
+              <option value="all">{t("common.all")}</option>
+              {privileges.map((p) => (
+                <option key={p.id} value={p.id}>{p.name}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <Label>{ar ? "الحالة" : "Status"}</Label>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as any)}
+              className="w-full h-9 rounded-md border bg-background px-3 text-sm"
+            >
+              <option value="all">{t("common.all")}</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <div>
+            <Label>{ar ? "ترتيب حسب" : "Sort by"}</Label>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="w-full h-9 rounded-md border bg-background px-3 text-sm"
+            >
+              <option value="name">{t("common.name")}</option>
+              <option value="department">{ar ? "القسم" : "Department"}</option>
+              <option value="joinedAt">{ar ? "تاريخ الالتحاق" : "Date of Joining"}</option>
+            </select>
+          </div>
+          <div>
+            <Label>{ar ? "الاتجاه" : "Direction"}</Label>
+            <select
+              value={sortDir}
+              onChange={(e) => setSortDir(e.target.value as any)}
+              className="w-full h-9 rounded-md border bg-background px-3 text-sm"
+            >
+              <option value="asc">Asc</option>
+              <option value="desc">Desc</option>
             </select>
           </div>
         </CardContent>
@@ -311,40 +408,40 @@ export default function Employees() {
                   <TableHead>{t("common.name")}</TableHead>
                   <TableHead>{t("common.email")}</TableHead>
                   <TableHead>{t("common.departmentTitle")}</TableHead>
-                  <TableHead className="hidden md:table-cell">
-                    {t("common.roles")}
-                  </TableHead>
-                  <TableHead className="hidden md:table-cell">
-                    {t("common.privileges")}
-                  </TableHead>
+                  <TableHead className="hidden md:table-cell">{ar ? "تاريخ الالتحاق" : "Joined"}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t("common.roles")}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t("common.privileges")}</TableHead>
                   <TableHead className="hidden md:table-cell">Login</TableHead>
                   <TableHead className="hidden md:table-cell">Default Password</TableHead>
                   {canManage && (
-                    <TableHead className="text-center">
-                      {t("common.actions")}
-                    </TableHead>
+                    <TableHead className="text-center">{t("common.actions")}</TableHead>
                   )}
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {pageItems.map((u) => (
                   <TableRow key={u.id}>
-                    <TableCell className="font-medium">{u.name}</TableCell>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        {u.titleAbbrev ? <Badge variant="secondary">{u.titleAbbrev}</Badge> : null}
+                        <span>{u.name}</span>
+                      </div>
+                    </TableCell>
                     <TableCell>{u.email}</TableCell>
                     <TableCell>
                       <div className="text-sm">
-                        {(u.department || "").toString()}{" "}
-                        {u.title ? `• ${u.title}` : ""}
+                        {(u.department || "").toString()} {u.title ? `• ${u.title}` : ""}
                       </div>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {u.joinedAt ? new Date(u.joinedAt).toLocaleDateString() : "—"}
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {u.roleIds.map((rid) => {
                           const r = roles.find((x) => x.id === rid);
                           return (
-                            <Badge key={rid} variant="secondary">
-                              {r ? r.name : rid}
-                            </Badge>
+                            <Badge key={rid} variant="secondary">{r ? r.name : rid}</Badge>
                           );
                         })}
                       </div>
@@ -363,18 +460,12 @@ export default function Employees() {
                       </span>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
-                      <span className="font-mono text-xs">
-                        {u.defaultPassword || "-"}
-                      </span>
+                      <span className="font-mono text-xs">{u.defaultPassword || "-"}</span>
                     </TableCell>
                     {canManage && (
                       <TableCell className="text-center">
                         <div className="flex items-center justify-center gap-2">
-                          <Button
-                            size="sm"
-                            variant="secondary"
-                            onClick={() => setEditing(u)}
-                          >
+                          <Button size="sm" variant="secondary" onClick={() => setEditing(u)}>
                             {t("common.edit")}
                           </Button>
                           <Button size="sm" variant="outline" onClick={() => setPrivUserId(u.id)}>
@@ -410,17 +501,11 @@ export default function Employees() {
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                  {t("pages.employees.confirmDeleteTitle")}
-                                </AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  {t("pages.employees.confirmDeleteMsg")}
-                                </AlertDialogDescription>
+                                <AlertDialogTitle>{t("pages.employees.confirmDeleteTitle")}</AlertDialogTitle>
+                                <AlertDialogDescription>{t("pages.employees.confirmDeleteMsg")}</AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel>
-                                  {t("common.cancel")}
-                                </AlertDialogCancel>
+                                <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => {
                                     removeUser(u.id);
@@ -444,27 +529,13 @@ export default function Employees() {
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setPage((p) => Math.max(1, p - 1));
-                    }}
-                  />
+                  <PaginationPrevious href="#" onClick={(e) => { e.preventDefault(); setPage((p) => Math.max(1, p - 1)); }} />
                 </PaginationItem>
                 <PaginationItem>
-                  <span className="px-3 py-2 text-sm text-muted-foreground">
-                    {page} / {totalPages}
-                  </span>
+                  <span className="px-3 py-2 text-sm text-muted-foreground">{page} / {totalPages}</span>
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setPage((p) => Math.min(totalPages, p + 1));
-                    }}
-                  />
+                  <PaginationNext href="#" onClick={(e) => { e.preventDefault(); setPage((p) => Math.min(totalPages, p + 1)); }} />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
