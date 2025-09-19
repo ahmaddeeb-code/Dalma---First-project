@@ -1,0 +1,95 @@
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
+import { Download, Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+type TableToolbarProps = {
+  className?: string;
+  onAdd?: () => void;
+  addLabel?: string;
+  onExport?: (type: "csv" | "xlsx" | "pdf") => void;
+  pageSize?: number;
+  onPageSizeChange?: (n: number) => void;
+  pageSizeOptions?: number[];
+  children?: React.ReactNode;
+};
+
+export default function TableToolbar({
+  className,
+  onAdd,
+  addLabel = "Add",
+  onExport,
+  pageSize,
+  onPageSizeChange,
+  pageSizeOptions = [10, 25, 50, 100],
+  children,
+}: TableToolbarProps) {
+  return (
+    <div
+      className={cn(
+        "w-full flex items-center justify-between gap-3 flex-wrap mb-3",
+        className,
+      )}
+    >
+      <div className="flex items-center gap-2 flex-wrap">
+        {onAdd ? (
+          <Button onClick={onAdd} className="flex items-center" variant={"default"}>
+            <Plus className="mr-2 h-4 w-4" />
+            {addLabel}
+          </Button>
+        ) : null}
+
+        {onExport ? (
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() => onExport("csv")}
+              variant="outline"
+              size="sm"
+              className="flex items-center"
+            >
+              <Download className="mr-2 h-4 w-4" /> CSV
+            </Button>
+            <Button
+              onClick={() => onExport("xlsx")}
+              variant="outline"
+              size="sm"
+              className="flex items-center"
+            >
+              <Download className="mr-2 h-4 w-4" /> XLSX
+            </Button>
+            <Button
+              onClick={() => onExport("pdf")}
+              variant="outline"
+              size="sm"
+              className="flex items-center"
+            >
+              <Download className="mr-2 h-4 w-4" /> PDF
+            </Button>
+          </div>
+        ) : null}
+
+        {children}
+      </div>
+
+      <div className="flex items-center gap-2">
+        {onPageSizeChange ? (
+          <div className="flex items-center gap-2">
+            <div className="text-sm text-muted-foreground">Page size</div>
+            <Select
+              value={String(pageSize || pageSizeOptions[0])}
+              onValueChange={(v) => onPageSizeChange(Number(v))}
+              className="w-24"
+            >
+              {pageSizeOptions.map((o) => (
+                <option key={o} value={o}>
+                  {o}
+                </option>
+              ))}
+            </Select>
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
