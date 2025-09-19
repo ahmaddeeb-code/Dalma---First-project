@@ -154,7 +154,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     if (el.getAttribute("lang") !== wantLang) el.setAttribute("lang", wantLang);
   }, [locale]);
 
-  const hideChrome = pathname.startsWith("/login");
+  const hideChrome = pathname.startsWith("/login") || pathname.startsWith("/logout");
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
   const toggleGroup = (k: string) =>
@@ -571,14 +571,10 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                         <DropdownMenuSeparator />
                       </>
                     ) : null}
-                    <DropdownMenuItem
-                      onClick={() => {
-                        logout();
-                        window.location.reload();
-                      }}
-                      className="hover:bg-destructive/10 hover:text-destructive transition-all duration-200"
-                    >
-                      <LogOut className="mr-2 h-4 w-4" /> {t("header.signOut")}
+                    <DropdownMenuItem asChild className="hover:bg-destructive/10 hover:text-destructive transition-all duration-200">
+                      <Link to="/logout">
+                        <LogOut className="mr-2 h-4 w-4" /> {t("header.signOut")}
+                      </Link>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

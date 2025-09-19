@@ -28,6 +28,7 @@ import LoginFamily from "./pages/auth/LoginFamily";
 import LoginBeneficiary from "./pages/auth/LoginBeneficiary";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
+import Logout from "./pages/Logout";
 import RequireAuth from "@/components/auth/RequireAuth";
 import AdminUsers from "./pages/admin/Users";
 
@@ -59,6 +60,7 @@ const App = () => (
             {/* Public auth routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/logout" element={<Logout />} />
             <Route path="/login/admin" element={<LoginAdmin />} />
             <Route path="/login/staff" element={<LoginStaff />} />
             <Route path="/login/family" element={<LoginFamily />} />
