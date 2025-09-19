@@ -147,21 +147,24 @@ export function ensureAuthFromRemember() {
   }
 }
 
-export function forgotPassword(email: string) {
-  const acl = loadACL();
-  const user = acl.users.find((u) => u.email === email);
-  if (!user) return { ok: false };
-
-  // generate token
-  const token = Math.random().toString(36).slice(2, 10);
-  const resets = JSON.parse(localStorage.getItem(RESET_KEY) || "{}") as Record<string, { email: string; expiresAt: string }>;
-  const expiresAt = new Date();
-  expiresAt.setHours(expiresAt.getHours() + 1);
-  resets[token] = { email, expiresAt: expiresAt.toISOString() };
-  localStorage.setItem(RESET_KEY, JSON.stringify(resets));
-
-  // NOTE: In real app we'd send email/SMS. Here we return token for dev.
-  return { ok: true, token };
+export async function forgotPassword(email: string) {
+  try {
+    const r = await fetch('/api/auth/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+    const d = await r.json();
+    return d;
+  } catch (e) {
+    // fallback local
+    const acl = loadACL();
+    const user = acl.users.find((u) => u.email === email);
+    if (!user) return { ok: false };
+    const token = Math.random().toString(36).slice(2, 10);
+    const resets = JSON.parse(localStorage.getItem(RESET_KEY) || "{}") as Record<string, { email: string; expiresAt: string }>;
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 1);
+    resets[token] = { email, expiresAt: expiresAt.toISOString() };
+    localStorage.setItem(RESET_KEY, JSON.stringify(resets));
+    return { ok: true, token };
+  }
 }
 
 export async function verifyResetToken(token: string) {
