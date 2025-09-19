@@ -183,4 +183,4 @@ export function resetPassword(token: string, newPassword: string) {
   return { ok: true };
 }
 
-export { subscribeAuth as subscribe };
+export { subscribeAuth as subscribe, verifyOTP, authenticate, setUserPassword, sendOTP };
