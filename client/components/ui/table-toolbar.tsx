@@ -75,17 +75,17 @@ export default function TableToolbar({
         {onPageSizeChange ? (
           <div className="flex items-center gap-2">
             <div className="text-sm text-muted-foreground">Page size</div>
-            <Select
+            <select
+              className="h-9 rounded-md border bg-background px-2 text-sm"
               value={String(pageSize || pageSizeOptions[0])}
-              onValueChange={(v) => onPageSizeChange(Number(v))}
-              className="w-24"
+              onChange={(e) => onPageSizeChange(Number(e.target.value))}
             >
               {pageSizeOptions.map((o) => (
                 <option key={o} value={o}>
                   {o}
                 </option>
               ))}
-            </Select>
+            </select>
           </div>
         ) : null}
       </div>
