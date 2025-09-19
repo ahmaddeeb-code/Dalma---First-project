@@ -42,9 +42,11 @@ import {
   effectivePrivileges,
   removeUser,
 } from "@/store/acl";
-import { getCurrentUser } from "@/store/auth";
+import { getCurrentUser, setUserPassword } from "@/store/auth";
+import { updateUser } from "@/store/acl";
 import { toast } from "sonner";
 import AddEditEmployeeDialog from "@/pages/employees/AddEditDialog";
+import ManagePrivilegesDialog from "@/pages/employees/ManagePrivilegesDialog";
 import {
   Filter,
   Plus,
