@@ -31,6 +31,7 @@ import LoginFamily from "./pages/auth/LoginFamily";
 import LoginBeneficiary from "./pages/auth/LoginBeneficiary";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
+import FirstLogin from "./pages/auth/FirstLogin";
 const Logout = lazy(() => import("./pages/Logout"));
 import RequireAuth from "@/components/auth/RequireAuth";
 const AdminUsers = lazy(() => import("./pages/admin/Users"));
@@ -69,6 +70,7 @@ const App = () => (
             <Route path="/login/staff" element={<LoginStaff />} />
             <Route path="/login/family" element={<LoginFamily />} />
             <Route path="/login/beneficiary" element={<LoginBeneficiary />} />
+            <Route path="/first-login" element={<FirstLogin />} />
 
             {/* Protected routes */}
             <Route element={<RequireAuth />}>
