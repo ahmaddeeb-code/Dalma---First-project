@@ -349,11 +349,23 @@ function CarePlansCard({
             Reusable goals, interventions and metrics
           </CardDescription>
         </div>
-        <Button onClick={() => setOpen(true)}>
-          <Plus className="ml-1 h-4 w-4" /> Add
-        </Button>
       </CardHeader>
       <CardContent>
+        <div className="mb-3">
+          <TableToolbar
+            onAdd={() => setOpen(true)}
+            addLabel="Add"
+            onExport={(type) => {
+              const cols = [
+                { header: 'Name', accessor: (r:any) => r.name },
+                { header: 'Goals', accessor: (r:any) => (r.goals || []).join(', ') },
+                { header: 'Interventions', accessor: (r:any) => (r.interventions || []).join(', ') },
+                { header: 'Metrics', accessor: (r:any) => (r.metrics || []).join(', ') },
+              ];
+              import('@/lib/export').then((m)=>m.exportAll(s.carePlanTemplates, cols, type, 'careplans'));
+            }}
+          />
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
