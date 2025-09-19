@@ -455,7 +455,7 @@ export default function Translations() {
               >
                 <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-6 7-7-1.414-1.414L11 13.172 8.414 10.586 7 12l4 4z" />
               </svg>
-              {ar ? "بحاجة لمراجعة" : "Needs review"}
+              {ar ? "��حاجة لمراجعة" : "Needs review"}
             </CardDescription>
             <CardTitle className="text-xl">{reviewCount}</CardTitle>
           </CardHeader>
@@ -491,6 +491,21 @@ export default function Translations() {
           </div>
         </CardHeader>
         <CardContent>
+        <div className="mb-3">
+          <TableToolbar
+            onExport={(type) => {
+              const cols = [
+                { header: 'Key', accessor: (r:any) => r.key },
+                { header: 'English', accessor: (r:any) => r.en },
+                { header: 'Arabic', accessor: (r:any) => r.ar || '' },
+                { header: 'Status', accessor: (r:any) => (r.missing ? 'Missing' : r.needsReview ? 'Needs review' : 'OK') },
+              ];
+              import('@/lib/export').then((m)=>m.exportAll(pageItems, cols, type, 'translations'));
+            }}
+            pageSize={pageSize}
+            onPageSizeChange={(n)=>{ setPageSize(n); setPage(1); }}
+          />
+        </div>
           <div className="w-full overflow-x-auto">
             <Table>
               <TableHeader>
@@ -605,7 +620,7 @@ export default function Translations() {
             </AlertDialogTitle>
             <AlertDialogDescription>
               {ar
-                ? "سيتم فحص الكود لاكتشاف ال��فاتيح الجديدة وإضافتها"
+                ? "سيتم فحص الكود لاكتشاف ال��فاتيح الج��يدة وإضافتها"
                 : "We will scan the source to find new keys and add them."}
             </AlertDialogDescription>
           </AlertDialogHeader>
