@@ -52,7 +52,11 @@ export default function AdminDashboard() {
         <StatsCard
           title={t("pages.admin.tiles.beneficiaries.title")}
           value="1,248"
-          description={ar ? "سكنية ٤٥٪ · نهارية ٤٠٪ · منزلية ١٥٪" : "Residential 45% · Daycare 40% · Home-based 15%"}
+          description={
+            ar
+              ? "سكنية ٤٥٪ · نهارية ٤٠٪ · منزلية ١٥٪"
+              : "Residential 45% · Daycare 40% · Home-based 15%"
+          }
           icon={<Users className="h-5 w-5" />}
           trend={{ value: 12, isPositive: true }}
           gradient="from-blue-500/10 via-blue-500/5 to-transparent"
@@ -133,19 +137,25 @@ export default function AdminDashboard() {
           <CardContent>
             <ul className="space-y-3">
               <li className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-red-500/5 to-red-500/10 border border-red-500/20">
-                <span className="text-sm font-medium">{t("pages.admin.alerts.items.missedMedication")}</span>
+                <span className="text-sm font-medium">
+                  {t("pages.admin.alerts.items.missedMedication")}
+                </span>
                 <Badge className="bg-red-500 text-white hover:bg-red-500">
                   {t("pages.admin.alerts.levels.high")}
                 </Badge>
               </li>
               <li className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-amber-500/5 to-amber-500/10 border border-amber-500/20">
-                <span className="text-sm font-medium">{t("pages.admin.alerts.items.transportDelay")}</span>
+                <span className="text-sm font-medium">
+                  {t("pages.admin.alerts.items.transportDelay")}
+                </span>
                 <Badge className="bg-amber-500 text-white hover:bg-amber-500">
                   {t("pages.admin.alerts.levels.medium")}
                 </Badge>
               </li>
               <li className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-blue-500/5 to-blue-500/10 border border-blue-500/20">
-                <span className="text-sm font-medium">{t("pages.admin.alerts.items.therapyRescheduled")}</span>
+                <span className="text-sm font-medium">
+                  {t("pages.admin.alerts.items.therapyRescheduled")}
+                </span>
                 <Badge className="bg-blue-500 text-white hover:bg-blue-500">
                   {t("pages.admin.alerts.levels.info")}
                 </Badge>
@@ -165,7 +175,9 @@ export default function AdminDashboard() {
             <CardDescription>{t("pages.admin.team.desc")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">{t("pages.admin.team.summary")}</p>
+            <p className="text-sm text-muted-foreground">
+              {t("pages.admin.team.summary")}
+            </p>
           </CardContent>
         </Card>
         <Card variant="modern" hover>
@@ -177,7 +189,9 @@ export default function AdminDashboard() {
             <CardDescription>{t("pages.admin.reviews.desc")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">{t("pages.admin.reviews.summary")}</p>
+            <p className="text-sm text-muted-foreground">
+              {t("pages.admin.reviews.summary")}
+            </p>
           </CardContent>
         </Card>
         <Card variant="modern" hover>
@@ -186,10 +200,14 @@ export default function AdminDashboard() {
               <Bell className="h-5 w-5 text-primary" />
               {t("pages.admin.notifSummary.title")}
             </CardTitle>
-            <CardDescription>{t("pages.admin.notifSummary.desc")}</CardDescription>
+            <CardDescription>
+              {t("pages.admin.notifSummary.desc")}
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">{t("pages.admin.notifSummary.summary")}</p>
+            <p className="text-sm text-muted-foreground">
+              {t("pages.admin.notifSummary.summary")}
+            </p>
           </CardContent>
         </Card>
       </section>

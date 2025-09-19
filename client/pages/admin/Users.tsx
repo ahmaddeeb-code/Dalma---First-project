@@ -23,7 +23,11 @@ async function fetchUsers(): Promise<UserRow[]> {
 export default function AdminUsers() {
   const qc = useQueryClient();
 
-  const { data: users, isLoading, isFetching } = useQuery({
+  const {
+    data: users,
+    isLoading,
+    isFetching,
+  } = useQuery({
     queryKey: ["admin-users"],
     queryFn: fetchUsers,
     staleTime: 60_000,
@@ -44,7 +48,9 @@ export default function AdminUsers() {
     },
     onSuccess: ({ id, val }) => {
       qc.setQueryData<UserRow[] | undefined>(["admin-users"], (prev) =>
-        prev ? prev.map((u) => (u.id === id ? { ...u, twoFactor: val } : u)) : prev,
+        prev
+          ? prev.map((u) => (u.id === id ? { ...u, twoFactor: val } : u))
+          : prev,
       );
       toast.success("Updated");
     },
@@ -86,7 +92,9 @@ export default function AdminUsers() {
           {!isLoading && users && (
             <>
               {isFetching && (
-                <div className="text-xs text-muted-foreground mb-2">Loading content…</div>
+                <div className="text-xs text-muted-foreground mb-2">
+                  Loading content…
+                </div>
               )}
               <div className="space-y-3">
                 {users.map((u) => (
@@ -97,7 +105,9 @@ export default function AdminUsers() {
                     <div>
                       <div className="font-medium">
                         {u.name}{" "}
-                        <span className="text-xs text-muted-foreground">{u.email}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {u.email}
+                        </span>
                       </div>
                       <div className="text-sm text-muted-foreground">
                         Failed attempts: {u.failedAttempts}{" "}

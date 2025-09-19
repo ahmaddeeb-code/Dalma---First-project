@@ -226,11 +226,19 @@ function BuildingsTab({
             addLabel={t("common.add")}
             onExport={(type) => {
               const cols = [
-                { header: t("common.name"), accessor: (r:any) => L(loc, r.name) },
-                { header: loc === "ar" ? "العنوان" : "Address", accessor: (r:any) => L(loc, r.address) },
-                { header: t("common.total"), accessor: (r:any) => r.capacity },
+                {
+                  header: t("common.name"),
+                  accessor: (r: any) => L(loc, r.name),
+                },
+                {
+                  header: loc === "ar" ? "العنوان" : "Address",
+                  accessor: (r: any) => L(loc, r.address),
+                },
+                { header: t("common.total"), accessor: (r: any) => r.capacity },
               ];
-              import('@/lib/export').then((m)=>m.exportAll(buildings, cols, type, 'buildings'));
+              import("@/lib/export").then((m) =>
+                m.exportAll(buildings, cols, type, "buildings"),
+              );
             }}
           />
         </div>
@@ -508,11 +516,23 @@ function RoomsTab({
             addLabel={t("common.add")}
             onExport={(type) => {
               const cols = [
-                { header: t("common.name"), accessor: (r:any) => L(loc, r.name) },
-                { header: loc === "ar" ? "المبنى" : "Building", accessor: (r:any) => L(loc, buildings.find(b=>b.id===r.buildingId)?.name) },
-                { header: loc === "ar" ? "الطابق" : "Floor", accessor: (r:any) => r.floor },
+                {
+                  header: t("common.name"),
+                  accessor: (r: any) => L(loc, r.name),
+                },
+                {
+                  header: loc === "ar" ? "المبنى" : "Building",
+                  accessor: (r: any) =>
+                    L(loc, buildings.find((b) => b.id === r.buildingId)?.name),
+                },
+                {
+                  header: loc === "ar" ? "الطابق" : "Floor",
+                  accessor: (r: any) => r.floor,
+                },
               ];
-              import('@/lib/export').then((m)=>m.exportAll(rooms, cols, type, 'rooms'));
+              import("@/lib/export").then((m) =>
+                m.exportAll(rooms, cols, type, "rooms"),
+              );
             }}
           />
         </div>
@@ -878,12 +898,23 @@ function SchedulesTab({
             addLabel={t("common.add")}
             onExport={(type) => {
               const cols = [
-                { header: loc === 'ar' ? 'الغرفة' : 'Room', accessor: (r:any) => rooms.find(rr=>rr.id===r.roomId)? L(loc, rooms.find(rr=>rr.id===r.roomId).name) : '' },
-                { header: t('common.name'), accessor: (r:any) => L(loc, r.title) },
-                { header: 'Start', accessor: (r:any) => r.start },
-                { header: 'End', accessor: (r:any) => r.end },
+                {
+                  header: loc === "ar" ? "الغرفة" : "Room",
+                  accessor: (r: any) =>
+                    rooms.find((rr) => rr.id === r.roomId)
+                      ? L(loc, rooms.find((rr) => rr.id === r.roomId).name)
+                      : "",
+                },
+                {
+                  header: t("common.name"),
+                  accessor: (r: any) => L(loc, r.title),
+                },
+                { header: "Start", accessor: (r: any) => r.start },
+                { header: "End", accessor: (r: any) => r.end },
               ];
-              import('@/lib/export').then((m)=>m.exportAll(data, cols, type, 'schedules'));
+              import("@/lib/export").then((m) =>
+                m.exportAll(data, cols, type, "schedules"),
+              );
             }}
           />
         </div>
@@ -1227,11 +1258,13 @@ function ResourcesTab({
             addLabel={t("common.add")}
             onExport={(type) => {
               const cols = [
-                { header: t('common.name'), accessor: (r:any)=> r.name },
-                { header: 'Status', accessor: (r:any)=> r.status },
-                { header: 'Location', accessor: (r:any)=> r.location || '' },
+                { header: t("common.name"), accessor: (r: any) => r.name },
+                { header: "Status", accessor: (r: any) => r.status },
+                { header: "Location", accessor: (r: any) => r.location || "" },
               ];
-              import('@/lib/export').then((m)=>m.exportAll(list, cols, type, 'equipment'));
+              import("@/lib/export").then((m) =>
+                m.exportAll(list, cols, type, "equipment"),
+              );
             }}
           />
         </div>

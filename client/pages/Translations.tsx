@@ -491,21 +491,34 @@ export default function Translations() {
           </div>
         </CardHeader>
         <CardContent>
-        <div className="mb-3">
-          <TableToolbar
-            onExport={(type) => {
-              const cols = [
-                { header: 'Key', accessor: (r:any) => r.key },
-                { header: 'English', accessor: (r:any) => r.en },
-                { header: 'Arabic', accessor: (r:any) => r.ar || '' },
-                { header: 'Status', accessor: (r:any) => (r.missing ? 'Missing' : r.needsReview ? 'Needs review' : 'OK') },
-              ];
-              import('@/lib/export').then((m)=>m.exportAll(pageItems, cols, type, 'translations'));
-            }}
-            pageSize={pageSize}
-            onPageSizeChange={(n)=>{ setPageSize(n); setPage(1); }}
-          />
-        </div>
+          <div className="mb-3">
+            <TableToolbar
+              onExport={(type) => {
+                const cols = [
+                  { header: "Key", accessor: (r: any) => r.key },
+                  { header: "English", accessor: (r: any) => r.en },
+                  { header: "Arabic", accessor: (r: any) => r.ar || "" },
+                  {
+                    header: "Status",
+                    accessor: (r: any) =>
+                      r.missing
+                        ? "Missing"
+                        : r.needsReview
+                          ? "Needs review"
+                          : "OK",
+                  },
+                ];
+                import("@/lib/export").then((m) =>
+                  m.exportAll(pageItems, cols, type, "translations"),
+                );
+              }}
+              pageSize={pageSize}
+              onPageSizeChange={(n) => {
+                setPageSize(n);
+                setPage(1);
+              }}
+            />
+          </div>
           <div className="w-full overflow-x-auto">
             <Table>
               <TableHeader>

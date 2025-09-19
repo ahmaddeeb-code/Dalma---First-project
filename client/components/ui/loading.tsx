@@ -1,15 +1,27 @@
-import React, { createContext, useContext, useState, useCallback, useRef, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+  ReactNode,
+} from "react";
 
 interface LoadingState {
   isLoading: boolean;
   isVisible: boolean;
   message?: string;
-  type?: 'default' | 'page' | 'form' | 'api';
+  type?: "default" | "page" | "form" | "api";
 }
 
 interface LoadingContextType {
   loading: LoadingState;
-  showLoading: (message?: string, type?: LoadingState['type'], delay?: number) => void;
+  showLoading: (
+    message?: string,
+    type?: LoadingState["type"],
+    delay?: number,
+  ) => void;
   hideLoading: () => void;
   setLoading: (state: LoadingState) => void;
 }
@@ -19,7 +31,7 @@ const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
 export function useLoading() {
   const context = useContext(LoadingContext);
   if (!context) {
-    throw new Error('useLoading must be used within a LoadingProvider');
+    throw new Error("useLoading must be used within a LoadingProvider");
   }
   return context;
 }
@@ -33,37 +45,44 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
     isLoading: false,
     isVisible: false,
     message: undefined,
-    type: 'default'
+    type: "default",
   });
 
   const delayTimerRef = useRef<NodeJS.Timeout | null>(null);
   const hideTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const showLoading = useCallback((message?: string, type: LoadingState['type'] = 'default', delay: number = 400) => {
-    // Clear any existing timers
-    if (delayTimerRef.current) {
-      clearTimeout(delayTimerRef.current);
-    }
-    if (hideTimerRef.current) {
-      clearTimeout(hideTimerRef.current);
-    }
+  const showLoading = useCallback(
+    (
+      message?: string,
+      type: LoadingState["type"] = "default",
+      delay: number = 400,
+    ) => {
+      // Clear any existing timers
+      if (delayTimerRef.current) {
+        clearTimeout(delayTimerRef.current);
+      }
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+      }
 
-    // Set loading state immediately but don't show spinner yet
-    setLoadingState({
-      isLoading: true,
-      isVisible: false,
-      message,
-      type
-    });
+      // Set loading state immediately but don't show spinner yet
+      setLoadingState({
+        isLoading: true,
+        isVisible: false,
+        message,
+        type,
+      });
 
-    // Start delay timer to show spinner only if operation takes longer than threshold
-    delayTimerRef.current = setTimeout(() => {
-      setLoadingState(prev => ({
-        ...prev,
-        isVisible: prev.isLoading // Only show if still loading
-      }));
-    }, delay);
-  }, []);
+      // Start delay timer to show spinner only if operation takes longer than threshold
+      delayTimerRef.current = setTimeout(() => {
+        setLoadingState((prev) => ({
+          ...prev,
+          isVisible: prev.isLoading, // Only show if still loading
+        }));
+      }, delay);
+    },
+    [],
+  );
 
   const hideLoading = useCallback(() => {
     // Clear delay timer if still pending
@@ -73,13 +92,13 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
     }
 
     // Set loading to false immediately
-    setLoadingState(prev => ({
+    setLoadingState((prev) => ({
       ...prev,
-      isLoading: false
+      isLoading: false,
     }));
 
     // If spinner is visible, hide it with a small delay for smooth transition
-    setLoadingState(prev => {
+    setLoadingState((prev) => {
       if (prev.isVisible) {
         // Clear any existing hide timer
         if (hideTimerRef.current) {
@@ -88,11 +107,11 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
 
         // Hide after a brief moment to ensure smooth fade-out
         hideTimerRef.current = setTimeout(() => {
-          setLoadingState(current => ({
+          setLoadingState((current) => ({
             isLoading: false,
             isVisible: false,
             message: undefined,
-            type: 'default'
+            type: "default",
           }));
         }, 100);
 
@@ -103,7 +122,7 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
           isLoading: false,
           isVisible: false,
           message: undefined,
-          type: 'default'
+          type: "default",
         };
       }
     });
@@ -126,7 +145,9 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
   }, []);
 
   return (
-    <LoadingContext.Provider value={{ loading, showLoading, hideLoading, setLoading }}>
+    <LoadingContext.Provider
+      value={{ loading, showLoading, hideLoading, setLoading }}
+    >
       {children}
       <LoadingOverlay />
     </LoadingContext.Provider>
@@ -134,11 +155,17 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
 }
 
 // Loading Spinner Component
-export function LoadingSpinner({ size = 'default', className = '' }: { size?: 'small' | 'default' | 'large', className?: string }) {
+export function LoadingSpinner({
+  size = "default",
+  className = "",
+}: {
+  size?: "small" | "default" | "large";
+  className?: string;
+}) {
   const sizeClasses = {
-    small: 'w-4 h-4',
-    default: 'w-8 h-8',
-    large: 'w-12 h-12'
+    small: "w-4 h-4",
+    default: "w-8 h-8",
+    large: "w-12 h-12",
   };
 
   return (
@@ -160,7 +187,7 @@ function LoadingOverlay() {
   const { loading } = useLoading();
 
   // Never show a full-screen overlay for route (page) transitions
-  if (!loading.isVisible || loading.type === 'page') return null;
+  if (!loading.isVisible || loading.type === "page") return null;
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/20 backdrop-blur-sm transition-all duration-300 ease-in-out animate-in fade-in">
@@ -169,7 +196,9 @@ function LoadingOverlay() {
 
         {loading.message && (
           <div className="text-center animate-in fade-in slide-in-from-bottom-2 duration-300 delay-150">
-            <p className="text-lg font-medium text-slate-800">{loading.message}</p>
+            <p className="text-lg font-medium text-slate-800">
+              {loading.message}
+            </p>
             <p className="text-sm text-slate-600 mt-1">Please wait...</p>
           </div>
         )}
@@ -184,8 +213,14 @@ function LoadingOverlay() {
         {/* Animated dots */}
         <div className="flex space-x-1 animate-in fade-in duration-300 delay-300">
           <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
-          <div className="w-2 h-2 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-          <div className="w-2 h-2 bg-cyan-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+          <div
+            className="w-2 h-2 bg-purple-600 rounded-full animate-bounce"
+            style={{ animationDelay: "0.1s" }}
+          ></div>
+          <div
+            className="w-2 h-2 bg-cyan-600 rounded-full animate-bounce"
+            style={{ animationDelay: "0.2s" }}
+          ></div>
         </div>
       </div>
     </div>
@@ -196,19 +231,22 @@ function LoadingOverlay() {
 export function useLoadingApi() {
   const { showLoading, hideLoading } = useLoading();
 
-  const withLoading = useCallback(async <T,>(
-    apiCall: () => Promise<T>,
-    message?: string,
-    delay?: number
-  ): Promise<T> => {
-    try {
-      showLoading(message || 'Processing...', 'api', delay || 300);
-      const result = await apiCall();
-      return result;
-    } finally {
-      hideLoading();
-    }
-  }, [showLoading, hideLoading]);
+  const withLoading = useCallback(
+    async <T,>(
+      apiCall: () => Promise<T>,
+      message?: string,
+      delay?: number,
+    ): Promise<T> => {
+      try {
+        showLoading(message || "Processing...", "api", delay || 300);
+        const result = await apiCall();
+        return result;
+      } finally {
+        hideLoading();
+      }
+    },
+    [showLoading, hideLoading],
+  );
 
   return { withLoading };
 }
@@ -217,19 +255,22 @@ export function useLoadingApi() {
 export function useLoadingForm() {
   const { showLoading, hideLoading } = useLoading();
 
-  const withFormLoading = useCallback(async <T,>(
-    formSubmit: () => Promise<T>,
-    message?: string,
-    delay?: number
-  ): Promise<T> => {
-    try {
-      showLoading(message || 'Saving...', 'form', delay || 250);
-      const result = await formSubmit();
-      return result;
-    } finally {
-      hideLoading();
-    }
-  }, [showLoading, hideLoading]);
+  const withFormLoading = useCallback(
+    async <T,>(
+      formSubmit: () => Promise<T>,
+      message?: string,
+      delay?: number,
+    ): Promise<T> => {
+      try {
+        showLoading(message || "Saving...", "form", delay || 250);
+        const result = await formSubmit();
+        return result;
+      } finally {
+        hideLoading();
+      }
+    },
+    [showLoading, hideLoading],
+  );
 
   return { withFormLoading };
 }

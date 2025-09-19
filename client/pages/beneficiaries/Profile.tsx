@@ -3,7 +3,13 @@ import { Link, useParams } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   AlertDialog,
@@ -66,7 +72,10 @@ import {
   removeBeneficiary,
   archiveBeneficiaries,
 } from "@/store/beneficiaries";
-import { getBeneficiarySettings, subscribeBeneficiarySettings } from "@/store/beneficiary-settings";
+import {
+  getBeneficiarySettings,
+  subscribeBeneficiarySettings,
+} from "@/store/beneficiary-settings";
 
 import { getCurrentUser, getCurrentUserId } from "@/store/auth";
 import { effectivePrivileges, loadACL } from "@/store/acl";
@@ -101,11 +110,11 @@ function statusBadgeAr(status: Beneficiary["status"]) {
   }
 }
 
-function useBeneficiarySettings(){
+function useBeneficiarySettings() {
   return useSyncExternalStore(
-    (cb)=>subscribeBeneficiarySettings(cb),
-    ()=>getBeneficiarySettings(),
-    ()=>getBeneficiarySettings(),
+    (cb) => subscribeBeneficiarySettings(cb),
+    () => getBeneficiarySettings(),
+    () => getBeneficiarySettings(),
   );
 }
 
@@ -145,7 +154,11 @@ export default function BeneficiaryProfile() {
   const nextAppointment = b.care.appointments
     .filter((a) => new Date(a.date) > new Date())
     .sort((a, c) => +new Date(a.date) - +new Date(c.date))[0];
-  const expiringSoon = b.documents.filter((d) => d.expiresAt && new Date(d.expiresAt) < new Date(Date.now() + 1000*60*60*24*30));
+  const expiringSoon = b.documents.filter(
+    (d) =>
+      d.expiresAt &&
+      new Date(d.expiresAt) < new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+  );
 
   return (
     <div className="space-y-6">
@@ -190,26 +203,50 @@ export default function BeneficiaryProfile() {
                 <span className="flex items-center gap-2">
                   <span>{ar ? "الجنس" : "Gender"}:</span>
                   {edit ? (
-                    <Select defaultValue={b.gender} onValueChange={(v)=> (b.gender = v as any)}>
-                      <SelectTrigger className="h-8 w-28"><SelectValue /></SelectTrigger>
+                    <Select
+                      defaultValue={b.gender}
+                      onValueChange={(v) => (b.gender = v as any)}
+                    >
+                      <SelectTrigger className="h-8 w-28">
+                        <SelectValue />
+                      </SelectTrigger>
                       <SelectContent>
-                        {(settings.lists.gender || ["male","female"]).map((g)=> (
-                          <SelectItem key={g} value={g}>{g}</SelectItem>
-                        ))}
+                        {(settings.lists.gender || ["male", "female"]).map(
+                          (g) => (
+                            <SelectItem key={g} value={g}>
+                              {g}
+                            </SelectItem>
+                          ),
+                        )}
                       </SelectContent>
                     </Select>
+                  ) : b.gender === "male" ? (
+                    ar ? (
+                      "ذكر"
+                    ) : (
+                      "Male"
+                    )
+                  ) : ar ? (
+                    "أنثى"
                   ) : (
-                    b.gender === "male" ? (ar?"ذكر":"Male") : (ar?"أنثى":"Female")
+                    "Female"
                   )}
                 </span>
                 <span className="flex items-center gap-2">
                   <span>{ar ? "الإعاقة" : "Disability"}:</span>
                   {edit ? (
-                    <Select defaultValue={b.medical.disabilityType} onValueChange={(v)=> (b.medical.disabilityType = v)}>
-                      <SelectTrigger className="h-8 w-40"><SelectValue /></SelectTrigger>
+                    <Select
+                      defaultValue={b.medical.disabilityType}
+                      onValueChange={(v) => (b.medical.disabilityType = v)}
+                    >
+                      <SelectTrigger className="h-8 w-40">
+                        <SelectValue />
+                      </SelectTrigger>
                       <SelectContent>
-                        {settings.disabilityCategories.map((d)=> (
-                          <SelectItem key={d} value={d}>{d}</SelectItem>
+                        {settings.disabilityCategories.map((d) => (
+                          <SelectItem key={d} value={d}>
+                            {d}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -389,18 +426,28 @@ export default function BeneficiaryProfile() {
           </CardHeader>
           <CardContent>
             <div className="w-full h-2 bg-muted rounded">
-              <div className="h-2 bg-primary rounded" style={{ width: `${b.care.progress}%` }} />
+              <div
+                className="h-2 bg-primary rounded"
+                style={{ width: `${b.care.progress}%` }}
+              />
             </div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{ar ? "الموعد القادم" : "Next appointment"}</CardDescription>
+            <CardDescription>
+              {ar ? "الموعد القادم" : "Next appointment"}
+            </CardDescription>
             <CardTitle className="text-base">
               {nextAppointment ? (
-                <span className="inline-flex items-center gap-2"><CalendarClock className="h-5 w-5" />{new Date(nextAppointment.date).toLocaleString()}</span>
+                <span className="inline-flex items-center gap-2">
+                  <CalendarClock className="h-5 w-5" />
+                  {new Date(nextAppointment.date).toLocaleString()}
+                </span>
               ) : (
-                <span className="text-muted-foreground">{ar?"لا يوجد":"None"}</span>
+                <span className="text-muted-foreground">
+                  {ar ? "لا يوجد" : "None"}
+                </span>
               )}
             </CardTitle>
           </CardHeader>
@@ -410,16 +457,27 @@ export default function BeneficiaryProfile() {
             <CardDescription>{ar ? "البرامج" : "Programs"}</CardDescription>
           </CardHeader>
           <CardContent className="pt-0 flex flex-wrap gap-2">
-            {b.education.programs.length ? b.education.programs.map((p)=> (
-              <Badge key={p} variant="secondary">{p}</Badge>
-            )): <span className="text-sm text-muted-foreground">{ar?"لا يوجد":"None"}</span>}
+            {b.education.programs.length ? (
+              b.education.programs.map((p) => (
+                <Badge key={p} variant="secondary">
+                  {p}
+                </Badge>
+              ))
+            ) : (
+              <span className="text-sm text-muted-foreground">
+                {ar ? "لا يوجد" : "None"}
+              </span>
+            )}
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>{ar ? "مستندات على وشك الانتهاء" : "Expiring docs"}</CardDescription>
+            <CardDescription>
+              {ar ? "مستندات على وشك الانتهاء" : "Expiring docs"}
+            </CardDescription>
             <CardTitle className="text-2xl flex items-center gap-2">
-              <FileWarning className="h-5 w-5 text-amber-500" /> {expiringSoon.length}
+              <FileWarning className="h-5 w-5 text-amber-500" />{" "}
+              {expiringSoon.length}
             </CardTitle>
           </CardHeader>
         </Card>
@@ -431,28 +489,35 @@ export default function BeneficiaryProfile() {
             {ar ? "البيانات الشخصية" : "Personal"}
           </TabsTrigger>
           <TabsTrigger value="medical">
-            <Stethoscope className="h-4 w-4 ml-1" /> {ar ? "طبي وإعاقة" : "Medical"}
+            <Stethoscope className="h-4 w-4 ml-1" />{" "}
+            {ar ? "طبي وإعاقة" : "Medical"}
           </TabsTrigger>
           <TabsTrigger value="care">
-            <ClipboardList className="h-4 w-4 ml-1" /> {ar ? "خطة ا��رعاية" : "Care Plan"}
+            <ClipboardList className="h-4 w-4 ml-1" />{" "}
+            {ar ? "خطة ا��رعاية" : "Care Plan"}
           </TabsTrigger>
           <TabsTrigger value="education">
-            <CalendarDays className="h-4 w-4 ml-1" /> {ar ? "تعليم وأنشطة" : "Education"}
+            <CalendarDays className="h-4 w-4 ml-1" />{" "}
+            {ar ? "تعليم وأنشطة" : "Education"}
           </TabsTrigger>
           <TabsTrigger value="documents">
-            <FileText className="h-4 w-4 ml-1" /> {ar ? "المستندات" : "Documents"}
+            <FileText className="h-4 w-4 ml-1" />{" "}
+            {ar ? "المستندات" : "Documents"}
           </TabsTrigger>
           <TabsTrigger value="financial">
-            <WalletMinimal className="h-4 w-4 ml-1" /> {ar ? "مالية وإدارية" : "Financial"}
+            <WalletMinimal className="h-4 w-4 ml-1" />{" "}
+            {ar ? "مالية وإدارية" : "Financial"}
           </TabsTrigger>
           <TabsTrigger value="communication">
-            <MessagesSquare className="h-4 w-4 ml-1" /> {ar ? "تواصل وملاحظات" : "Communication"}
+            <MessagesSquare className="h-4 w-4 ml-1" />{" "}
+            {ar ? "تواصل وملاحظات" : "Communication"}
           </TabsTrigger>
           <TabsTrigger value="emergency">
             <LifeBuoy className="h-4 w-4 ml-1" /> {ar ? "الطوارئ" : "Emergency"}
           </TabsTrigger>
           <TabsTrigger value="history">
-            <ClipboardList className="h-4 w-4 ml-1" /> {ar ? "السجل" : "History"}
+            <ClipboardList className="h-4 w-4 ml-1" />{" "}
+            {ar ? "السجل" : "History"}
           </TabsTrigger>
         </TabsList>
 
@@ -522,7 +587,8 @@ export default function BeneficiaryProfile() {
                         className="h-8 w-48"
                         defaultValue={b.guardian.name}
                         onChange={(e) => (b.guardian.name = e.target.value)}
-                      /> ( 
+                      />{" "}
+                      (
                       <Input
                         className="h-8 w-40"
                         defaultValue={b.guardian.relation}
@@ -555,30 +621,52 @@ export default function BeneficiaryProfile() {
           </Card>
           <Card className="mt-4">
             <CardHeader>
-              <CardTitle>{ar?"حقول إضافية":"Custom Fields"}</CardTitle>
-              <CardDescription>{ar?"تُدار من إعدادات المستفيد":"Managed in Beneficiary Settings"}</CardDescription>
+              <CardTitle>{ar ? "حقول إضافية" : "Custom Fields"}</CardTitle>
+              <CardDescription>
+                {ar
+                  ? "تُدار من إعدادات المستفيد"
+                  : "Managed in Beneficiary Settings"}
+              </CardDescription>
             </CardHeader>
             <CardContent className="grid md:grid-cols-2 gap-4">
-              {settings.customFields.map((f)=> (
+              {settings.customFields.map((f) => (
                 <div key={f.id} className="text-sm">
                   <div className="text-muted-foreground mb-1">{f.label}</div>
                   {f.type === "select" ? (
                     edit ? (
-                      <Select defaultValue={String(b.extra?.[f.key]||"")} onValueChange={(v)=>{ b.extra = { ...(b.extra||{}), [f.key]: v }; }}>
-                        <SelectTrigger className="h-8"><SelectValue /></SelectTrigger>
+                      <Select
+                        defaultValue={String(b.extra?.[f.key] || "")}
+                        onValueChange={(v) => {
+                          b.extra = { ...(b.extra || {}), [f.key]: v };
+                        }}
+                      >
+                        <SelectTrigger className="h-8">
+                          <SelectValue />
+                        </SelectTrigger>
                         <SelectContent>
-                          {(f.options||[]).map(o=> (<SelectItem key={o} value={o}>{o}</SelectItem>))}
+                          {(f.options || []).map((o) => (
+                            <SelectItem key={o} value={o}>
+                              {o}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     ) : (
-                      <div>{String(b.extra?.[f.key] || (ar?"—":"—"))}</div>
+                      <div>{String(b.extra?.[f.key] || (ar ? "—" : "—"))}</div>
                     )
+                  ) : edit ? (
+                    <Input
+                      className="h-8"
+                      defaultValue={String(b.extra?.[f.key] || "")}
+                      onChange={(e) => {
+                        b.extra = {
+                          ...(b.extra || {}),
+                          [f.key]: e.target.value,
+                        };
+                      }}
+                    />
                   ) : (
-                    edit ? (
-                      <Input className="h-8" defaultValue={String(b.extra?.[f.key]||"")} onChange={(e)=>{ b.extra = { ...(b.extra||{}), [f.key]: e.target.value }; }} />
-                    ) : (
-                      <div>{String(b.extra?.[f.key] || (ar?"—":"—"))}</div>
-                    )
+                    <div>{String(b.extra?.[f.key] || (ar ? "—" : "—"))}</div>
                   )}
                 </div>
               ))}
@@ -603,24 +691,33 @@ export default function BeneficiaryProfile() {
                 <div className="text-sm">
                   <span className="text-muted-foreground">
                     {ar ? "التاريخ" : "History"}:
-                  </span> {b.medical.history || (ar ? "غير متوفر" : "Not provided")}
+                  </span>{" "}
+                  {b.medical.history || (ar ? "غير متوفر" : "Not provided")}
                 </div>
                 <div className="text-sm">
                   <span className="text-muted-foreground">
                     {ar ? "التشخيصات" : "Diagnoses"}:
-                  </span> {b.medical.diagnoses?.join(", ") || (ar ? "لا يوجد" : "None")}
+                  </span>{" "}
+                  {b.medical.diagnoses?.join(", ") || (ar ? "لا يوجد" : "None")}
                 </div>
                 <div className="text-sm">
                   <span className="text-muted-foreground">
                     {ar ? "العلاجات" : "Treatments"}:
-                  </span> {b.medical.treatments?.join(", ") || (ar ? "لا يوجد" : "None")}
+                  </span>{" "}
+                  {b.medical.treatments?.join(", ") ||
+                    (ar ? "لا يوجد" : "None")}
                 </div>
               </div>
               <div className="space-y-2">
                 <div className="text-sm">
                   <span className="text-muted-foreground">
                     {ar ? "الأدوية" : "Medications"}:
-                  </span> {b.medical.medications && b.medical.medications.length ? "" : (ar ? "لا يوجد" : "None")}
+                  </span>{" "}
+                  {b.medical.medications && b.medical.medications.length
+                    ? ""
+                    : ar
+                      ? "لا يوجد"
+                      : "None"}
                 </div>
                 {b.medical.medications?.map((m) => (
                   <div key={m.name} className="text-sm pl-3">
@@ -630,7 +727,8 @@ export default function BeneficiaryProfile() {
                 <div className="text-sm">
                   <span className="text-muted-foreground">
                     {ar ? "الحساسية" : "Allergies"}:
-                  </span> {b.medical.allergies?.join(", ") || (ar ? "لا يوجد" : "None")}
+                  </span>{" "}
+                  {b.medical.allergies?.join(", ") || (ar ? "لا يوجد" : "None")}
                 </div>
               </div>
             </CardContent>
@@ -653,7 +751,8 @@ export default function BeneficiaryProfile() {
               <div className="text-sm flex items-center gap-2 flex-wrap">
                 <span className="text-muted-foreground">
                   {ar ? "الطبيب" : "Doctor"}:
-                </span> {edit ? (
+                </span>{" "}
+                {edit ? (
                   <Input
                     className="h-8 w-48"
                     defaultValue={b.care.assignedDoctor}
@@ -665,11 +764,14 @@ export default function BeneficiaryProfile() {
                 <span>·</span>
                 <span className="text-muted-foreground">
                   {ar ? "المعالج" : "Therapist"}:
-                </span> {edit ? (
+                </span>{" "}
+                {edit ? (
                   <Input
                     className="h-8 w-48"
                     defaultValue={b.care.assignedTherapist}
-                    onChange={(e) => (b.care.assignedTherapist = e.target.value)}
+                    onChange={(e) =>
+                      (b.care.assignedTherapist = e.target.value)
+                    }
                   />
                 ) : (
                   b.care.assignedTherapist || (ar ? "غير محدد" : "Unassigned")
@@ -680,23 +782,66 @@ export default function BeneficiaryProfile() {
                   {ar ? "الأهداف" : "Goals"}
                   {edit && (
                     <>
-                      <Input className="h-8 w-56" placeholder={ar?"أضف هدفاً":"Add goal"} onKeyDown={(e)=>{ if(e.key==="Enter"){ const v=(e.target as HTMLInputElement).value.trim(); if(v){ b.care.goals.push(v); (e.target as HTMLInputElement).value=""; }}}} />
-                      <Select onValueChange={(id)=>{ const tpl = settings.carePlanTemplates.find(t=>t.id===id); if(tpl){ tpl.goals.forEach(g=>{ if(!b.care.goals.includes(g)) b.care.goals.push(g); }); toast.success(ar?"تم تطبيق القالب":"Template applied"); } }}>
-                        <SelectTrigger className="h-8 w-56"><SelectValue placeholder={ar?"تطبيق قالب":"Apply template"} /></SelectTrigger>
+                      <Input
+                        className="h-8 w-56"
+                        placeholder={ar ? "أضف هدفاً" : "Add goal"}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            const v = (
+                              e.target as HTMLInputElement
+                            ).value.trim();
+                            if (v) {
+                              b.care.goals.push(v);
+                              (e.target as HTMLInputElement).value = "";
+                            }
+                          }
+                        }}
+                      />
+                      <Select
+                        onValueChange={(id) => {
+                          const tpl = settings.carePlanTemplates.find(
+                            (t) => t.id === id,
+                          );
+                          if (tpl) {
+                            tpl.goals.forEach((g) => {
+                              if (!b.care.goals.includes(g))
+                                b.care.goals.push(g);
+                            });
+                            toast.success(
+                              ar ? "تم تطبيق القالب" : "Template applied",
+                            );
+                          }
+                        }}
+                      >
+                        <SelectTrigger className="h-8 w-56">
+                          <SelectValue
+                            placeholder={ar ? "تطبيق قالب" : "Apply template"}
+                          />
+                        </SelectTrigger>
                         <SelectContent>
-                          {settings.carePlanTemplates.map(t=>(<SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>))}
+                          {settings.carePlanTemplates.map((t) => (
+                            <SelectItem key={t.id} value={t.id}>
+                              {t.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </>
                   )}
                 </div>
                 <ul className="list-disc pl-5 space-y-1 text-sm">
-                  {b.care.goals.map((g,idx) => (
+                  {b.care.goals.map((g, idx) => (
                     <li key={idx} className="flex items-center gap-2">
                       <span className="flex-1">{g}</span>
                       {edit && (
-                        <Button size="sm" variant="ghost" onClick={()=>{ b.care.goals = b.care.goals.filter((x)=>x!==g); }}>
-                          {ar?"حذف":"Delete"}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            b.care.goals = b.care.goals.filter((x) => x !== g);
+                          }}
+                        >
+                          {ar ? "حذف" : "Delete"}
                         </Button>
                       )}
                     </li>
@@ -727,11 +872,44 @@ export default function BeneficiaryProfile() {
                   {ar ? "جدول الجلسات" : "Appointments"}
                   {edit && (
                     <>
-                      <Input className="h-8 w-36" placeholder={ar?"النوع":"Type"} onChange={(e)=>((window as any)._apType=e.target.value)} />
-                      <Input className="h-8 w-52" type="datetime-local" onChange={(e)=>((window as any)._apDate=e.target.value)} />
-                      <Input className="h-8 w-40" placeholder={ar?"المعالج":"Therapist"} onChange={(e)=>((window as any)._apTher=e.target.value)} />
-                      <Button size="sm" onClick={()=>{ const t=(window as any)._apType||"Session"; const d=(window as any)._apDate||new Date().toISOString(); const th=(window as any)._apTher; b.care.appointments.push({ id: String(Date.now()), type: t, date: d, therapist: th }); toast.success(ar?"تمت الإضافة":"Added"); }}>
-                        {ar?"إضافة":"Add"}
+                      <Input
+                        className="h-8 w-36"
+                        placeholder={ar ? "النوع" : "Type"}
+                        onChange={(e) =>
+                          ((window as any)._apType = e.target.value)
+                        }
+                      />
+                      <Input
+                        className="h-8 w-52"
+                        type="datetime-local"
+                        onChange={(e) =>
+                          ((window as any)._apDate = e.target.value)
+                        }
+                      />
+                      <Input
+                        className="h-8 w-40"
+                        placeholder={ar ? "المعالج" : "Therapist"}
+                        onChange={(e) =>
+                          ((window as any)._apTher = e.target.value)
+                        }
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          const t = (window as any)._apType || "Session";
+                          const d =
+                            (window as any)._apDate || new Date().toISOString();
+                          const th = (window as any)._apTher;
+                          b.care.appointments.push({
+                            id: String(Date.now()),
+                            type: t,
+                            date: d,
+                            therapist: th,
+                          });
+                          toast.success(ar ? "تمت الإضافة" : "Added");
+                        }}
+                      >
+                        {ar ? "إضافة" : "Add"}
                       </Button>
                     </>
                   )}
@@ -739,12 +917,40 @@ export default function BeneficiaryProfile() {
                 <TableToolbar
                   onExport={(type) => {
                     const cols = [
-                      { header: ar ? 'النوع' : 'Type', accessor: (r:any) => r.type },
-                      { header: ar ? 'التاريخ' : 'Date', accessor: (r:any) => new Date(r.date).toLocaleString() },
-                      { header: ar ? 'المعالج' : 'Therapist', accessor: (r:any) => r.therapist || '' },
-                      { header: ar ? 'الحضور' : 'Attendance', accessor: (r:any) => (r.attended === true ? (ar ? 'حضر' : 'Present') : r.attended === false ? (ar ? 'غاب' : 'Missed') : '-') },
+                      {
+                        header: ar ? "النوع" : "Type",
+                        accessor: (r: any) => r.type,
+                      },
+                      {
+                        header: ar ? "التاريخ" : "Date",
+                        accessor: (r: any) => new Date(r.date).toLocaleString(),
+                      },
+                      {
+                        header: ar ? "المعالج" : "Therapist",
+                        accessor: (r: any) => r.therapist || "",
+                      },
+                      {
+                        header: ar ? "الحضور" : "Attendance",
+                        accessor: (r: any) =>
+                          r.attended === true
+                            ? ar
+                              ? "حضر"
+                              : "Present"
+                            : r.attended === false
+                              ? ar
+                                ? "غاب"
+                                : "Missed"
+                              : "-",
+                      },
                     ];
-                    import('@/lib/export').then((m)=>m.exportAll(b.care.appointments, cols, type, 'appointments'));
+                    import("@/lib/export").then((m) =>
+                      m.exportAll(
+                        b.care.appointments,
+                        cols,
+                        type,
+                        "appointments",
+                      ),
+                    );
                   }}
                 />
                 <Table>
@@ -781,8 +987,17 @@ export default function BeneficiaryProfile() {
                         </TableCell>
                         {edit && (
                           <TableCell className="text-right">
-                            <Button size="sm" variant="ghost" onClick={()=>{ b.care.appointments = b.care.appointments.filter(x=>x.id!==a.id); }}>
-                              {ar?"حذف":"Delete"}
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => {
+                                b.care.appointments =
+                                  b.care.appointments.filter(
+                                    (x) => x.id !== a.id,
+                                  );
+                              }}
+                            >
+                              {ar ? "حذف" : "Delete"}
                             </Button>
                           </TableCell>
                         )}
@@ -814,10 +1029,23 @@ export default function BeneficiaryProfile() {
                 </div>
                 {edit && (
                   <div className="flex items-center gap-2 mb-2">
-                    <Select onValueChange={(v)=>{ if(v && !b.education.programs.includes(v)) b.education.programs.push(v); }}>
-                      <SelectTrigger className="h-8 w-56"><SelectValue placeholder={ar?"إضافة برنامج":"Add program"} /></SelectTrigger>
+                    <Select
+                      onValueChange={(v) => {
+                        if (v && !b.education.programs.includes(v))
+                          b.education.programs.push(v);
+                      }}
+                    >
+                      <SelectTrigger className="h-8 w-56">
+                        <SelectValue
+                          placeholder={ar ? "إضافة برنامج" : "Add program"}
+                        />
+                      </SelectTrigger>
                       <SelectContent>
-                        {settings.lists.supportPrograms.map((p)=>(<SelectItem key={p} value={p}>{p}</SelectItem>))}
+                        {settings.lists.supportPrograms.map((p) => (
+                          <SelectItem key={p} value={p}>
+                            {p}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -839,7 +1067,19 @@ export default function BeneficiaryProfile() {
                 </div>
                 {edit && (
                   <div className="flex items-center gap-2 mb-2">
-                    <Input className="h-8 w-56" placeholder={ar?"إضافة نشاط":"Add activity"} onKeyDown={(e)=>{ if(e.key==="Enter"){ const v=(e.target as HTMLInputElement).value.trim(); if(v){ b.education.activities.push(v); (e.target as HTMLInputElement).value=""; }}}} />
+                    <Input
+                      className="h-8 w-56"
+                      placeholder={ar ? "إضافة نشاط" : "Add activity"}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          const v = (e.target as HTMLInputElement).value.trim();
+                          if (v) {
+                            b.education.activities.push(v);
+                            (e.target as HTMLInputElement).value = "";
+                          }
+                        }
+                      }}
+                    />
                   </div>
                 )}
                 <ul className="list-disc pl-5 space-y-1">
@@ -873,18 +1113,47 @@ export default function BeneficiaryProfile() {
               {canEdit && (
                 <div className="mb-3 grid gap-2">
                   <div className="flex items-center gap-2">
-                    <Select onValueChange={(v)=>((window as any)._docType=v)}>
-                      <SelectTrigger className="h-8 w-56"><SelectValue placeholder={ar?"نوع المستند":"Document type"} /></SelectTrigger>
+                    <Select
+                      onValueChange={(v) => ((window as any)._docType = v)}
+                    >
+                      <SelectTrigger className="h-8 w-56">
+                        <SelectValue
+                          placeholder={ar ? "نوع المستند" : "Document type"}
+                        />
+                      </SelectTrigger>
                       <SelectContent>
-                        {settings.documentCategories.map((c)=>(<SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>))}
+                        {settings.documentCategories.map((c) => (
+                          <SelectItem key={c.id} value={c.name}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
-                    <Input className="h-8 w-56" placeholder={ar?"العنوان":"Title"} onChange={(e)=>((window as any)._docTitle=e.target.value)} />
-                    <Input className="h-8" type="date" onChange={(e)=>((window as any)._docIssued=e.target.value)} />
-                    <Input className="h-8" type="date" onChange={(e)=>((window as any)._docExp=e.target.value)} />
+                    <Input
+                      className="h-8 w-56"
+                      placeholder={ar ? "العنوان" : "Title"}
+                      onChange={(e) =>
+                        ((window as any)._docTitle = e.target.value)
+                      }
+                    />
+                    <Input
+                      className="h-8"
+                      type="date"
+                      onChange={(e) =>
+                        ((window as any)._docIssued = e.target.value)
+                      }
+                    />
+                    <Input
+                      className="h-8"
+                      type="date"
+                      onChange={(e) =>
+                        ((window as any)._docExp = e.target.value)
+                      }
+                    />
                   </div>
                   <label className="cursor-pointer inline-flex items-center gap-2">
-                    <UploadCloud className="h-4 w-4" /> {ar?"رفع ملف":"Upload file"}
+                    <UploadCloud className="h-4 w-4" />{" "}
+                    {ar ? "رفع ملف" : "Upload file"}
                     <Input
                       type="file"
                       accept="image/*,application/pdf"
@@ -895,14 +1164,26 @@ export default function BeneficiaryProfile() {
                         for (const f of Array.from(files)) {
                           const reader = new FileReader();
                           reader.onload = () => {
-                            const cat = (window as any)._docType || settings.documentCategories[0]?.name || "Attachment";
+                            const cat =
+                              (window as any)._docType ||
+                              settings.documentCategories[0]?.name ||
+                              "Attachment";
                             const title = (window as any)._docTitle || f.name;
-                            const issued = (window as any)._docIssued ? new Date((window as any)._docIssued).toISOString() : new Date().toISOString();
-                            const exp = (window as any)._docExp ? new Date((window as any)._docExp).toISOString() : undefined;
+                            const issued = (window as any)._docIssued
+                              ? new Date(
+                                  (window as any)._docIssued,
+                                ).toISOString()
+                              : new Date().toISOString();
+                            const exp = (window as any)._docExp
+                              ? new Date((window as any)._docExp).toISOString()
+                              : undefined;
                             addDocument(
                               b.id,
                               {
-                                id: `${Date.now()}_${f.name}`.replace(/\s+/g, "_"),
+                                id: `${Date.now()}_${f.name}`.replace(
+                                  /\s+/g,
+                                  "_",
+                                ),
                                 type: cat,
                                 title,
                                 url: reader.result as string,
@@ -925,12 +1206,26 @@ export default function BeneficiaryProfile() {
               <TableToolbar
                 onExport={(type) => {
                   const cols = [
-                    { header: ar ? 'النوع' : 'Type', accessor: (r:any) => r.type },
-                    { header: ar ? 'العنوان' : 'Title', accessor: (r:any) => r.title },
-                    { header: ar ? 'تاريخ الإصدار' : 'Issued', accessor: (r:any) => r.issuedAt || '' },
-                    { header: ar ? 'تاريخ الانتهاء' : 'Expires', accessor: (r:any) => r.expiresAt || '' },
+                    {
+                      header: ar ? "النوع" : "Type",
+                      accessor: (r: any) => r.type,
+                    },
+                    {
+                      header: ar ? "العنوان" : "Title",
+                      accessor: (r: any) => r.title,
+                    },
+                    {
+                      header: ar ? "تاريخ الإصدار" : "Issued",
+                      accessor: (r: any) => r.issuedAt || "",
+                    },
+                    {
+                      header: ar ? "تاريخ الانتهاء" : "Expires",
+                      accessor: (r: any) => r.expiresAt || "",
+                    },
                   ];
-                  import('@/lib/export').then((m)=>m.exportAll(b.documents, cols, type, 'documents'));
+                  import("@/lib/export").then((m) =>
+                    m.exportAll(b.documents, cols, type, "documents"),
+                  );
                 }}
               />
               <Table>
@@ -966,7 +1261,8 @@ export default function BeneficiaryProfile() {
                       <TableCell>
                         {d.expiresAt ? (
                           <span>
-                            {new Date(d.expiresAt).toLocaleDateString()} {new Date(d.expiresAt) < new Date() ? (
+                            {new Date(d.expiresAt).toLocaleDateString()}{" "}
+                            {new Date(d.expiresAt) < new Date() ? (
                               <Badge className="ml-2 bg-destructive text-destructive-foreground">
                                 {ar ? "منتهي" : "Expired"}
                               </Badge>
@@ -1005,10 +1301,19 @@ export default function BeneficiaryProfile() {
                     {ar ? "الرعاية" : "Sponsorship"}:
                   </span>
                   {edit ? (
-                    <Select defaultValue={b.financial.sponsorship || undefined} onValueChange={(v)=> (b.financial.sponsorship = v)}>
-                      <SelectTrigger className="h-8 w-56"><SelectValue placeholder={ar?"اختر":"Choose"} /></SelectTrigger>
+                    <Select
+                      defaultValue={b.financial.sponsorship || undefined}
+                      onValueChange={(v) => (b.financial.sponsorship = v)}
+                    >
+                      <SelectTrigger className="h-8 w-56">
+                        <SelectValue placeholder={ar ? "اختر" : "Choose"} />
+                      </SelectTrigger>
                       <SelectContent>
-                        {settings.lists.sponsorshipTypes.map((s)=>(<SelectItem key={s} value={s}>{s}</SelectItem>))}
+                        {settings.lists.sponsorshipTypes.map((s) => (
+                          <SelectItem key={s} value={s}>
+                            {s}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   ) : (
@@ -1018,24 +1323,34 @@ export default function BeneficiaryProfile() {
                 <div className="mt-2">
                   <span className="text-muted-foreground">
                     {ar ? "البرامج الداعمة" : "Support Programs"}:
-                  </span> {edit ? (
+                  </span>{" "}
+                  {edit ? (
                     <div className="mt-1 grid grid-cols-2 gap-2">
-                      {settings.lists.supportPrograms.map((p)=>{
-                        const checked = (b.financial.supportPrograms||[]).includes(p);
+                      {settings.lists.supportPrograms.map((p) => {
+                        const checked = (
+                          b.financial.supportPrograms || []
+                        ).includes(p);
                         return (
                           <label key={p} className="flex items-center gap-2">
-                            <Checkbox checked={checked} onCheckedChange={(v)=>{
-                              const list = new Set(b.financial.supportPrograms||[]);
-                              if(v) list.add(p); else list.delete(p);
-                              b.financial.supportPrograms = Array.from(list);
-                            }} />
+                            <Checkbox
+                              checked={checked}
+                              onCheckedChange={(v) => {
+                                const list = new Set(
+                                  b.financial.supportPrograms || [],
+                                );
+                                if (v) list.add(p);
+                                else list.delete(p);
+                                b.financial.supportPrograms = Array.from(list);
+                              }}
+                            />
                             <span>{p}</span>
                           </label>
                         );
                       })}
                     </div>
                   ) : (
-                    b.financial.supportPrograms?.join(", ") || (ar ? "لا يوجد" : "None")
+                    b.financial.supportPrograms?.join(", ") ||
+                    (ar ? "لا يوجد" : "None")
                   )}
                 </div>
               </div>
@@ -1046,12 +1361,32 @@ export default function BeneficiaryProfile() {
                 <TableToolbar
                   onExport={(type) => {
                     const cols = [
-                      { header: ar ? 'التاريخ' : 'Date', accessor: (r:any) => new Date(r.date).toLocaleDateString() },
-                      { header: ar ? 'المبلغ' : 'Amount', accessor: (r:any) => r.amount },
-                      { header: ar ? 'الطريقة' : 'Method', accessor: (r:any) => r.method },
-                      { header: ar ? 'ملاحظة' : 'Note', accessor: (r:any) => r.note || '' },
+                      {
+                        header: ar ? "التاريخ" : "Date",
+                        accessor: (r: any) =>
+                          new Date(r.date).toLocaleDateString(),
+                      },
+                      {
+                        header: ar ? "المبلغ" : "Amount",
+                        accessor: (r: any) => r.amount,
+                      },
+                      {
+                        header: ar ? "الطريقة" : "Method",
+                        accessor: (r: any) => r.method,
+                      },
+                      {
+                        header: ar ? "ملاحظة" : "Note",
+                        accessor: (r: any) => r.note || "",
+                      },
                     ];
-                    import('@/lib/export').then((m)=>m.exportAll(b.financial.paymentHistory, cols, type, 'payments'));
+                    import("@/lib/export").then((m) =>
+                      m.exportAll(
+                        b.financial.paymentHistory,
+                        cols,
+                        type,
+                        "payments",
+                      ),
+                    );
                   }}
                 />
                 <Table>

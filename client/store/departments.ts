@@ -3,9 +3,12 @@ export type Department = { id: string; name: string };
 const KEY = "departments_v1";
 let cache: Department[] | null = null;
 const subs = new Set<() => void>();
-function emit() { subs.forEach((cb) => cb()); }
+function emit() {
+  subs.forEach((cb) => cb());
+}
 export function subscribeDepartments(cb: () => void) {
-  subs.add(cb); return () => subs.delete(cb);
+  subs.add(cb);
+  return () => subs.delete(cb);
 }
 
 const seed: Department[] = [
@@ -20,21 +23,32 @@ function load(): Department[] {
   if (cache) return cache;
   try {
     const raw = localStorage.getItem(KEY);
-    if (!raw) { cache = seed; localStorage.setItem(KEY, JSON.stringify(seed)); return cache; }
+    if (!raw) {
+      cache = seed;
+      localStorage.setItem(KEY, JSON.stringify(seed));
+      return cache;
+    }
     cache = JSON.parse(raw) as Department[];
     return cache;
   } catch {
-    cache = seed; localStorage.setItem(KEY, JSON.stringify(seed)); return cache;
+    cache = seed;
+    localStorage.setItem(KEY, JSON.stringify(seed));
+    return cache;
   }
 }
 function save(list: Department[]) {
-  cache = list; localStorage.setItem(KEY, JSON.stringify(list)); emit();
+  cache = list;
+  localStorage.setItem(KEY, JSON.stringify(list));
+  emit();
 }
-export function listDepartments() { return load(); }
+export function listDepartments() {
+  return load();
+}
 export function upsertDepartment(dep: Department) {
   const arr = load();
   const idx = arr.findIndex((d) => d.id === dep.id);
-  if (idx >= 0) arr[idx] = dep; else arr.push(dep);
+  if (idx >= 0) arr[idx] = dep;
+  else arr.push(dep);
   save([...arr]);
 }
 export function removeDepartment(id: string) {

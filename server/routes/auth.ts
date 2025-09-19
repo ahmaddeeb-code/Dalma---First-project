@@ -127,7 +127,9 @@ router.post("/admin/set-password", (req, res) => {
   const users = loadUsers();
   const u = users.find(
     (x: any) =>
-      (identifier && x.email && x.email.toLowerCase() === String(identifier).toLowerCase()) ||
+      (identifier &&
+        x.email &&
+        x.email.toLowerCase() === String(identifier).toLowerCase()) ||
       (userId && x.id === userId),
   );
   if (!u) return res.json({ ok: false, error: "User not found" });
@@ -136,7 +138,8 @@ router.post("/admin/set-password", (req, res) => {
   u.hash = creds.hash;
   u.failedAttempts = 0;
   u.lockedUntil = null;
-  if (typeof mustChangePassword === "boolean") u.mustChangePassword = mustChangePassword;
+  if (typeof mustChangePassword === "boolean")
+    u.mustChangePassword = mustChangePassword;
   saveUsers(users);
   return res.json({ ok: true });
 });

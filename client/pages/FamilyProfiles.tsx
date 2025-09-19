@@ -17,8 +17,13 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import TableToolbar from "@/components/ui/table-toolbar";
-import TableActions, { createEditAction, createDeleteAction } from "@/components/ui/table-actions";
-import SortableTableHead, { useTableSort } from "@/components/ui/sortable-table-head";
+import TableActions, {
+  createEditAction,
+  createDeleteAction,
+} from "@/components/ui/table-actions";
+import SortableTableHead, {
+  useTableSort,
+} from "@/components/ui/sortable-table-head";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -120,12 +125,15 @@ export default function FamilyProfiles() {
   );
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const { sortBy, sortDir, handleSort, sortData } = useTableSort<'name' | 'phone' | 'beneficiaries'>('name');
+  const { sortBy, sortDir, handleSort, sortData } = useTableSort<
+    "name" | "phone" | "beneficiaries"
+  >("name");
   const sortedFiltered = useMemo(() => {
     return sortData(filtered, sortBy, sortDir, (a, b) => {
-      if (sortBy === 'name') return (a.name || '').localeCompare(b.name || '');
-      if (sortBy === 'phone') return (a.contact.phone || '').localeCompare(b.contact.phone || '');
-      if (sortBy === 'beneficiaries') return a.links.length - b.links.length;
+      if (sortBy === "name") return (a.name || "").localeCompare(b.name || "");
+      if (sortBy === "phone")
+        return (a.contact.phone || "").localeCompare(b.contact.phone || "");
+      if (sortBy === "beneficiaries") return a.links.length - b.links.length;
       return 0;
     });
   }, [filtered, sortBy, sortDir]);
@@ -274,24 +282,42 @@ export default function FamilyProfiles() {
           </div>
         </CardHeader>
         <CardContent>
-        <div className="mb-3">
-          <TableToolbar
-            onAdd={canManage ? () => setOpen(true) : undefined}
-            addLabel={t("common.add")}
-            onExport={(type) => {
-              const cols = [
-                { header: 'ID', accessor: (r:any) => r.familyId },
-                { header: t("common.name") as string, accessor: (r:any) => r.name || '' },
-                { header: getLocale() === 'ar' ? 'الهاتف' : 'Phone', accessor: (r:any) => r.contact.phone || '' },
-                { header: getLocale() === 'ar' ? 'البريد' : 'Email', accessor: (r:any) => r.contact.email || '' },
-                { header: getLocale() === 'ar' ? 'المست��يدون' : 'Beneficiaries', accessor: (r:any) => r.links.length },
-              ];
-              import('@/lib/export').then((m)=>m.exportAll(filtered, cols, type, 'families'));
-            }}
-            pageSize={pageSize}
-            onPageSizeChange={(n)=>{ setPageSize(n); setPage(1); }}
-          />
-        </div>
+          <div className="mb-3">
+            <TableToolbar
+              onAdd={canManage ? () => setOpen(true) : undefined}
+              addLabel={t("common.add")}
+              onExport={(type) => {
+                const cols = [
+                  { header: "ID", accessor: (r: any) => r.familyId },
+                  {
+                    header: t("common.name") as string,
+                    accessor: (r: any) => r.name || "",
+                  },
+                  {
+                    header: getLocale() === "ar" ? "الهاتف" : "Phone",
+                    accessor: (r: any) => r.contact.phone || "",
+                  },
+                  {
+                    header: getLocale() === "ar" ? "البريد" : "Email",
+                    accessor: (r: any) => r.contact.email || "",
+                  },
+                  {
+                    header:
+                      getLocale() === "ar" ? "المست��يدون" : "Beneficiaries",
+                    accessor: (r: any) => r.links.length,
+                  },
+                ];
+                import("@/lib/export").then((m) =>
+                  m.exportAll(filtered, cols, type, "families"),
+                );
+              }}
+              pageSize={pageSize}
+              onPageSizeChange={(n) => {
+                setPageSize(n);
+                setPage(1);
+              }}
+            />
+          </div>
           <div className="w-full overflow-x-auto">
             <Table>
               <TableHeader>
@@ -313,7 +339,10 @@ export default function FamilyProfiles() {
                   >
                     {getLocale() === "ar" ? "الهاتف" : "Phone"}
                   </SortableTableHead>
-                  <SortableTableHead sortable={false} className="hidden md:table-cell">
+                  <SortableTableHead
+                    sortable={false}
+                    className="hidden md:table-cell"
+                  >
                     {getLocale() === "ar" ? "البريد" : "Email"}
                   </SortableTableHead>
                   <SortableTableHead
@@ -346,14 +375,18 @@ export default function FamilyProfiles() {
                             setEditing(f);
                             setOpen(true);
                           }),
-                          ...(canManage ? [createDeleteAction(
-                            () => {
-                              removeFamily(f.id);
-                              toast.success(t("pages.medical.saved"));
-                            },
-                            t("common.delete"),
-                            `Delete family "${f.name}"?`
-                          )] : []),
+                          ...(canManage
+                            ? [
+                                createDeleteAction(
+                                  () => {
+                                    removeFamily(f.id);
+                                    toast.success(t("pages.medical.saved"));
+                                  },
+                                  t("common.delete"),
+                                  `Delete family "${f.name}"?`,
+                                ),
+                              ]
+                            : []),
                         ]}
                       />
                     </TableCell>
@@ -654,12 +687,19 @@ function GuardiansTab({
             addLabel={t("common.add")}
             onExport={(type) => {
               const cols = [
-                { header: 'Name', accessor: (r:any) => r.fullName },
-                { header: 'Relation', accessor: (r:any) => r.relation },
-                { header: 'Contact', accessor: (r:any) => (r.contact.phone || '') + (r.contact.email ? ' • ' + r.contact.email : '') },
-                { header: 'Status', accessor: (r:any) => r.status },
+                { header: "Name", accessor: (r: any) => r.fullName },
+                { header: "Relation", accessor: (r: any) => r.relation },
+                {
+                  header: "Contact",
+                  accessor: (r: any) =>
+                    (r.contact.phone || "") +
+                    (r.contact.email ? " • " + r.contact.email : ""),
+                },
+                { header: "Status", accessor: (r: any) => r.status },
               ];
-              import('@/lib/export').then((m)=>m.exportAll(family.guardians, cols, type, 'guardians'));
+              import("@/lib/export").then((m) =>
+                m.exportAll(family.guardians, cols, type, "guardians"),
+              );
             }}
           />
         </div>
@@ -939,17 +979,45 @@ function BeneficiariesTab({
       <CardContent>
         <div className="mb-3">
           <TableToolbar
-            onAdd={canManage ? () => {
-              if(selectedId){ linkBeneficiary(family.id, selectedId); setSelectedId(""); toast.success(t("pages.medical.saved")); }
-            } : undefined}
+            onAdd={
+              canManage
+                ? () => {
+                    if (selectedId) {
+                      linkBeneficiary(family.id, selectedId);
+                      setSelectedId("");
+                      toast.success(t("pages.medical.saved"));
+                    }
+                  }
+                : undefined
+            }
             addLabel={t("common.add")}
             onExport={(type) => {
               const cols = [
-                { header: 'Beneficiary', accessor: (r:any)=> r.beneficiaryId },
-                { header: 'Therapist', accessor: (r:any)=> r.assignedTherapist || '' },
-                { header: 'Status', accessor: (r:any)=> r.status || '' },
+                {
+                  header: "Beneficiary",
+                  accessor: (r: any) => r.beneficiaryId,
+                },
+                {
+                  header: "Therapist",
+                  accessor: (r: any) => r.assignedTherapist || "",
+                },
+                { header: "Status", accessor: (r: any) => r.status || "" },
               ];
-              import('@/lib/export').then((m)=>m.exportAll(links.map(l=>({beneficiaryId:l.beneficiaryId, assignedTherapist: all.find(a=>a.id===l.beneficiaryId)?.care.assignedTherapist || '', status: all.find(a=>a.id===l.beneficiaryId)?.status || ''})), cols, type, 'linked_beneficiaries'));
+              import("@/lib/export").then((m) =>
+                m.exportAll(
+                  links.map((l) => ({
+                    beneficiaryId: l.beneficiaryId,
+                    assignedTherapist:
+                      all.find((a) => a.id === l.beneficiaryId)?.care
+                        .assignedTherapist || "",
+                    status:
+                      all.find((a) => a.id === l.beneficiaryId)?.status || "",
+                  })),
+                  cols,
+                  type,
+                  "linked_beneficiaries",
+                ),
+              );
             }}
           />
         </div>
@@ -1174,12 +1242,17 @@ function DashboardTab({ family }: { family: Family | null }) {
             <TableToolbar
               onExport={(type) => {
                 const cols = [
-                  { header: 'Name', accessor: (r:any) => r.name },
-                  { header: 'ID', accessor: (r:any) => r.beneficiaryId },
-                  { header: 'Therapist', accessor: (r:any) => r.care.assignedTherapist || '' },
-                  { header: 'Status', accessor: (r:any) => r.status || '' },
+                  { header: "Name", accessor: (r: any) => r.name },
+                  { header: "ID", accessor: (r: any) => r.beneficiaryId },
+                  {
+                    header: "Therapist",
+                    accessor: (r: any) => r.care.assignedTherapist || "",
+                  },
+                  { header: "Status", accessor: (r: any) => r.status || "" },
                 ];
-                import('@/lib/export').then((m)=>m.exportAll(items, cols, type, 'overview'));
+                import("@/lib/export").then((m) =>
+                  m.exportAll(items, cols, type, "overview"),
+                );
               }}
             />
           </div>

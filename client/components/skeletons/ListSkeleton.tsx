@@ -4,7 +4,10 @@ export default function ListSkeleton({ rows = 6 }: { rows?: number }) {
   return (
     <div className="space-y-3" aria-busy>
       {[...Array(rows)].map((_, i) => (
-        <div key={i} className="flex items-center justify-between gap-4 p-3 rounded-md border">
+        <div
+          key={i}
+          className="flex items-center justify-between gap-4 p-3 rounded-md border"
+        >
           <div className="w-full">
             <div className="flex items-center gap-2">
               <Skeleton className="h-4 w-40" />

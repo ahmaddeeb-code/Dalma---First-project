@@ -76,7 +76,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   Pagination,
   PaginationContent,
@@ -116,11 +121,19 @@ export default function Employees() {
   const [privUserId, setPrivUserId] = useState<string | null>(null);
   const [searchText, setSearchText] = useState("");
   const [roleFilter, setRoleFilter] = useState<string | "all">("all");
-  const [departmentFilter, setDepartmentFilter] = useState<string | "all">("all");
-  const [loginFilter, setLoginFilter] = useState<"all" | "enabled" | "disabled">("all");
+  const [departmentFilter, setDepartmentFilter] = useState<string | "all">(
+    "all",
+  );
+  const [loginFilter, setLoginFilter] = useState<
+    "all" | "enabled" | "disabled"
+  >("all");
   const [privilegeFilter, setPrivilegeFilter] = useState<string | "all">("all");
-  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
-  const [sortBy, setSortBy] = useState<"name" | "department" | "joinedAt">("name");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "active" | "inactive"
+  >("all");
+  const [sortBy, setSortBy] = useState<"name" | "department" | "joinedAt">(
+    "name",
+  );
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
   function handleSort(column: "name" | "department" | "joinedAt") {
@@ -133,16 +146,27 @@ export default function Employees() {
   }
 
   function getSortIcon(column: "name" | "department" | "joinedAt") {
-    if (sortBy !== column) return <ChevronsUpDown className="h-3 w-3 opacity-50" />;
-    return sortDir === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />;
+    if (sortBy !== column)
+      return <ChevronsUpDown className="h-3 w-3 opacity-50" />;
+    return sortDir === "asc" ? (
+      <ChevronUp className="h-3 w-3" />
+    ) : (
+      <ChevronDown className="h-3 w-3" />
+    );
   }
 
   const filtered = useMemo(() => {
     const s = searchText.trim().toLowerCase();
     const acl = loadACL();
     const withFilters = users
-      .filter((u) => (roleFilter === "all" ? true : u.roleIds.includes(roleFilter)))
-      .filter((u) => (departmentFilter === "all" ? true : (u.department || "") === departmentFilter))
+      .filter((u) =>
+        roleFilter === "all" ? true : u.roleIds.includes(roleFilter),
+      )
+      .filter((u) =>
+        departmentFilter === "all"
+          ? true
+          : (u.department || "") === departmentFilter,
+      )
       .filter((u) =>
         loginFilter === "all"
           ? true
@@ -200,7 +224,17 @@ export default function Employees() {
     };
 
     return withFilters.sort(cmp);
-  }, [users, searchText, roleFilter, departmentFilter, loginFilter, privilegeFilter, statusFilter, sortBy, sortDir]);
+  }, [
+    users,
+    searchText,
+    roleFilter,
+    departmentFilter,
+    loginFilter,
+    privilegeFilter,
+    statusFilter,
+    sortBy,
+    sortDir,
+  ]);
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -210,14 +244,20 @@ export default function Employees() {
 
   const total = users.filter((u) => u.active !== false).length;
   const doctors = users.filter((u) => u.roleIds.includes("r_doctor")).length;
-  const therapists = users.filter((u) => u.roleIds.includes("r_therapist")).length;
+  const therapists = users.filter((u) =>
+    u.roleIds.includes("r_therapist"),
+  ).length;
 
   return (
     <div className="space-y-6">
       <div className="flex items-end justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t("pages.employees.title")}</h1>
-          <p className="text-muted-foreground mt-1">{t("pages.employees.desc")}</p>
+          <h1 className="text-2xl font-bold tracking-tight">
+            {t("pages.employees.title")}
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            {t("pages.employees.desc")}
+          </p>
         </div>
       </div>
 
@@ -255,7 +295,10 @@ export default function Employees() {
           <div className="md:col-span-2">
             <Label>{t("common.search")}</Label>
             <div className="relative">
-              <Search className="absolute top-2.5 text-muted-foreground" style={{ [ar ? "right" : "left"]: "0.5rem" }} />
+              <Search
+                className="absolute top-2.5 text-muted-foreground"
+                style={{ [ar ? "right" : "left"]: "0.5rem" }}
+              />
               <Input
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
@@ -273,7 +316,9 @@ export default function Employees() {
             >
               <option value="all">{t("common.all")}</option>
               {roles.map((r) => (
-                <option key={r.id} value={r.id}>{r.name}</option>
+                <option key={r.id} value={r.id}>
+                  {r.name}
+                </option>
               ))}
             </select>
           </div>
@@ -286,7 +331,9 @@ export default function Employees() {
             >
               <option value="all">{t("common.all")}</option>
               {departments.map((d) => (
-                <option key={d.id} value={d.name}>{d.name}</option>
+                <option key={d.id} value={d.name}>
+                  {d.name}
+                </option>
               ))}
             </select>
           </div>
@@ -311,7 +358,9 @@ export default function Employees() {
             >
               <option value="all">{t("common.all")}</option>
               {privileges.map((p) => (
-                <option key={p.id} value={p.id}>{p.name}</option>
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
               ))}
             </select>
           </div>
@@ -336,7 +385,9 @@ export default function Employees() {
             >
               <option value="name">{t("common.name")}</option>
               <option value="department">{ar ? "القسم" : "Department"}</option>
-              <option value="joinedAt">{ar ? "تاريخ الالتحاق" : "Date of Joining"}</option>
+              <option value="joinedAt">
+                {ar ? "تاريخ الالتحاق" : "Date of Joining"}
+              </option>
             </select>
           </div>
           <div>
@@ -359,7 +410,9 @@ export default function Employees() {
             <Users className="h-5 w-5 text-primary" />
             {t("pages.employees.table.title")}
           </CardTitle>
-          <CardDescription className="text-muted-foreground">{t("pages.employees.table.desc")}</CardDescription>
+          <CardDescription className="text-muted-foreground">
+            {t("pages.employees.table.desc")}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <TooltipProvider>
@@ -372,13 +425,24 @@ export default function Employees() {
                     const cols = [
                       { header: "Name", accessor: (r: any) => r.name },
                       { header: "Email", accessor: (r: any) => r.email },
-                      { header: "Department", accessor: (r: any) => r.department },
-                      { header: "Roles", accessor: (r: any) => (r.roleIds || []).join(", ") },
+                      {
+                        header: "Department",
+                        accessor: (r: any) => r.department,
+                      },
+                      {
+                        header: "Roles",
+                        accessor: (r: any) => (r.roleIds || []).join(", "),
+                      },
                     ];
-                    await import("@/lib/export").then((m) => m.exportAll(pageItems, cols, type, "employees"));
+                    await import("@/lib/export").then((m) =>
+                      m.exportAll(pageItems, cols, type, "employees"),
+                    );
                   }}
                   pageSize={pageSize}
-                  onPageSizeChange={(n) => { setPageSize(n); setPage(1); }}
+                  onPageSizeChange={(n) => {
+                    setPageSize(n);
+                    setPage(1);
+                  }}
                 />
               </div>
             </div>
@@ -396,7 +460,9 @@ export default function Employees() {
                           {getSortIcon("name")}
                         </div>
                       </TableHead>
-                      <TableHead className="font-semibold">{t("common.email")}</TableHead>
+                      <TableHead className="font-semibold">
+                        {t("common.email")}
+                      </TableHead>
                       <TableHead
                         className="cursor-pointer select-none hover:bg-accent/30 transition-colors font-semibold"
                         onClick={() => handleSort("department")}
@@ -415,11 +481,19 @@ export default function Employees() {
                           {getSortIcon("joinedAt")}
                         </div>
                       </TableHead>
-                      <TableHead className="hidden md:table-cell font-semibold">{t("common.roles")}</TableHead>
-                      <TableHead className="hidden md:table-cell font-semibold">Login</TableHead>
-                      <TableHead className="hidden md:table-cell font-semibold">Default Password</TableHead>
+                      <TableHead className="hidden md:table-cell font-semibold">
+                        {t("common.roles")}
+                      </TableHead>
+                      <TableHead className="hidden md:table-cell font-semibold">
+                        Login
+                      </TableHead>
+                      <TableHead className="hidden md:table-cell font-semibold">
+                        Default Password
+                      </TableHead>
                       {canManage && (
-                        <TableHead className="text-center font-semibold w-[140px]">{t("common.actions")}</TableHead>
+                        <TableHead className="text-center font-semibold w-[140px]">
+                          {t("common.actions")}
+                        </TableHead>
                       )}
                     </TableRow>
                   </TableHeader>
@@ -428,39 +502,62 @@ export default function Employees() {
                       <TableRow
                         key={u.id}
                         className={`hover:bg-accent/50 transition-colors border-border/40 ${
-                          index % 2 === 0 ? 'bg-background/50' : 'bg-muted/20'
+                          index % 2 === 0 ? "bg-background/50" : "bg-muted/20"
                         }`}
                       >
                         <TableCell className="font-medium py-3">
                           <div className="flex items-center gap-2">
-                            {u.title ? <Badge variant="secondary" className="text-xs">{u.title}</Badge> : null}
+                            {u.title ? (
+                              <Badge variant="secondary" className="text-xs">
+                                {u.title}
+                              </Badge>
+                            ) : null}
                             <span>{u.name}</span>
                           </div>
                         </TableCell>
                         <TableCell className="py-3">{u.email}</TableCell>
                         <TableCell className="py-3">
-                          <div className="text-sm">{(u.department || "").toString()}</div>
+                          <div className="text-sm">
+                            {(u.department || "").toString()}
+                          </div>
                         </TableCell>
                         <TableCell className="hidden md:table-cell py-3">
-                          {u.joinedAt ? new Date(u.joinedAt).toLocaleDateString() : "—"}
+                          {u.joinedAt
+                            ? new Date(u.joinedAt).toLocaleDateString()
+                            : "—"}
                         </TableCell>
                         <TableCell className="py-3">
                           <div className="flex flex-wrap gap-1">
                             {u.roleIds.map((rid) => {
                               const r = roles.find((x) => x.id === rid);
                               return (
-                                <Badge key={rid} variant="secondary" className="text-xs">{r ? r.name : rid}</Badge>
+                                <Badge
+                                  key={rid}
+                                  variant="secondary"
+                                  className="text-xs"
+                                >
+                                  {r ? r.name : rid}
+                                </Badge>
                               );
                             })}
                           </div>
                         </TableCell>
                         <TableCell className="hidden md:table-cell py-3">
-                          <Badge variant={u.loginEnabled === false ? "destructive" : "default"} className="text-xs">
+                          <Badge
+                            variant={
+                              u.loginEnabled === false
+                                ? "destructive"
+                                : "default"
+                            }
+                            className="text-xs"
+                          >
                             {u.loginEnabled === false ? "Disabled" : "Enabled"}
                           </Badge>
                         </TableCell>
                         <TableCell className="hidden md:table-cell py-3">
-                          <span className="font-mono text-xs bg-muted px-2 py-1 rounded">{u.defaultPassword || "-"}</span>
+                          <span className="font-mono text-xs bg-muted px-2 py-1 rounded">
+                            {u.defaultPassword || "-"}
+                          </span>
                         </TableCell>
                         {canManage && (
                           <TableCell className="text-center py-3">
@@ -490,39 +587,73 @@ export default function Employees() {
                                     <Eye className="h-4 w-4" />
                                   </Button>
                                 </TooltipTrigger>
-                                <TooltipContent>Manage Privileges</TooltipContent>
+                                <TooltipContent>
+                                  Manage Privileges
+                                </TooltipContent>
                               </Tooltip>
 
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                  <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-accent">
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-8 w-8 p-0 hover:bg-accent"
+                                  >
                                     <MoreHorizontal className="h-4 w-4" />
                                   </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-48">
+                                <DropdownMenuContent
+                                  align="end"
+                                  className="w-48"
+                                >
                                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                   <DropdownMenuSeparator />
                                   <DropdownMenuItem
                                     onClick={async () => {
-                                      const pwd = Math.random().toString(36).slice(2, 10);
+                                      const pwd = Math.random()
+                                        .toString(36)
+                                        .slice(2, 10);
                                       setUserPassword(u.id, pwd);
-                                      updateUser(u.id, { defaultPassword: pwd, loginEnabled: true, mustChangePassword: true });
+                                      updateUser(u.id, {
+                                        defaultPassword: pwd,
+                                        loginEnabled: true,
+                                        mustChangePassword: true,
+                                      });
                                       try {
-                                        const r = await fetch("/api/auth/admin/set-password", {
-                                          method: "POST",
-                                          headers: { "Content-Type": "application/json" },
-                                          body: JSON.stringify({ identifier: u.email, password: pwd, mustChangePassword: true }),
-                                        });
+                                        const r = await fetch(
+                                          "/api/auth/admin/set-password",
+                                          {
+                                            method: "POST",
+                                            headers: {
+                                              "Content-Type":
+                                                "application/json",
+                                            },
+                                            body: JSON.stringify({
+                                              identifier: u.email,
+                                              password: pwd,
+                                              mustChangePassword: true,
+                                            }),
+                                          },
+                                        );
                                         const d = await r.json();
-                                        if (!d.ok) throw new Error(d.error || "Server error");
-                                        toast.success("Account generated / password set");
+                                        if (!d.ok)
+                                          throw new Error(
+                                            d.error || "Server error",
+                                          );
+                                        toast.success(
+                                          "Account generated / password set",
+                                        );
                                       } catch (e: any) {
-                                        toast.error("Server password update failed");
+                                        toast.error(
+                                          "Server password update failed",
+                                        );
                                       }
                                     }}
                                   >
                                     <Key className="mr-2 h-4 w-4" />
-                                    {u.password ? "Reset Password" : "Generate Account"}
+                                    {u.password
+                                      ? "Reset Password"
+                                      : "Generate Account"}
                                   </DropdownMenuItem>
                                   <DropdownMenuItem
                                     onClick={() => {
@@ -555,15 +686,27 @@ export default function Employees() {
                                     </AlertDialogTrigger>
                                     <AlertDialogContent>
                                       <AlertDialogHeader>
-                                        <AlertDialogTitle>{t("pages.employees.confirmDeleteTitle")}</AlertDialogTitle>
-                                        <AlertDialogDescription>{t("pages.employees.confirmDeleteMsg")}</AlertDialogDescription>
+                                        <AlertDialogTitle>
+                                          {t(
+                                            "pages.employees.confirmDeleteTitle",
+                                          )}
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          {t(
+                                            "pages.employees.confirmDeleteMsg",
+                                          )}
+                                        </AlertDialogDescription>
                                       </AlertDialogHeader>
                                       <AlertDialogFooter>
-                                        <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                                        <AlertDialogCancel>
+                                          {t("common.cancel")}
+                                        </AlertDialogCancel>
                                         <AlertDialogAction
                                           onClick={() => {
                                             removeUser(u.id);
-                                            toast.success(t("pages.employees.deleted"));
+                                            toast.success(
+                                              t("pages.employees.deleted"),
+                                            );
                                           }}
                                         >
                                           {t("common.delete")}
@@ -587,13 +730,27 @@ export default function Employees() {
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious href="#" onClick={(e) => { e.preventDefault(); setPage((p) => Math.max(1, p - 1)); }} />
+                  <PaginationPrevious
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setPage((p) => Math.max(1, p - 1));
+                    }}
+                  />
                 </PaginationItem>
                 <PaginationItem>
-                  <span className="px-3 py-2 text-sm text-muted-foreground">{page} / {totalPages}</span>
+                  <span className="px-3 py-2 text-sm text-muted-foreground">
+                    {page} / {totalPages}
+                  </span>
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationNext href="#" onClick={(e) => { e.preventDefault(); setPage((p) => Math.min(totalPages, p + 1)); }} />
+                  <PaginationNext
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setPage((p) => Math.min(totalPages, p + 1));
+                    }}
+                  />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
@@ -610,7 +767,11 @@ export default function Employees() {
         }}
         user={editing}
       />
-      <ManagePrivilegesDialog userId={privUserId} open={!!privUserId} onOpenChange={(v) => !v && setPrivUserId(null)} />
+      <ManagePrivilegesDialog
+        userId={privUserId}
+        open={!!privUserId}
+        onOpenChange={(v) => !v && setPrivUserId(null)}
+      />
     </div>
   );
 }

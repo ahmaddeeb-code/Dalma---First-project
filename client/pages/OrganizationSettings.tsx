@@ -317,12 +317,14 @@ function BranchesCard({ canManage }: { canManage: boolean }) {
             addLabel="Add"
             onExport={(type) => {
               const cols = [
-                { header: 'Name', accessor: (r:any) => r.name },
-                { header: 'Address', accessor: (r:any) => r.address },
-                { header: 'Phone', accessor: (r:any) => r.phone },
-                { header: 'Contact', accessor: (r:any) => r.contactPerson },
+                { header: "Name", accessor: (r: any) => r.name },
+                { header: "Address", accessor: (r: any) => r.address },
+                { header: "Phone", accessor: (r: any) => r.phone },
+                { header: "Contact", accessor: (r: any) => r.contactPerson },
               ];
-              import('@/lib/export').then((m)=>m.exportAll(st.branches, cols, type, 'branches'));
+              import("@/lib/export").then((m) =>
+                m.exportAll(st.branches, cols, type, "branches"),
+              );
             }}
           />
         </div>

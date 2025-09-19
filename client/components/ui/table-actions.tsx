@@ -1,7 +1,23 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { MoreHorizontal, Pencil, Trash2, Eye, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -9,7 +25,13 @@ export type TableAction = {
   label: string;
   icon?: React.ReactNode;
   onClick: () => void;
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
   disabled?: boolean;
   confirmation?: {
     title: string;
@@ -50,12 +72,16 @@ export default function TableActions({
           {visibleActions.map((action, index) => (
             <ActionButton key={index} action={action} />
           ))}
-          
+
           {/* Show overflow actions in dropdown */}
           {hiddenActions.length > 0 && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-accent">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-8 w-8 p-0 hover:bg-accent"
+                >
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -90,9 +116,7 @@ function ActionButton({ action }: { action: TableAction }) {
   if (action.confirmation) {
     return (
       <AlertDialog>
-        <AlertDialogTrigger asChild>
-          {buttonContent}
-        </AlertDialogTrigger>
+        <AlertDialogTrigger asChild>{buttonContent}</AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{action.confirmation.title}</AlertDialogTitle>
@@ -124,7 +148,8 @@ function ActionMenuItem({ action }: { action: TableAction }) {
       onClick={action.onClick}
       disabled={action.disabled}
       className={cn(
-        action.variant === "destructive" && "text-destructive focus:text-destructive"
+        action.variant === "destructive" &&
+          "text-destructive focus:text-destructive",
       )}
       onSelect={action.confirmation ? (e) => e.preventDefault() : undefined}
     >
@@ -136,9 +161,7 @@ function ActionMenuItem({ action }: { action: TableAction }) {
   if (action.confirmation) {
     return (
       <AlertDialog>
-        <AlertDialogTrigger asChild>
-          {menuItem}
-        </AlertDialogTrigger>
+        <AlertDialogTrigger asChild>{menuItem}</AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{action.confirmation.title}</AlertDialogTitle>
@@ -174,7 +197,7 @@ export const createEditAction = (onClick: () => void): TableAction => ({
 export const createDeleteAction = (
   onClick: () => void,
   confirmTitle = "Confirm delete",
-  confirmDescription?: string
+  confirmDescription?: string,
 ): TableAction => ({
   label: "Delete",
   icon: <Trash2 className="h-4 w-4" />,

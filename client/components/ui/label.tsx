@@ -55,8 +55,14 @@ const Label = React.forwardRef<
           const next = root.nextElementSibling as HTMLElement | null;
           if (next) {
             const candidate =
-              next.querySelector("input[required],select[required],textarea[required]") ||
-              (next as HTMLInputElement).matches && (next as HTMLInputElement).hasAttribute && (next as HTMLInputElement).hasAttribute("required") ? next : null;
+              next.querySelector(
+                "input[required],select[required],textarea[required]",
+              ) ||
+              ((next as HTMLInputElement).matches &&
+                (next as HTMLInputElement).hasAttribute &&
+                (next as HTMLInputElement).hasAttribute("required"))
+                ? next
+                : null;
             if (candidate) isRequired = true;
           }
         }
@@ -77,7 +83,9 @@ const Label = React.forwardRef<
       <span className="inline-flex items-center gap-1">
         {children}
         {detected ? (
-          <span aria-hidden className="text-red-600">*</span>
+          <span aria-hidden className="text-red-600">
+            *
+          </span>
         ) : null}
       </span>
     </LabelPrimitive.Root>

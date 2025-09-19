@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ShieldCheck } from "lucide-react";
@@ -20,11 +26,15 @@ export default function Logout() {
         // Clear auth/session
         logout();
         // Remove transient auth artifacts
-        try { localStorage.removeItem("auth_otp_v1"); } catch {}
+        try {
+          localStorage.removeItem("auth_otp_v1");
+        } catch {}
         // Clear in-memory cached data
         qc.clear();
         // Clear sessionStorage entirely (non-persistent sensitive data)
-        try { sessionStorage.clear(); } catch {}
+        try {
+          sessionStorage.clear();
+        } catch {}
       } finally {
         setPhase("done");
         // Redirect to login shortly after
@@ -43,10 +53,15 @@ export default function Logout() {
               <ShieldCheck className="h-7 w-7" />
             </div>
             <CardTitle className="mt-4 text-2xl font-bold">
-              {t("brand")} – {phase === "clearing" ? (t("header.signOut") || "Signing out") : ("Done")}
+              {t("brand")} –{" "}
+              {phase === "clearing"
+                ? t("header.signOut") || "Signing out"
+                : "Done"}
             </CardTitle>
             <CardDescription>
-              {phase === "clearing" ? ("Clearing your session…") : ("You have successfully logged out.")}
+              {phase === "clearing"
+                ? "Clearing your session…"
+                : "You have successfully logged out."}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -56,15 +71,28 @@ export default function Logout() {
               <Skeleton className="h-4 w-1/2" />
             </div>
             <div className="mt-6 flex items-center justify-center gap-3 text-sm text-muted-foreground">
-              <span>{phase === "clearing" ? ("Loading content…") : ("Redirecting to sign in…")}</span>
+              <span>
+                {phase === "clearing"
+                  ? "Loading content…"
+                  : "Redirecting to sign in…"}
+              </span>
               <span className="flex gap-1">
                 <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" />
-                <span className="w-1.5 h-1.5 bg-secondary rounded-full animate-bounce" style={{ animationDelay: "0.1s" }} />
-                <span className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
+                <span
+                  className="w-1.5 h-1.5 bg-secondary rounded-full animate-bounce"
+                  style={{ animationDelay: "0.1s" }}
+                />
+                <span
+                  className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.2s" }}
+                />
               </span>
             </div>
             <div className="mt-6 flex justify-center">
-              <Button variant="secondary" onClick={() => navigate("/login", { replace: true })}>
+              <Button
+                variant="secondary"
+                onClick={() => navigate("/login", { replace: true })}
+              >
                 {t("header.signIn") || "Sign in"}
               </Button>
             </div>

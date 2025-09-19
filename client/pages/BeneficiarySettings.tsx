@@ -17,7 +17,10 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import TableToolbar from "@/components/ui/table-toolbar";
-import TableActions, { createEditAction, createDeleteAction } from "@/components/ui/table-actions";
+import TableActions, {
+  createEditAction,
+  createDeleteAction,
+} from "@/components/ui/table-actions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -54,7 +57,19 @@ import {
   removeListItem,
   uid,
 } from "@/store/beneficiary-settings";
-import { Plus, Pencil, Trash2, User, Settings, Hash, Shield, FolderOpen, FileText, UserCheck, List } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  User,
+  Settings,
+  Hash,
+  Shield,
+  FolderOpen,
+  FileText,
+  UserCheck,
+  List,
+} from "lucide-react";
 
 function useLocaleValue() {
   return useSyncExternalStore(
@@ -368,12 +383,23 @@ function CarePlansCard({
             addLabel="Add"
             onExport={(type) => {
               const cols = [
-                { header: 'Name', accessor: (r:any) => r.name },
-                { header: 'Goals', accessor: (r:any) => (r.goals || []).join(', ') },
-                { header: 'Interventions', accessor: (r:any) => (r.interventions || []).join(', ') },
-                { header: 'Metrics', accessor: (r:any) => (r.metrics || []).join(', ') },
+                { header: "Name", accessor: (r: any) => r.name },
+                {
+                  header: "Goals",
+                  accessor: (r: any) => (r.goals || []).join(", "),
+                },
+                {
+                  header: "Interventions",
+                  accessor: (r: any) => (r.interventions || []).join(", "),
+                },
+                {
+                  header: "Metrics",
+                  accessor: (r: any) => (r.metrics || []).join(", "),
+                },
               ];
-              import('@/lib/export').then((m)=>m.exportAll(s.carePlanTemplates, cols, type, 'careplans'));
+              import("@/lib/export").then((m) =>
+                m.exportAll(s.carePlanTemplates, cols, type, "careplans"),
+              );
             }}
           />
         </div>
@@ -397,8 +423,18 @@ function CarePlansCard({
                 <TableCell className="text-center">
                   <TableActions
                     actions={[
-                      createEditAction(() => { setEditing(t); setOpen(true); }),
-                      createDeleteAction(() => { removeCarePlan(t.id); toast.success("Removed"); }, "Confirm delete", `Delete template "${t.name}"?`),
+                      createEditAction(() => {
+                        setEditing(t);
+                        setOpen(true);
+                      }),
+                      createDeleteAction(
+                        () => {
+                          removeCarePlan(t.id);
+                          toast.success("Removed");
+                        },
+                        "Confirm delete",
+                        `Delete template "${t.name}"?`,
+                      ),
                     ]}
                   />
                 </TableCell>
@@ -599,10 +635,7 @@ function DocumentsCard({
       </CardHeader>
       <CardContent>
         <div className="mb-3">
-          <TableToolbar
-            onAdd={() => setOpen(true)}
-            addLabel="Add"
-          />
+          <TableToolbar onAdd={() => setOpen(true)} addLabel="Add" />
         </div>
         <Table>
           <TableHeader>
@@ -922,10 +955,7 @@ function CustomFieldsCard({
       </CardHeader>
       <CardContent>
         <div className="mb-3">
-          <TableToolbar
-            onAdd={() => setOpen(true)}
-            addLabel="Add"
-          />
+          <TableToolbar onAdd={() => setOpen(true)} addLabel="Add" />
         </div>
         <Table>
           <TableHeader>

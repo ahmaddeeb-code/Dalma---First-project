@@ -79,11 +79,15 @@ export default function Login() {
       if ((res as any).mfa) {
         setMfaPending(true);
         setMfaUserId((res as any).userId || null);
-        if ((res as any).demoCode) toast.success(`OTP: ${(res as any).demoCode}`);
+        if ((res as any).demoCode)
+          toast.success(`OTP: ${(res as any).demoCode}`);
         return;
       }
       if ((res as any).mustChangePassword) {
-        navigate("/first-login", { replace: true, state: { userId: (res as any).userId } });
+        navigate("/first-login", {
+          replace: true,
+          state: { userId: (res as any).userId },
+        });
         return;
       }
       toast.success(t("login.success") || "Welcome");
@@ -107,7 +111,10 @@ export default function Login() {
         if (user) {
           // If user is flagged to change password, send to first-login
           if ((user as any).mustChangePassword) {
-            navigate("/first-login", { replace: true, state: { userId: user.id } });
+            navigate("/first-login", {
+              replace: true,
+              state: { userId: user.id },
+            });
             return;
           }
           doLogin(

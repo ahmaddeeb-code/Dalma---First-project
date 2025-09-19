@@ -2,7 +2,14 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type TableToolbarProps = {
   className?: string;
@@ -83,7 +90,11 @@ export default function TableToolbar({
 
         {rightChildren}
         {onAdd ? (
-          <Button onClick={onAdd} className="flex items-center" variant={"default"}>
+          <Button
+            onClick={onAdd}
+            className="flex items-center"
+            variant={"default"}
+          >
             <Plus className="mr-2 h-4 w-4" />
             {addLabel}
           </Button>

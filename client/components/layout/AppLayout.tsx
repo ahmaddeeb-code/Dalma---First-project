@@ -156,7 +156,10 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     if (el.getAttribute("lang") !== wantLang) el.setAttribute("lang", wantLang);
   }, [locale]);
 
-  const hideChrome = pathname.startsWith("/login") || pathname.startsWith("/logout") || pathname.startsWith("/first-login");
+  const hideChrome =
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/logout") ||
+    pathname.startsWith("/first-login");
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
   const [changePwOpen, setChangePwOpen] = useState(false);
@@ -575,18 +578,28 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                           <DropdownMenuSeparator />
                         </>
                       ) : null}
-                      <DropdownMenuItem onClick={()=>setChangePwOpen(true)} className="hover:bg-accent/50 transition-all duration-200">
+                      <DropdownMenuItem
+                        onClick={() => setChangePwOpen(true)}
+                        className="hover:bg-accent/50 transition-all duration-200"
+                      >
                         Change Password
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem asChild className="hover:bg-destructive/10 hover:text-destructive transition-all duration-200">
+                      <DropdownMenuItem
+                        asChild
+                        className="hover:bg-destructive/10 hover:text-destructive transition-all duration-200"
+                      >
                         <Link to="/logout">
-                          <LogOut className="mr-2 h-4 w-4" /> {t("header.signOut")}
+                          <LogOut className="mr-2 h-4 w-4" />{" "}
+                          {t("header.signOut")}
                         </Link>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <ChangePasswordDialog open={changePwOpen} onOpenChange={setChangePwOpen} />
+                  <ChangePasswordDialog
+                    open={changePwOpen}
+                    onOpenChange={setChangePwOpen}
+                  />
                 </>
               ) : (
                 <DropdownMenu>

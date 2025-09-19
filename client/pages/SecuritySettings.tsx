@@ -79,7 +79,8 @@ export default function SecuritySettings() {
   const stats = useMemo(() => {
     const activeUsers = s.auth.twoFactor ? "2FA Enabled" : "2FA Disabled";
     const auditCount = s.audits.length;
-    const complianceStatus = s.compliance.gdpr || s.compliance.hipaa ? "Compliant" : "Basic";
+    const complianceStatus =
+      s.compliance.gdpr || s.compliance.hipaa ? "Compliant" : "Basic";
     const dataProtection = s.data.encryptSensitive ? "Encrypted" : "Standard";
     return { activeUsers, auditCount, complianceStatus, dataProtection };
   }, [s]);
@@ -307,14 +308,16 @@ function RolesCard({ canManage }: { canManage: boolean }) {
           <TableToolbar
             onExport={(type) => {
               const cols = [
-                { header: 'Role', accessor: (r: any) => r.name },
-                { header: 'View', accessor: (r: any) => r.view },
-                { header: 'Edit', accessor: (r: any) => r.edit },
-                { header: 'Delete', accessor: (r: any) => r.del },
-                { header: 'Export', accessor: (r: any) => r.export },
+                { header: "Role", accessor: (r: any) => r.name },
+                { header: "View", accessor: (r: any) => r.view },
+                { header: "Edit", accessor: (r: any) => r.edit },
+                { header: "Delete", accessor: (r: any) => r.del },
+                { header: "Export", accessor: (r: any) => r.export },
               ];
               const roles = loadACL().roles;
-              import('@/lib/export').then((m) => m.exportAll(roles, cols, type, 'roles'));
+              import("@/lib/export").then((m) =>
+                m.exportAll(roles, cols, type, "roles"),
+              );
             }}
           />
         </div>
@@ -442,16 +445,43 @@ function AuditCard({
             onExport={(type) => {
               // export audits as csv/xlsx/pdf
               const cols = [
-                { header: 'Time', accessor: (r: any) => new Date(r.at).toLocaleString() },
-                { header: 'User', accessor: (r: any) => r.userId || 'system' },
-                { header: 'Action', accessor: (r: any) => r.action },
-                { header: 'Entity', accessor: (r: any) => r.entity || '-' },
-                { header: 'Old', accessor: (r: any) => (r.oldValue ? JSON.stringify(r.oldValue) : '-') },
-                { header: 'New', accessor: (r: any) => (r.newValue ? JSON.stringify(r.newValue) : '-') },
+                {
+                  header: "Time",
+                  accessor: (r: any) => new Date(r.at).toLocaleString(),
+                },
+                { header: "User", accessor: (r: any) => r.userId || "system" },
+                { header: "Action", accessor: (r: any) => r.action },
+                { header: "Entity", accessor: (r: any) => r.entity || "-" },
+                {
+                  header: "Old",
+                  accessor: (r: any) =>
+                    r.oldValue ? JSON.stringify(r.oldValue) : "-",
+                },
+                {
+                  header: "New",
+                  accessor: (r: any) =>
+                    r.newValue ? JSON.stringify(r.newValue) : "-",
+                },
               ];
-              import('@/lib/export').then((m) => m.exportAll(s.audits.slice(0,300), cols, type, `audits_${type}`));
+              import("@/lib/export").then((m) =>
+                m.exportAll(
+                  s.audits.slice(0, 300),
+                  cols,
+                  type,
+                  `audits_${type}`,
+                ),
+              );
             }}
-            children={<div className="flex items-center gap-2"><Button variant="destructive" onClick={() => setConfirmClear(true)}>Clear</Button></div>}
+            children={
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="destructive"
+                  onClick={() => setConfirmClear(true)}
+                >
+                  Clear
+                </Button>
+              </div>
+            }
           />
         </div>
         <Table>

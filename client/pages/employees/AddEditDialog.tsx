@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,12 +14,31 @@ import { Role, User, listRoles, upsertUser, uid } from "@/store/acl";
 import { listDepartments } from "@/store/departments";
 import { getLocale, t } from "@/i18n";
 import { toast } from "sonner";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-const titleOptions = ["Mr.", "Ms.", "Dr.", "Eng.", "Nrs.", "PT", "OT", "ST", "Admin"];
+const titleOptions = [
+  "Mr.",
+  "Ms.",
+  "Dr.",
+  "Eng.",
+  "Nrs.",
+  "PT",
+  "OT",
+  "ST",
+  "Admin",
+];
 
 function combineName(parts: string[]) {
-  return parts.map((p) => p.trim()).filter(Boolean).join(" ");
+  return parts
+    .map((p) => p.trim())
+    .filter(Boolean)
+    .join(" ");
 }
 
 export default function AddEditEmployeeDialog({
@@ -27,8 +52,20 @@ export default function AddEditEmployeeDialog({
 }) {
   const ar = getLocale() === "ar";
   // Saudi 5-part names in EN/AR
-  const [nameEnParts, setNameEnParts] = useState<string[]>(["", "", "", "", ""]);
-  const [nameArParts, setNameArParts] = useState<string[]>(["", "", "", "", ""]);
+  const [nameEnParts, setNameEnParts] = useState<string[]>([
+    "",
+    "",
+    "",
+    "",
+    "",
+  ]);
+  const [nameArParts, setNameArParts] = useState<string[]>([
+    "",
+    "",
+    "",
+    "",
+    "",
+  ]);
   // Basics
   const [title, setTitle] = useState<string>("");
   const [gender, setGender] = useState<"male" | "female">("male");
@@ -73,7 +110,8 @@ export default function AddEditEmployeeDialog({
 
   const valid = useMemo(() => {
     const en = combineName(nameEnParts);
-    const hasName = en.trim().length > 0 && nameEnParts[0].trim() && nameEnParts[3].trim();
+    const hasName =
+      en.trim().length > 0 && nameEnParts[0].trim() && nameEnParts[3].trim();
     return hasName && /.+@.+\..+/.test(email) && !!title;
   }, [nameEnParts, email, title]);
 
@@ -116,7 +154,13 @@ export default function AddEditEmployeeDialog({
       <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {user ? (ar ? "تعديل موظف" : "Edit Employee") : (ar ? "إضافة موظف" : "Add Employee")}
+            {user
+              ? ar
+                ? "تعديل موظف"
+                : "Edit Employee"
+              : ar
+                ? "إضافة موظف"
+                : "Add Employee"}
           </DialogTitle>
         </DialogHeader>
 
@@ -131,7 +175,9 @@ export default function AddEditEmployeeDialog({
                 <Label requiredMark>{ar ? "اللقب" : "Title"}</Label>
                 <Select value={title} onValueChange={setTitle}>
                   <SelectTrigger className="h-9">
-                    <SelectValue placeholder={ar ? "اختر اللقب" : "Choose title"} />
+                    <SelectValue
+                      placeholder={ar ? "اختر اللقب" : "Choose title"}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {titleOptions.map((ab) => (
@@ -143,7 +189,9 @@ export default function AddEditEmployeeDialog({
                 </Select>
               </div>
               <div className="md:col-span-2">
-                <Label requiredMark>{ar ? "الاسم (إنجليزي)" : "Name (English)"}</Label>
+                <Label requiredMark>
+                  {ar ? "الاسم (إنجليزي)" : "Name (English)"}
+                </Label>
                 <div className="grid grid-cols-5 gap-2 mt-1">
                   {nameEnParts.map((p, i) => (
                     <Input
@@ -154,11 +202,15 @@ export default function AddEditEmployeeDialog({
                         arr[i] = e.target.value;
                         setNameEnParts(arr);
                       }}
-                      placeholder={["Given", "Father", "Grandfather", "Family", "Extra"][i]}
+                      placeholder={
+                        ["Given", "Father", "Grandfather", "Family", "Extra"][i]
+                      }
                     />
                   ))}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">{combineName(nameEnParts)}</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {combineName(nameEnParts)}
+                </p>
               </div>
             </div>
             <div className="grid md:grid-cols-3 gap-3 mt-3">
@@ -175,7 +227,9 @@ export default function AddEditEmployeeDialog({
                         arr[i] = e.target.value;
                         setNameArParts(arr);
                       }}
-                      placeholder={["الاسم", "اسم الأب", "اسم الجد", "العائلة", "إضافي"][i]}
+                      placeholder={
+                        ["الاسم", "اسم الأب", "اسم الجد", "العائلة", "إضافي"][i]
+                      }
                     />
                   ))}
                 </div>
@@ -209,7 +263,9 @@ export default function AddEditEmployeeDialog({
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
                 >
-                  <option value="">{t("common.select") || (ar ? "اختر" : "Select")}</option>
+                  <option value="">
+                    {t("common.select") || (ar ? "اختر" : "Select")}
+                  </option>
                   {departments.map((d) => (
                     <option key={d.id} value={d.name}>
                       {d.name}
@@ -219,11 +275,18 @@ export default function AddEditEmployeeDialog({
               </div>
               <div>
                 <Label>{ar ? "تاريخ الالتحاق" : "Date of Joining"}</Label>
-                <Input type="date" value={joinedAt} onChange={(e) => setJoinedAt(e.target.value)} />
+                <Input
+                  type="date"
+                  value={joinedAt}
+                  onChange={(e) => setJoinedAt(e.target.value)}
+                />
               </div>
             </div>
             <div className="flex items-center gap-2 mt-2">
-              <Checkbox checked={active} onCheckedChange={(v) => setActive(v === true)} />
+              <Checkbox
+                checked={active}
+                onCheckedChange={(v) => setActive(v === true)}
+              />
               <Label>{t("common.active") || (ar ? "نشط" : "Active")}</Label>
             </div>
           </div>
@@ -236,11 +299,18 @@ export default function AddEditEmployeeDialog({
             <div className="grid md:grid-cols-2 gap-3">
               <div>
                 <Label requiredMark>Email</Label>
-                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
               <div>
                 <Label>{ar ? "الهاتف" : "Phone"}</Label>
-                <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
+                <Input
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
               </div>
             </div>
           </div>
@@ -250,7 +320,9 @@ export default function AddEditEmployeeDialog({
             <div className="text-xs uppercase tracking-wide text-muted-foreground font-semibold mb-2">
               {ar ? "الصلاحيات" : "Access"}
             </div>
-            <Label className="mb-1 inline-block">{t("common.roles") || (ar ? "الأدوار" : "Roles")}</Label>
+            <Label className="mb-1 inline-block">
+              {t("common.roles") || (ar ? "الأدوار" : "Roles")}
+            </Label>
             <div className="border rounded-md p-2 max-h-48 overflow-auto space-y-2">
               {roles.map((r) => (
                 <label key={r.id} className="flex items-center gap-2 text-sm">

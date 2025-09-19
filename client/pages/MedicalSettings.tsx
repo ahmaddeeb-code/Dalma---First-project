@@ -17,8 +17,13 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import TableToolbar from "@/components/ui/table-toolbar";
-import TableActions, { createEditAction, createDeleteAction } from "@/components/ui/table-actions";
-import SortableTableHead, { useTableSort } from "@/components/ui/sortable-table-head";
+import TableActions, {
+  createEditAction,
+  createDeleteAction,
+} from "@/components/ui/table-actions";
+import SortableTableHead, {
+  useTableSort,
+} from "@/components/ui/sortable-table-head";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -72,7 +77,18 @@ import {
   removeDosageUnit,
 } from "@/store/medical";
 import { getCurrentUser, getCurrentUserId, subscribeAuth } from "@/store/auth";
-import { Plus, Pencil, Trash2, ShieldAlert, Stethoscope, FileText, Pill, Calendar, TrendingUp, AlertTriangle } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  ShieldAlert,
+  Stethoscope,
+  FileText,
+  Pill,
+  Calendar,
+  TrendingUp,
+  AlertTriangle,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
@@ -195,19 +211,21 @@ function TherapyTypesCard({
 }) {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<TherapySessionType | null>(null);
-  const { sortBy, sortDir, handleSort, sortData } = useTableSort<'name' | 'duration' | 'frequency'>('name');
+  const { sortBy, sortDir, handleSort, sortData } = useTableSort<
+    "name" | "duration" | "frequency"
+  >("name");
 
   const sortedTherapyTypes = useMemo(() => {
     return sortData(state.therapyTypes, sortBy, sortDir, (a, b) => {
-      if (sortBy === 'name') {
-        const aName = L(loc, a.name) || '';
-        const bName = L(loc, b.name) || '';
+      if (sortBy === "name") {
+        const aName = L(loc, a.name) || "";
+        const bName = L(loc, b.name) || "";
         return aName.localeCompare(bName);
       }
-      if (sortBy === 'duration') {
+      if (sortBy === "duration") {
         return a.durationMin - b.durationMin;
       }
-      if (sortBy === 'frequency') {
+      if (sortBy === "frequency") {
         return a.defaultFrequency.localeCompare(b.defaultFrequency);
       }
       return 0;
@@ -229,11 +247,22 @@ function TherapyTypesCard({
             addLabel={t("common.add")}
             onExport={(type) => {
               const cols = [
-                { header: t("common.name"), accessor: (r:any) => r.name.en || r.name },
-                { header: t("pages.medical.therapy.duration"), accessor: (r:any) => r.durationMin },
-                { header: t("pages.medical.therapy.frequency"), accessor: (r:any) => r.defaultFrequency },
+                {
+                  header: t("common.name"),
+                  accessor: (r: any) => r.name.en || r.name,
+                },
+                {
+                  header: t("pages.medical.therapy.duration"),
+                  accessor: (r: any) => r.durationMin,
+                },
+                {
+                  header: t("pages.medical.therapy.frequency"),
+                  accessor: (r: any) => r.defaultFrequency,
+                },
               ];
-              import('@/lib/export').then((m)=>m.exportAll(state.therapyTypes, cols, type, 'therapy'));
+              import("@/lib/export").then((m) =>
+                m.exportAll(state.therapyTypes, cols, type, "therapy"),
+              );
             }}
           />
         </div>
@@ -300,7 +329,7 @@ function TherapyTypesCard({
                             toast.success(t("pages.medical.saved"));
                           },
                           t("common.delete"),
-                          `${t("pages.medical.therapy.title")} — ${t("common.delete")}?`
+                          `${t("pages.medical.therapy.title")} — ${t("common.delete")}?`,
                         ),
                       ]}
                     />
@@ -477,10 +506,18 @@ function PlanTemplatesCard({
             addLabel={t("common.add")}
             onExport={(type) => {
               const cols = [
-                { header: t("common.name"), accessor: (r:any) => L(loc, r.name) },
-                { header: t("pages.medical.plans.assigned"), accessor: (r:any) => r.assignedRole },
+                {
+                  header: t("common.name"),
+                  accessor: (r: any) => L(loc, r.name),
+                },
+                {
+                  header: t("pages.medical.plans.assigned"),
+                  accessor: (r: any) => r.assignedRole,
+                },
               ];
-              import('@/lib/export').then((m)=>m.exportAll(state.templates, cols, type, 'plan_templates'));
+              import("@/lib/export").then((m) =>
+                m.exportAll(state.templates, cols, type, "plan_templates"),
+              );
             }}
           />
         </div>
@@ -1157,10 +1194,23 @@ function ProgressCard({
             addLabel={t("common.add")}
             onExport={(type) => {
               const cols = [
-                { header: t("common.name"), accessor: (r:any) => L(loc, r.name) },
-                { header: t("pages.medical.common.description"), accessor: (r:any) => L(loc, r.description) },
+                {
+                  header: t("common.name"),
+                  accessor: (r: any) => L(loc, r.name),
+                },
+                {
+                  header: t("pages.medical.common.description"),
+                  accessor: (r: any) => L(loc, r.description),
+                },
               ];
-              import('@/lib/export').then((m)=>m.exportAll(state.progress.criteria, cols, type, 'progress_criteria'));
+              import("@/lib/export").then((m) =>
+                m.exportAll(
+                  state.progress.criteria,
+                  cols,
+                  type,
+                  "progress_criteria",
+                ),
+              );
             }}
           />
         </div>
@@ -1368,11 +1418,28 @@ function EmergencyCard({
             addLabel={t("common.add")}
             onExport={(type) => {
               const cols = [
-                { header: t("common.name"), accessor: (r:any) => L(loc, r.name) },
-                { header: t("pages.medical.common.description"), accessor: (r:any) => L(loc, r.description) },
-                { header: t("pages.medical.emergency.steps"), accessor: (r:any) => (r.steps[loc] || r.steps.en || []).join(' → ') },
+                {
+                  header: t("common.name"),
+                  accessor: (r: any) => L(loc, r.name),
+                },
+                {
+                  header: t("pages.medical.common.description"),
+                  accessor: (r: any) => L(loc, r.description),
+                },
+                {
+                  header: t("pages.medical.emergency.steps"),
+                  accessor: (r: any) =>
+                    (r.steps[loc] || r.steps.en || []).join(" → "),
+                },
               ];
-              import('@/lib/export').then((m)=>m.exportAll(state.emergencyProtocols, cols, type, 'emergency_protocols'));
+              import("@/lib/export").then((m) =>
+                m.exportAll(
+                  state.emergencyProtocols,
+                  cols,
+                  type,
+                  "emergency_protocols",
+                ),
+              );
             }}
           />
         </div>
