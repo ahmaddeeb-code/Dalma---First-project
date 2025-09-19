@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import TableToolbar from "@/components/ui/table-toolbar";
+import TableActions, { createViewAction } from "@/components/ui/table-actions";
 import {
   Select,
   SelectContent,
@@ -852,11 +853,13 @@ export default function Beneficiaries() {
                       </TableCell>
                       <TableCell>{statusBadge(b.status)}</TableCell>
                       <TableCell className="text-center">
-                        <Button asChild size="sm" variant="secondary">
-                          <Link to={`/beneficiaries/${b.id}`}>
-                            {ar ? "فتح" : "Open"}
-                          </Link>
-                        </Button>
+                        <TableActions
+                          actions={[
+                            createViewAction(() => {
+                              window.location.href = `/beneficiaries/${b.id}`;
+                            }),
+                          ]}
+                        />
                       </TableCell>
                     </TableRow>
                   ))}
