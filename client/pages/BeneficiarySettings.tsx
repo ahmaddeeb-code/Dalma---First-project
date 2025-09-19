@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import TableToolbar from "@/components/ui/table-toolbar";
+import TableActions, { createEditAction, createDeleteAction } from "@/components/ui/table-actions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -383,27 +384,13 @@ function CarePlansCard({
                 <TableCell>{t.goals.join(", ")}</TableCell>
                 <TableCell>{t.interventions.join(", ")}</TableCell>
                 <TableCell>{t.metrics.join(", ")}</TableCell>
-                <TableCell className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => {
-                      setEditing(t);
-                      setOpen(true);
-                    }}
-                  >
-                    <Pencil className="ml-1 h-4 w-4" /> Edit
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    onClick={() => {
-                      removeCarePlan(t.id);
-                      toast.success("Removed");
-                    }}
-                  >
-                    Delete
-                  </Button>
+                <TableCell className="text-center">
+                  <TableActions
+                    actions={[
+                      createEditAction(() => { setEditing(t); setOpen(true); }),
+                      createDeleteAction(() => { removeCarePlan(t.id); toast.success("Removed"); }, "Confirm delete", `Delete template "${t.name}"?`),
+                    ]}
+                  />
                 </TableCell>
               </TableRow>
             ))}
