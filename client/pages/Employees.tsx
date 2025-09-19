@@ -54,6 +54,15 @@ import {
   ShieldCheck,
   Trash2,
   Download,
+  Edit3,
+  Eye,
+  Key,
+  UserCheck,
+  UserX,
+  MoreHorizontal,
+  ChevronUp,
+  ChevronDown,
+  ChevronsUpDown,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -63,6 +72,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Pagination,
   PaginationContent,
