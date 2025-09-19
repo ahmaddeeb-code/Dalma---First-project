@@ -59,11 +59,11 @@ export default function RoleLogin({
   const [mfaCode, setMfaCode] = useState("");
   const [mfaUserId, setMfaUserId] = useState<string | null>(null);
 
-  const signInSelected = () => {
+  const signInSelected = async () => {
     const user = acl.users.find((u) => u.id === selectedUserId);
     if (!user) return;
     const { authenticate } = require("@/store/auth");
-    const res = authenticate(user.email || user.name, password, true);
+    const res = await authenticate(user.email || user.name, password, true);
     if (!res.ok) {
       alert(res.error || "Invalid credentials");
       return;
@@ -79,10 +79,10 @@ export default function RoleLogin({
     window.location.assign(redirectPath);
   };
 
-  const submitMfa = () => {
+  const submitMfa = async () => {
     if (!mfaUserId) return;
     const { verifyOTP } = require("@/store/auth");
-    const v = verifyOTP(mfaUserId, mfaCode);
+    const v = await verifyOTP(mfaUserId, mfaCode);
     if (!v.ok) { alert(v.error); return; }
     const u = acl.users.find((x) => x.id === mfaUserId);
     if (u) { login(u); window.location.assign(redirectPath); }
