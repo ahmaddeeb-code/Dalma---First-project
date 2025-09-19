@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import TableToolbar from "@/components/ui/table-toolbar";
+import TableActions, { createEditAction, createDeleteAction } from "@/components/ui/table-actions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -82,40 +83,20 @@ export default function DepartmentsPage() {
                   <TableRow key={d.id}>
                     <TableCell className="font-medium">{d.name}</TableCell>
                     <TableCell className="text-center">
-                      <div className="flex items-center justify-center gap-1">
-                        <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-accent" onClick={() => { setEditing(d); setName(d.name); setOpen(true); }}>
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-accent">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-44">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <DropdownMenuItem className="text-destructive focus:text-destructive" onSelect={(e) => e.preventDefault()}>
-                                  <Trash2 className="mr-2 h-4 w-4" /> {t("common.delete") || "Delete"}
-                                </DropdownMenuItem>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>{t("common.confirmDelete") || "Confirm delete"}</AlertDialogTitle>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>{t("common.cancel") || "Cancel"}</AlertDialogCancel>
-                                  <AlertDialogAction onClick={() => removeDepartment(d.id)}>
-                                    {t("common.delete") || "Delete"}
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
+                      <TableActions
+                        actions={[
+                          createEditAction(() => {
+                            setEditing(d);
+                            setName(d.name);
+                            setOpen(true);
+                          }),
+                          createDeleteAction(
+                            () => removeDepartment(d.id),
+                            t("common.confirmDelete") || "Confirm delete",
+                            `Delete department "${d.name}"?`
+                          ),
+                        ]}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
