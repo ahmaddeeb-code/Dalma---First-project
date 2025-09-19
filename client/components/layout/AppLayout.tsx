@@ -281,7 +281,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       </Sidebar>
       <SidebarInset>
         <header className="bg-sidebar border border-sidebar-border sticky top-0 z-50">
-          <div className="container flex h-16 items-center justify-between gap-4">
+          <div className="flex h-16 items-center justify-between gap-4 px-4">
             <div className="flex items-center gap-4">
               <SidebarTrigger className="hover:bg-accent/50 transition-all duration-200 hover:scale-105" />
               <div className="flex flex-col">
