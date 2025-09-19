@@ -36,7 +36,6 @@ export default function DepartmentsPage() {
           <h1 className="text-2xl font-bold tracking-tight">Departments</h1>
           <p className="text-muted-foreground">Manage predefined departments and assignments</p>
         </div>
-        <Button onClick={() => { setEditing(null); setName(""); setOpen(true); }}>{t("common.add") || "Add"}</Button>
       </header>
 
       <Card>
