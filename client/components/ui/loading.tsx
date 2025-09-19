@@ -1,14 +1,15 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, useRef, ReactNode } from 'react';
 
 interface LoadingState {
   isLoading: boolean;
+  isVisible: boolean;
   message?: string;
   type?: 'default' | 'page' | 'form' | 'api';
 }
 
 interface LoadingContextType {
   loading: LoadingState;
-  showLoading: (message?: string, type?: LoadingState['type']) => void;
+  showLoading: (message?: string, type?: LoadingState['type'], delay?: number) => void;
   hideLoading: () => void;
   setLoading: (state: LoadingState) => void;
 }
