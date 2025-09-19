@@ -239,10 +239,33 @@ function TherapyTypesCard({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>{t("common.name")}</TableHead>
-              <TableHead>{t("pages.medical.therapy.duration")}</TableHead>
-              <TableHead>{t("pages.medical.therapy.frequency")}</TableHead>
-              <TableHead>{t("common.actions")}</TableHead>
+              <SortableTableHead
+                sortKey="name"
+                currentSortBy={sortBy}
+                currentSortDir={sortDir}
+                onSort={handleSort}
+              >
+                {t("common.name")}
+              </SortableTableHead>
+              <SortableTableHead
+                sortKey="duration"
+                currentSortBy={sortBy}
+                currentSortDir={sortDir}
+                onSort={handleSort}
+              >
+                {t("pages.medical.therapy.duration")}
+              </SortableTableHead>
+              <SortableTableHead
+                sortKey="frequency"
+                currentSortBy={sortBy}
+                currentSortDir={sortDir}
+                onSort={handleSort}
+              >
+                {t("pages.medical.therapy.frequency")}
+              </SortableTableHead>
+              <SortableTableHead sortable={false} align="center">
+                {t("common.actions")}
+              </SortableTableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
