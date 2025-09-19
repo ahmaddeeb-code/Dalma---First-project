@@ -85,14 +85,7 @@ export default function AccessControl() {
                   {t("pages.accessControl.users.desc")}
                 </CardDescription>
               </div>
-              <UserDialog
-                onSubmit={(u) =>
-                  setState((s) => ({ ...s, users: upsert(s.users, u) }))
-                }
-                roles={state.roles}
-                privileges={state.privileges}
-              />
-            </CardHeader>
+              </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
