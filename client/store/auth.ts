@@ -206,4 +206,4 @@ export async function resetPassword(token: string, newPassword: string) {
   }
 }
 
-export { subscribeAuth as subscribe, verifyOTP, authenticate, setUserPassword, sendOTP };
+export { subscribeAuth as subscribe };
