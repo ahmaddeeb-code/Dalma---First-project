@@ -63,6 +63,9 @@ import {
   ChevronUp,
   ChevronDown,
   ChevronsUpDown,
+  Users,
+  Stethoscope,
+  Activity,
 } from "lucide-react";
 import {
   DropdownMenu,
