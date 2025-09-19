@@ -46,6 +46,7 @@ export default function ResetPassword() {
             <div className="space-y-4">
               <div className="text-sm text-muted-foreground">Resetting password for {email}</div>
               <Input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="New password" />
+              <div className="mt-2"><PasswordStrength value={password} /></div>
               <Button className="w-full" onClick={submit}>Set new password</Button>
             </div>
           ) : (
