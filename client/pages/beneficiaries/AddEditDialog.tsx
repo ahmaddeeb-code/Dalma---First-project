@@ -519,8 +519,8 @@ export default function AddEditBeneficiaryDialog({
             </div>
 
             <div>
-              <Label>
-                {ar ? "الاسم وفق الصيغة السعودية" : "Name (Saudi format)"} *
+              <Label requiredMark={settings.required?.name}>
+                {ar ? "الاسم وفق الصيغة السعودية" : "Name (Saudi format)"}
               </Label>
               <div className="grid md:grid-cols-3 gap-3 mt-2">
                 <Input
