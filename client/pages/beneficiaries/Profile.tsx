@@ -1043,6 +1043,17 @@ export default function BeneficiaryProfile() {
                 <div className="font-medium mb-1">
                   {ar ? "سجل الدفعات" : "Payment History"}
                 </div>
+                <TableToolbar
+                  onExport={(type) => {
+                    const cols = [
+                      { header: ar ? 'التاريخ' : 'Date', accessor: (r:any) => new Date(r.date).toLocaleDateString() },
+                      { header: ar ? 'المبلغ' : 'Amount', accessor: (r:any) => r.amount },
+                      { header: ar ? 'الطريقة' : 'Method', accessor: (r:any) => r.method },
+                      { header: ar ? 'ملاحظة' : 'Note', accessor: (r:any) => r.note || '' },
+                    ];
+                    import('@/lib/export').then((m)=>m.exportAll(b.financial.paymentHistory, cols, type, 'payments'));
+                  }}
+                />
                 <Table>
                   <TableHeader>
                     <TableRow>
