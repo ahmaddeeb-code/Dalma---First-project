@@ -60,6 +60,26 @@ const messages = {
       family: "Family",
       beneficiary: "Beneficiary",
     },
+    login: {
+      title: "Sign in",
+      welcome: "Enter your credentials to continue",
+      email: "Email or Username",
+      password: "Password",
+      emailPlaceholder: "you@example.com",
+      passwordPlaceholder: "••••••••",
+      remember: "Remember me",
+      forgot: "Forgot?",
+      login: "Sign in",
+      enterEmail: "Enter email to reset",
+      resetSent: "Reset sent",
+      resetFailed: "Reset failed",
+      success: "Welcome",
+    },
+    home: "Home",
+    dashboard: "Dashboard",
+    donate: { now: "Donate now" },
+    cancel: "Cancel",
+    search: { placeholder: "Search..." },
     footer: {
       copyright: "© {{year}} DALMA Center. All rights reserved.",
       privacy: "Privacy",
@@ -567,7 +587,7 @@ const messages = {
           title: "المستخدمون",
           desc: "إنشاء الحسابات وتعيين الأدوار/الصلاحيات.",
           headers: {
-            name: "الاسم",
+            name: "الا��م",
             email: "البريد الإلكتروني",
             roles: "الأدوار",
             effectivePrivs: "الصلاحيات الفعلية",
@@ -661,7 +681,7 @@ const messages = {
         },
         scheduling: {
           title: "جدولة المواعيد",
-          desc: "ساعات العمل وقواعد الحجز.",
+          desc: "ساعات العمل وقواعد ا��حجز.",
           sessionLength: "مدة الجلسة (د)",
           maxPerDay: "الحد الأقصى/اليوم",
           bufferMin: "فاصل (د)",
@@ -689,7 +709,7 @@ const messages = {
         totalKeys: "إجمالي المفاتيح",
         missing: "مفقود",
         needsReview: "بحاجة لمراجعة",
-        tableTitle: "الترجمات",
+        tableTitle: "الترجم��ت",
         tableDesc: "ابحث وحرّر العربية",
         onlyMissing: "إظهار الناقصة فقط",
         placeholder: "بحث بالمفتاح أو النص",
@@ -720,7 +740,7 @@ const messages = {
           maxAge: "ال��مر الأقصى",
           searchPlaceholder: "اسم، رقم هوية، ولي أمر...",
           asc: "تصاعدي",
-          desc: "تنازلي",
+          desc: "تن��زلي",
           all: "الكل",
         },
         actions: {
@@ -757,7 +777,7 @@ const messages = {
       },
       admin: {
         title: "لوحة التحكم",
-        subtitle: "نظرة فورية على المستفيدين والموظفين والخدمات والتنبيهات.",
+        subtitle: "نظرة فورية على المستفيدين والموظفين والخدم��ت والتنبيهات.",
         buttons: {
           accessControl: "ال��حكم بالصلاحيات",
           exportReport: "تصدير تقرير",
@@ -816,7 +836,7 @@ const messages = {
         ctaDonate: "ادعمنا بالتبرع",
       },
       metrics: {
-        active: "المستفيدون النشطون",
+        active: "ال��ستفيدون النشطون",
         monthly: "المواعيد الشهرية",
         satisfaction: "متوسط الرضا",
       },
@@ -846,7 +866,7 @@ const messages = {
           title: "لوحة التحكم",
           bullets: [
             "تحليلات المؤشرات",
-            "الأدوار والصلاحيات",
+            "الأدوار والصلاح��ات",
             "الميزانيات والمالية",
             "سجلات ��لتدقيق",
           ],
@@ -877,7 +897,7 @@ const messages = {
         urgent: "عاجل",
         absences: "تم رصد ٣ غيابات",
         medium: "متوسط",
-        schedule: "تم تحديث جدول العلاجات",
+        schedule: "تم تحديث جدول العلاج��ت",
         low: "منخفض",
       },
       security: {
