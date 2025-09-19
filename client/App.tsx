@@ -1,4 +1,5 @@
 import "./global.css";
+import { Suspense, lazy } from "react";
 
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -7,30 +8,31 @@ import { LoadingProvider } from "@/components/ui/loading";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppLayout from "@/components/layout/AppLayout";
+import PageSkeleton from "@/components/skeletons/PageSkeleton";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import AdminDashboard from "./pages/AdminDashboard";
-import AccessControl from "./pages/AccessControl";
-import Placeholder from "./pages/_Placeholder";
-import Beneficiaries from "@/pages/Beneficiaries";
-import BeneficiaryProfile from "@/pages/beneficiaries/Profile";
-import Employees from "@/pages/Employees";
-import Translations from "@/pages/Translations";
-import MedicalSettings from "@/pages/MedicalSettings";
-import BeneficiarySettings from "@/pages/BeneficiarySettings";
-import OrganizationSettings from "@/pages/OrganizationSettings";
-import SecuritySettings from "@/pages/SecuritySettings";
-import FamilyProfiles from "@/pages/FamilyProfiles";
-import Logistics from "@/pages/Logistics";
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const AccessControl = lazy(() => import("./pages/AccessControl"));
+const Placeholder = lazy(() => import("./pages/_Placeholder"));
+const Beneficiaries = lazy(() => import("@/pages/Beneficiaries"));
+const BeneficiaryProfile = lazy(() => import("@/pages/beneficiaries/Profile"));
+const Employees = lazy(() => import("@/pages/Employees"));
+const Translations = lazy(() => import("@/pages/Translations"));
+const MedicalSettings = lazy(() => import("@/pages/MedicalSettings"));
+const BeneficiarySettings = lazy(() => import("@/pages/BeneficiarySettings"));
+const OrganizationSettings = lazy(() => import("@/pages/OrganizationSettings"));
+const SecuritySettings = lazy(() => import("@/pages/SecuritySettings"));
+const FamilyProfiles = lazy(() => import("@/pages/FamilyProfiles"));
+const Logistics = lazy(() => import("@/pages/Logistics"));
 import LoginAdmin from "./pages/auth/LoginAdmin";
 import LoginStaff from "./pages/auth/LoginStaff";
 import LoginFamily from "./pages/auth/LoginFamily";
 import LoginBeneficiary from "./pages/auth/LoginBeneficiary";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
-import Logout from "./pages/Logout";
+const Logout = lazy(() => import("./pages/Logout"));
 import RequireAuth from "@/components/auth/RequireAuth";
-import AdminUsers from "./pages/admin/Users";
+const AdminUsers = lazy(() => import("./pages/admin/Users"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -56,7 +58,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AppLayout>
-          <Routes>
+          <Suspense fallback={<PageSkeleton />}>
+            <Routes>
             {/* Public auth routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/reset-password" element={<ResetPassword />} />
@@ -155,6 +158,7 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </Suspense>
         </AppLayout>
       </BrowserRouter>
       </TooltipProvider>
