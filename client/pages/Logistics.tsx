@@ -218,13 +218,22 @@ function BuildingsTab({
               : "Add/edit/delete buildings and link rooms"}
           </CardDescription>
         </div>
-        {canManage && (
-          <Button onClick={() => setOpen(true)}>
-            <Plus className="ml-1 h-4 w-4" /> {t("common.add")}
-          </Button>
-        )}
       </CardHeader>
       <CardContent>
+        <div className="mb-3">
+          <TableToolbar
+            onAdd={canManage ? () => setOpen(true) : undefined}
+            addLabel={t("common.add")}
+            onExport={(type) => {
+              const cols = [
+                { header: t("common.name"), accessor: (r:any) => L(loc, r.name) },
+                { header: loc === "ar" ? "العنوان" : "Address", accessor: (r:any) => L(loc, r.address) },
+                { header: t("common.total"), accessor: (r:any) => r.capacity },
+              ];
+              import('@/lib/export').then((m)=>m.exportAll(buildings, cols, type, 'buildings'));
+            }}
+          />
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
@@ -371,7 +380,7 @@ function BuildingDialog({
           </div>
           <div className="grid md:grid-cols-2 gap-3">
             <div>
-              <Label>{loc === "ar" ? "الطوابق" : "Floors"}</Label>
+              <Label>{loc === "ar" ? "ال��وابق" : "Floors"}</Label>
               <Input
                 type="number"
                 value={floors}
