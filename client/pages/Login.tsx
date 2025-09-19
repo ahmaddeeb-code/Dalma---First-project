@@ -24,7 +24,7 @@ export default function Login() {
   const onSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
     setLoading(true);
-    const res = authenticate(identifier, password, remember);
+    const res = await authenticate(identifier, password, remember);
     setLoading(false);
     if (!res.ok) {
       toast.error(res.error || "Invalid credentials");
