@@ -20,11 +20,18 @@ export type User = {
   department?: string;
   title?: string;
   active?: boolean;
+  // Names per Saudi policy (up to five parts) in both languages
+  nameEnParts?: string[]; // [p1..p5]
+  nameArParts?: string[]; // [p1..p5]
   // security fields
   password?: string; // base64-encoded password (for demo only)
   failedAttempts?: number;
   lockedUntil?: string | null; // ISO
   twoFactor?: boolean;
+  // login controls
+  loginEnabled?: boolean; // default true
+  mustChangePassword?: boolean; // force on next login
+  defaultPassword?: string; // display hint for admins
 };
 
 export type ACLState = {
@@ -295,9 +302,15 @@ export function upsertUser(user: User) {
   const state = loadACL();
   const next: ACLState = {
     ...state,
-    users: upsert(state.users, user),
+    users: upsert(state.users, { loginEnabled: true, ...user }),
   };
   saveACL(next);
+}
+
+export function updateUser(userId: string, patch: Partial<User>) {
+  const u = getUserById(userId);
+  if (!u) return;
+  upsertUser({ ...u, ...patch });
 }
 export function removeUser(id: string) {
   const state = loadACL();
