@@ -215,30 +215,46 @@ export default function Employees() {
           <h1 className="text-2xl font-bold tracking-tight">{t("pages.employees.title")}</h1>
           <p className="text-muted-foreground mt-1">{t("pages.employees.desc")}</p>
         </div>
-        {canManage && (
-          <Button onClick={() => setAddOpen(true)}>
-            <Plus className="h-4 w-4 ml-1" /> {t("pages.employees.addEmployee")}
-          </Button>
-        )}
       </div>
 
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>{t("common.total")}</CardDescription>
-            <CardTitle className="text-2xl">{total}</CardTitle>
+      <div className="grid gap-3 grid-cols-1 md:grid-cols-3">
+        <Card className="relative overflow-hidden border-0 text-white bg-gradient-to-r from-blue-500 to-indigo-500">
+          <CardHeader className="py-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardDescription className="text-white/90">{t("common.total")}</CardDescription>
+                <CardTitle className="text-xl">{total}</CardTitle>
+              </div>
+              <div className="bg-white/20 rounded-full p-2">
+                <Users className="h-5 w-5" />
+              </div>
+            </div>
           </CardHeader>
         </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>{t("common.doctors")}</CardDescription>
-            <CardTitle className="text-2xl">{doctors}</CardTitle>
+        <Card className="relative overflow-hidden border-0 text-white bg-gradient-to-r from-emerald-500 to-teal-500">
+          <CardHeader className="py-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardDescription className="text-white/90">{t("common.doctors")}</CardDescription>
+                <CardTitle className="text-xl">{doctors}</CardTitle>
+              </div>
+              <div className="bg-white/20 rounded-full p-2">
+                <Stethoscope className="h-5 w-5" />
+              </div>
+            </div>
           </CardHeader>
         </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>{t("common.therapists")}</CardDescription>
-            <CardTitle className="text-2xl">{therapists}</CardTitle>
+        <Card className="relative overflow-hidden border-0 text-white bg-gradient-to-r from-purple-500 to-pink-500">
+          <CardHeader className="py-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardDescription className="text-white/90">{t("common.therapists")}</CardDescription>
+                <CardTitle className="text-xl">{therapists}</CardTitle>
+              </div>
+              <div className="bg-white/20 rounded-full p-2">
+                <Activity className="h-5 w-5" />
+              </div>
+            </div>
           </CardHeader>
         </Card>
       </div>
@@ -250,72 +266,6 @@ export default function Employees() {
               <Filter className="h-5 w-5" /> {t("common.filters")}
             </CardTitle>
             <CardDescription>{t("common.search")}</CardDescription>
-          </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="flex items-center gap-2">
-              <Label className="text-xs">{t("common.pageSize")}</Label>
-              <select
-                className="h-9 rounded-md border bg-background px-2 text-sm"
-                value={pageSize}
-                onChange={(e) => {
-                  setPageSize(Number(e.target.value));
-                  setPage(1);
-                }}
-              >
-                {[10, 20, 50, 100].map((n) => (
-                  <option key={n} value={n}>
-                    {n}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline">
-                  <Download className="h-4 w-4 ml-1" /> {t("common.export")}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{t("common.format")}</DropdownMenuLabel>
-                {["csv", "xlsx", "pdf"].map((fmt) => (
-                  <DropdownMenuItem
-                    key={fmt}
-                    onClick={() => {
-                      const cols: ColumnDef<User>[] = [
-                        { header: t("common.name") as string, accessor: (r) => r.name },
-                        { header: t("common.email") as string, accessor: (r) => r.email || "" },
-                        { header: t("common.departmentTitle") as string, accessor: (r) => `${r.department || ""} ${r.title ? `• ${r.title}` : ""}` },
-                      ];
-                      exportAll(filtered, cols, fmt as any, `employees_${fmt}`);
-                    }}
-                  >
-                    {t("common.filtered")} – {fmt.toUpperCase()}
-                  </DropdownMenuItem>
-                ))}
-                <DropdownMenuSeparator />
-                {["csv", "xlsx", "pdf"].map((fmt) => (
-                  <DropdownMenuItem
-                    key={fmt}
-                    onClick={() => {
-                      const cols: ColumnDef<User>[] = [
-                        { header: t("common.name") as string, accessor: (r) => r.name },
-                        { header: t("common.email") as string, accessor: (r) => r.email || "" },
-                        { header: t("common.departmentTitle") as string, accessor: (r) => `${r.department || ""} ${r.title ? `• ${r.title}` : ""}` },
-                      ];
-                      exportAll(users, cols, fmt as any, `employees_${fmt}`);
-                    }}
-                  >
-                    {t("common.fullDataset")} – {fmt.toUpperCase()}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            {!canManage && (
-              <Badge variant="secondary" className="text-xs">
-                <ShieldCheck className="h-3 w-3 ml-1" />
-                {t("common.readOnly")}
-              </Badge>
-            )}
           </div>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-3">
