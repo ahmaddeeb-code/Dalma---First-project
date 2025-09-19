@@ -200,13 +200,22 @@ function TherapyTypesCard({
           <CardTitle>{t("pages.medical.therapy.title")}</CardTitle>
           <CardDescription>{t("pages.medical.therapy.desc")}</CardDescription>
         </div>
-        {canManage && (
-          <Button onClick={() => setOpen(true)}>
-            <Plus className="ml-1 h-4 w-4" /> {t("common.add")}
-          </Button>
-        )}
       </CardHeader>
       <CardContent>
+        <div className="mb-3">
+          <TableToolbar
+            onAdd={canManage ? () => setOpen(true) : undefined}
+            addLabel={t("common.add")}
+            onExport={(type) => {
+              const cols = [
+                { header: t("common.name"), accessor: (r:any) => r.name.en || r.name },
+                { header: t("pages.medical.therapy.duration"), accessor: (r:any) => r.durationMin },
+                { header: t("pages.medical.therapy.frequency"), accessor: (r:any) => r.defaultFrequency },
+              ];
+              import('@/lib/export').then((m)=>m.exportAll(state.therapyTypes, cols, type, 'therapy'));
+            }}
+          />
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
