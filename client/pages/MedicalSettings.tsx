@@ -318,32 +318,6 @@ function TherapyTypesCard({
         }}
         editing={editing}
       />
-      <AlertDialog open={!!confirmId}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t("common.delete")}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t("pages.medical.therapy.title")} — {t("common.delete")}?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setConfirmId(null)}>
-              {t("common.cancel")}
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                if (confirmId) {
-                  removeTherapyType(confirmId);
-                  setConfirmId(null);
-                  toast.success(t("pages.medical.saved"));
-                }
-              }}
-            >
-              {t("common.delete")}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </Card>
   );
 }
