@@ -81,6 +81,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { exportAll, type ColumnDef } from "@/lib/export";
+import TableToolbar from "@/components/ui/table-toolbar";
 import { listDepartments } from "@/store/departments";
 
 function useACLUsers() {
