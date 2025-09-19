@@ -96,6 +96,7 @@ export default function Employees() {
 
   const [addOpen, setAddOpen] = useState(false);
   const [editing, setEditing] = useState<User | null>(null);
+  const [privUserId, setPrivUserId] = useState<string | null>(null);
   const [searchText, setSearchText] = useState("");
   const [roleFilter, setRoleFilter] = useState<string | "all">("all");
 
@@ -356,6 +357,16 @@ export default function Employees() {
                         })}
                       </div>
                     </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <span className={u.loginEnabled === false ? "text-red-600" : "text-emerald-600"}>
+                        {u.loginEnabled === false ? "Disabled" : "Enabled"}
+                      </span>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <span className="font-mono text-xs">
+                        {u.defaultPassword || "-"}
+                      </span>
+                    </TableCell>
                     {canManage && (
                       <TableCell className="text-center">
                         <div className="flex items-center justify-center gap-2">
@@ -365,6 +376,31 @@ export default function Employees() {
                             onClick={() => setEditing(u)}
                           >
                             {t("common.edit")}
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => setPrivUserId(u.id)}>
+                            Privileges
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              const pwd = Math.random().toString(36).slice(2, 10);
+                              setUserPassword(u.id, pwd);
+                              updateUser(u.id, { defaultPassword: pwd, loginEnabled: true, mustChangePassword: true });
+                              toast.success("Account generated / password set");
+                            }}
+                          >
+                            {u.password ? "Reset Password" : "Generate Account"}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant={u.loginEnabled === false ? "secondary" : "destructive"}
+                            onClick={() => {
+                              const next = !(u.loginEnabled === false);
+                              updateUser(u.id, { loginEnabled: !next });
+                            }}
+                          >
+                            {u.loginEnabled === false ? "Enable Login" : "Disable Login"}
                           </Button>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
@@ -445,6 +481,7 @@ export default function Employees() {
         }}
         user={editing}
       />
+      <ManagePrivilegesDialog userId={privUserId} open={!!privUserId} onOpenChange={(v) => !v && setPrivUserId(null)} />
     </div>
   );
 }
