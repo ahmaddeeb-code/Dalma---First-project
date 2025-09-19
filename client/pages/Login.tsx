@@ -89,26 +89,29 @@ export default function Login() {
 
   const submitMfa = async () => {
     if (!mfaUserId) return;
-    const v = await verifyOTP(mfaUserId, mfaCode);
-    if (!v.ok) {
-      toast.error(v.error || "Invalid code");
-      return;
-    }
-    try {
-      const r = await fetch(`/api/auth/admin/users`);
-      const list = await r.json();
-      const user = list.find((x: any) => x.id === mfaUserId);
-      if (user) {
-        doLogin(
-          { id: user.id, name: user.name, email: user.email } as any,
-          remember,
-        );
-        toast.success(t("login.success") || "Welcome");
-        navigate(from, { replace: true });
+
+    await withLoading(async () => {
+      const v = await verifyOTP(mfaUserId, mfaCode);
+      if (!v.ok) {
+        toast.error(v.error || "Invalid code");
+        return;
       }
-    } catch (e) {
-      toast.error("Failed to finalize login");
-    }
+      try {
+        const r = await fetch(`/api/auth/admin/users`);
+        const list = await r.json();
+        const user = list.find((x: any) => x.id === mfaUserId);
+        if (user) {
+          doLogin(
+            { id: user.id, name: user.name, email: user.email } as any,
+            remember,
+          );
+          toast.success(t("login.success") || "Welcome");
+          navigate(from, { replace: true });
+        }
+      } catch (e) {
+        toast.error("Failed to finalize login");
+      }
+    }, "Verifying code...");
   };
 
   const onForgot = async () => {
