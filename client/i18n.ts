@@ -525,6 +525,26 @@ const messages = {
       family: "عائلة",
       beneficiary: "مستفيد",
     },
+    login: {
+      title: "تسجيل الدخول",
+      welcome: "أدخل بياناتك للمتابعة",
+      email: "البريد الإلكتروني أو اسم المستخدم",
+      password: "كلمة المرور",
+      emailPlaceholder: "you@example.com",
+      passwordPlaceholder: "••••••••",
+      remember: "تذكرني",
+      forgot: "نسيت؟",
+      login: "تسجيل الدخول",
+      enterEmail: "أدخل البريد لإعادة التعيين",
+      resetSent: "تم إرسال رابط إعادة التعيين",
+      resetFailed: "فشل الإرسال",
+      success: "مرحبا",
+    },
+    home: "الرئيسية",
+    dashboard: "لوحة التحكم",
+    donate: { now: "تبرع الآن" },
+    cancel: "إلغاء",
+    search: { placeholder: "بحث..." },
     footer: {
       copyright: "© {{year}} مركز دلما. جميع الحقوق محفوظة.",
       privacy: "الخصوصية",
@@ -587,7 +607,7 @@ const messages = {
           title: "المستخدمون",
           desc: "إنشاء الحسابات وتعيين الأدوار/الصلاحيات.",
           headers: {
-            name: "الا��م",
+            name: "الاسم",
             email: "البريد الإلكتروني",
             roles: "الأدوار",
             effectivePrivs: "الصلاحيات الفعلية",
@@ -622,7 +642,7 @@ const messages = {
           title: "الصلاحيات",
           desc: "صلاحيات أساسية تُسند إلى الأدوار أو مباشرة للمستخدمين.",
           headers: {
-            name: "الاسم",
+            name: "الا��م",
             category: "الفئة",
             usedInRoles: "مستخدمة في الأدوار",
             usedInUsers: "مستخدمة في المستخدمين",
@@ -681,7 +701,7 @@ const messages = {
         },
         scheduling: {
           title: "جدولة المواعيد",
-          desc: "ساعات العمل وقواعد ا��حجز.",
+          desc: "ساعات العمل وقواعد الحجز.",
           sessionLength: "مدة الجلسة (د)",
           maxPerDay: "الحد الأقصى/اليوم",
           bufferMin: "فاصل (د)",
@@ -709,7 +729,7 @@ const messages = {
         totalKeys: "إجمالي المفاتيح",
         missing: "مفقود",
         needsReview: "بحاجة لمراجعة",
-        tableTitle: "الترجم��ت",
+        tableTitle: "الترجمات",
         tableDesc: "ابحث وحرّر العربية",
         onlyMissing: "إظهار الناقصة فقط",
         placeholder: "بحث بالمفتاح أو النص",
@@ -740,7 +760,7 @@ const messages = {
           maxAge: "ال��مر الأقصى",
           searchPlaceholder: "اسم، رقم هوية، ولي أمر...",
           asc: "تصاعدي",
-          desc: "تن��زلي",
+          desc: "تنازلي",
           all: "الكل",
         },
         actions: {
@@ -777,9 +797,9 @@ const messages = {
       },
       admin: {
         title: "لوحة التحكم",
-        subtitle: "نظرة فورية على المستفيدين والموظفين والخدم��ت والتنبيهات.",
+        subtitle: "نظرة فورية على المستفيدين والموظفين والخدمات والتنبيهات.",
         buttons: {
-          accessControl: "ال��حكم بالصلاحيات",
+          accessControl: "ال����حكم بالصلاحيات",
           exportReport: "تصدير تقرير",
           notifications: "مركز التنبيهات",
         },
@@ -836,8 +856,8 @@ const messages = {
         ctaDonate: "ادعمنا بالتبرع",
       },
       metrics: {
-        active: "ال��ستفيدون النشطون",
-        monthly: "المواعيد الشهرية",
+        active: "المستفيدون النشطون",
+        monthly: "المواعيد الشهر��ة",
         satisfaction: "متوسط الرضا",
       },
       portals: {
@@ -866,7 +886,7 @@ const messages = {
           title: "لوحة التحكم",
           bullets: [
             "تحليلات المؤشرات",
-            "الأدوار والصلاح��ات",
+            "الأدوار والصلاحيات",
             "الميزانيات والمالية",
             "سجلات ��لتدقيق",
           ],
@@ -897,7 +917,7 @@ const messages = {
         urgent: "عاجل",
         absences: "تم رصد ٣ غيابات",
         medium: "متوسط",
-        schedule: "تم تحديث جدول العلاج��ت",
+        schedule: "تم تحديث جدول العلاجات",
         low: "منخفض",
       },
       security: {
@@ -924,7 +944,7 @@ const messages = {
       },
       cta: {
         title: "هل أنت مستعد لتحديث مركزك؟",
-        desc: "لنقم برقمنة العمليات والارتقاء بجودة الرعاية — معاً.",
+        desc: "لنقم برقمن�� العمليات والارتقاء بجودة الرعاية — معاً.",
         button: "افتح لوحة التحكم",
       },
     },
