@@ -28,6 +28,7 @@ import LoginBeneficiary from "./pages/auth/LoginBeneficiary";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
 import RequireAuth from "@/components/auth/RequireAuth";
+import AdminUsers from "./pages/admin/Users";
 
 const queryClient = new QueryClient();
 
