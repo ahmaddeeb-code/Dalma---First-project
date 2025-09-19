@@ -337,7 +337,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
             return (
               <SidebarGroup
                 key={g.labelKey}
-                className="animate-fade-in-scale"
+                className=""
                 style={{ animationDelay: `${groupIndex * 100}ms` }}
               >
                 <SidebarGroupLabel
@@ -489,7 +489,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                     className="hover:bg-accent/50 transition-all duration-200"
                   >
                     <span className="mr-2">🇸🇦</span>
-                    العربية
+                    العر��ية
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => setLocale("en")}
