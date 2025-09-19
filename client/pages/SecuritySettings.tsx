@@ -204,7 +204,7 @@ function AuthCard({ canManage }: { canManage: boolean }) {
         </div>
         <div>
           <Label>Password policy</Label>
-          <div className="grid md:grid-cols-5 gap-3 mt-1">
+          <div className="grid md:grid-cols-5 gap-4 mt-2">
             <div>
               <Label>Min length</Label>
               <Input
@@ -302,7 +302,7 @@ function RolesCard({ canManage }: { canManage: boolean }) {
           Per-role actions and sensitive field visibility
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4">
         <div className="mb-3">
           <TableToolbar
             onExport={(type) => {
@@ -426,14 +426,15 @@ function AuditCard({
 }) {
   const s = useSecurity();
   return (
-    <Card>
-      <CardHeader className="flex items-center justify-between">
-        <div>
-          <CardTitle>Audit Logs</CardTitle>
-          <CardDescription>
-            Track actions with timestamps and actor
-          </CardDescription>
-        </div>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <FileText className="h-5 w-5 text-primary" />
+          Audit Logs
+        </CardTitle>
+        <CardDescription>
+          Track actions with timestamps and actor
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="mb-3">
@@ -517,9 +518,12 @@ function DataProtectionCard({ canManage }: { canManage: boolean }) {
   const [retDays, setRetDays] = useState(String(d.backupRetentionDays));
   const [years, setYears] = useState(String(d.retentionYears));
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Data Protection</CardTitle>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Shield className="h-5 w-5 text-primary" />
+          Data Protection
+        </CardTitle>
         <CardDescription>Encryption, backups, retention</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -584,9 +588,12 @@ function ComplianceCard({ canManage }: { canManage: boolean }) {
   const [hipaa, setHipaa] = useState(c.hipaa);
   const [consent, setConsent] = useState(c.consentRequired);
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Compliance Settings</CardTitle>
+    <Card variant="modern">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Settings className="h-5 w-5 text-primary" />
+          Compliance Settings
+        </CardTitle>
         <CardDescription>
           GDPR/HIPAA, consent, and privacy tools
         </CardDescription>
