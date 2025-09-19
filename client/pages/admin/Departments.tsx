@@ -77,7 +77,7 @@ export default function DepartmentsPage() {
             <DialogTitle>{editing ? (t("common.edit") || "Edit") : (t("common.add") || "Add")} Department</DialogTitle>
           </DialogHeader>
           <div className="space-y-2">
-            <label className="text-sm">{t("common.name") || "Name"}</label>
+            <Label requiredMark className="text-sm">{t("common.name") || "Name"}</Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <DialogFooter>
