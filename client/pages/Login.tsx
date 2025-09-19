@@ -87,6 +87,8 @@ export default function Login() {
         </CardHeader>
         <CardContent>
           <form onSubmit={onSubmit} className="space-y-4">
+            {!mfaPending ? (
+            <>
             <div>
               <label className="text-sm">{t("login.email") || "Email or Username"}</label>
               <Input value={identifier} onChange={(e)=>setIdentifier(e.target.value)} placeholder={t("login.emailPlaceholder") || "you@example.com"} />
@@ -105,6 +107,17 @@ export default function Login() {
             <div>
               <Button type="submit" className="w-full" loading={loading}>{t("login.login") || "Sign in"}</Button>
             </div>
+            </>
+            ) : (
+              <div className="space-y-4">
+                <div className="text-sm text-muted-foreground">Enter the OTP sent to your registered contact.</div>
+                <Input value={mfaCode} onChange={(e)=>setMfaCode(e.target.value)} placeholder="123456" />
+                <div className="flex gap-2">
+                  <Button onClick={submitMfa} className="flex-1">Verify</Button>
+                  <Button variant="ghost" onClick={()=>{ setMfaPending(false); setMfaUserId(null); }}>{t("cancel")||"Cancel"}</Button>
+                </div>
+              </div>
+            )}
           </form>
         </CardContent>
       </Card>
