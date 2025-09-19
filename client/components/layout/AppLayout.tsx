@@ -179,6 +179,14 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  if (hideChrome) {
+    return (
+      <div className="min-h-screen">
+        <main className="container py-8">{children}</main>
+      </div>
+    );
+  }
+
   return (
     <SidebarProvider>
       <Sidebar
