@@ -463,11 +463,24 @@ export default function Employees() {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => {
+                            onClick={async () => {
                               const pwd = Math.random().toString(36).slice(2, 10);
+                              // Update local (legacy) store
                               setUserPassword(u.id, pwd);
                               updateUser(u.id, { defaultPassword: pwd, loginEnabled: true, mustChangePassword: true });
-                              toast.success("Account generated / password set");
+                              // Update server auth
+                              try {
+                                const r = await fetch("/api/auth/admin/set-password", {
+                                  method: "POST",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ identifier: u.email, password: pwd, mustChangePassword: true }),
+                                });
+                                const d = await r.json();
+                                if (!d.ok) throw new Error(d.error || "Server error");
+                                toast.success("Account generated / password set");
+                              } catch (e: any) {
+                                toast.error("Server password update failed");
+                              }
                             }}
                           >
                             {u.password ? "Reset Password" : "Generate Account"}

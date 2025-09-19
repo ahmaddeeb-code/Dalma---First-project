@@ -109,10 +109,68 @@ router.post("/login", (req, res) => {
     return res.json({ ok: true, mfa: true, userId: u.id, demoCode: code });
   }
 
+  if (u.mustChangePassword) {
+    return res.json({ ok: true, mustChangePassword: true, userId: u.id });
+  }
+
   return res.json({
     ok: true,
     user: { id: u.id, name: u.name, email: u.email },
   });
+});
+
+// POST /api/auth/admin/set-password
+router.post("/admin/set-password", (req, res) => {
+  const { identifier, userId, password, mustChangePassword } = req.body || {};
+  if ((!identifier && !userId) || !password)
+    return res.json({ ok: false, error: "Missing" });
+  const users = loadUsers();
+  const u = users.find(
+    (x: any) =>
+      (identifier && x.email && x.email.toLowerCase() === String(identifier).toLowerCase()) ||
+      (userId && x.id === userId),
+  );
+  if (!u) return res.json({ ok: false, error: "User not found" });
+  const creds = hashPW(password);
+  u.salt = creds.salt;
+  u.hash = creds.hash;
+  u.failedAttempts = 0;
+  u.lockedUntil = null;
+  if (typeof mustChangePassword === "boolean") u.mustChangePassword = mustChangePassword;
+  saveUsers(users);
+  return res.json({ ok: true });
+});
+
+// POST /api/auth/first-login
+router.post("/first-login", (req, res) => {
+  const { userId, password } = req.body || {};
+  if (!userId || !password) return res.json({ ok: false, error: "Missing" });
+  const users = loadUsers();
+  const u = users.find((x: any) => x.id === userId);
+  if (!u) return res.json({ ok: false, error: "User not found" });
+  const creds = hashPW(password);
+  u.salt = creds.salt;
+  u.hash = creds.hash;
+  u.failedAttempts = 0;
+  u.lockedUntil = null;
+  u.mustChangePassword = false;
+  saveUsers(users);
+  return res.json({ ok: true });
+});
+
+// update admin users output to include mustChangePassword
+router.get("/admin/users", (req, res) => {
+  const users = loadUsers();
+  const out = users.map((u: any) => ({
+    id: u.id,
+    name: u.name,
+    email: u.email,
+    failedAttempts: u.failedAttempts || 0,
+    lockedUntil: u.lockedUntil || null,
+    twoFactor: !!u.twoFactor,
+    mustChangePassword: !!u.mustChangePassword,
+  }));
+  res.json(out);
 });
 
 // POST /api/auth/verify-otp
