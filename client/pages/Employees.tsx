@@ -314,6 +314,8 @@ export default function Employees() {
                   <TableHead className="hidden md:table-cell">
                     {t("common.privileges")}
                   </TableHead>
+                  <TableHead className="hidden md:table-cell">Login</TableHead>
+                  <TableHead className="hidden md:table-cell">Default Password</TableHead>
                   {canManage && (
                     <TableHead className="text-center">
                       {t("common.actions")}
