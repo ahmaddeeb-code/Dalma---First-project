@@ -82,6 +82,10 @@ export default function Login() {
         if ((res as any).demoCode) toast.success(`OTP: ${(res as any).demoCode}`);
         return;
       }
+      if ((res as any).mustChangePassword) {
+        navigate("/first-login", { replace: true, state: { userId: (res as any).userId } });
+        return;
+      }
       toast.success(t("login.success") || "Welcome");
       navigate(from, { replace: true });
     }, "Signing you in...");
