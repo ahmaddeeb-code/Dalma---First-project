@@ -285,27 +285,24 @@ function TherapyTypesCard({
                     `pages.medical.therapy.freq.${t0.defaultFrequency}` as any,
                   )}
                 </TableCell>
-                <TableCell className="flex items-center gap-2">
+                <TableCell className="text-center">
                   {canManage && (
-                    <>
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        onClick={() => {
+                    <TableActions
+                      actions={[
+                        createEditAction(() => {
                           setEditing(t0);
                           setOpen(true);
-                        }}
-                      >
-                        <Pencil className="ml-1 h-4 w-4" /> {t("common.edit")}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => setConfirmId(t0.id)}
-                      >
-                        <Trash2 className="ml-1 h-4 w-4" /> {t("common.delete")}
-                      </Button>
-                    </>
+                        }),
+                        createDeleteAction(
+                          () => {
+                            removeTherapyType(t0.id);
+                            toast.success(t("pages.medical.saved"));
+                          },
+                          t("common.delete"),
+                          `${t("pages.medical.therapy.title")} — ${t("common.delete")}?`
+                        ),
+                      ]}
+                    />
                   )}
                 </TableCell>
               </TableRow>
