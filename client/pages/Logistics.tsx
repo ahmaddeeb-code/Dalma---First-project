@@ -380,7 +380,7 @@ function BuildingDialog({
           </div>
           <div className="grid md:grid-cols-2 gap-3">
             <div>
-              <Label>{loc === "ar" ? "ال��وابق" : "Floors"}</Label>
+              <Label>{loc === "ar" ? "الطوابق" : "Floors"}</Label>
               <Input
                 type="number"
                 value={floors}
@@ -499,14 +499,23 @@ function RoomsTab({
               </option>
             ))}
           </select>
-          {canManage && (
-            <Button onClick={() => setOpen(true)}>
-              <Plus className="ml-1 h-4 w-4" /> {t("common.add")}
-            </Button>
-          )}
         </div>
       </CardHeader>
       <CardContent>
+        <div className="mb-3">
+          <TableToolbar
+            onAdd={canManage ? () => setOpen(true) : undefined}
+            addLabel={t("common.add")}
+            onExport={(type) => {
+              const cols = [
+                { header: t("common.name"), accessor: (r:any) => L(loc, r.name) },
+                { header: loc === "ar" ? "المبنى" : "Building", accessor: (r:any) => L(loc, buildings.find(b=>b.id===r.buildingId)?.name) },
+                { header: loc === "ar" ? "الطابق" : "Floor", accessor: (r:any) => r.floor },
+              ];
+              import('@/lib/export').then((m)=>m.exportAll(rooms, cols, type, 'rooms'));
+            }}
+          />
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
