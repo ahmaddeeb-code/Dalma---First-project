@@ -53,15 +53,22 @@ export function sendOTP(userId: string) {
   return code;
 }
 
-export function verifyOTP(userId: string, code: string) {
-  const map = JSON.parse(localStorage.getItem("auth_otp_v1") || "{}") as Record<string, { code:string; expiresAt:string }>;
-  const entry = map[userId];
-  if (!entry) return { ok: false, error: "No OTP" };
-  if (new Date(entry.expiresAt) < new Date()) return { ok: false, error: "Expired" };
-  if (entry.code !== code) return { ok: false, error: "Invalid code" };
-  delete map[userId];
-  localStorage.setItem("auth_otp_v1", JSON.stringify(map));
-  return { ok: true };
+export async function verifyOTP(userId: string, code: string) {
+  try {
+    const r = await fetch('/api/auth/verify-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId, code }) });
+    const d = await r.json();
+    return d;
+  } catch (e) {
+    // fallback local
+    const map = JSON.parse(localStorage.getItem("auth_otp_v1") || "{}") as Record<string, { code:string; expiresAt:string }>;
+    const entry = map[userId];
+    if (!entry) return { ok: false, error: "No OTP" };
+    if (new Date(entry.expiresAt) < new Date()) return { ok: false, error: "Expired" };
+    if (entry.code !== code) return { ok: false, error: "Invalid code" };
+    delete map[userId];
+    localStorage.setItem("auth_otp_v1", JSON.stringify(map));
+    return { ok: true };
+  }
 }
 
 export function login(user: User, remember = false) {
