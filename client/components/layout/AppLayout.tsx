@@ -147,9 +147,8 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   const locale = useLocale();
 
   // Enable page transition loading for non-login pages
-  if (!pathname.startsWith('/login')) {
-    usePageLoading();
-  }
+  const shouldShowPageLoading = !pathname.startsWith('/login');
+  usePageLoading(shouldShowPageLoading);
   useEffect(() => {
     const el = document.documentElement;
     const wantDir = locale === "ar" ? "rtl" : "ltr";
