@@ -93,6 +93,7 @@ const App = () => (
                 element={<SecuritySettings />}
               />
               <Route path="/admin/families" element={<FamilyProfiles />} />
+              <Route path="/admin/departments" element={<DepartmentsPage />} />
               <Route path="/admin/logistics" element={<Logistics />} />
               <Route path="/admin/users" element={<AdminUsers />} />
               <Route path="/beneficiaries" element={<Beneficiaries />} />
