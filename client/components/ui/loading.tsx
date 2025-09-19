@@ -159,7 +159,8 @@ export function LoadingSpinner({ size = 'default', className = '' }: { size?: 's
 function LoadingOverlay() {
   const { loading } = useLoading();
 
-  if (!loading.isVisible) return null;
+  // Never show a full-screen overlay for route (page) transitions
+  if (!loading.isVisible || loading.type === 'page') return null;
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/20 backdrop-blur-sm transition-all duration-300 ease-in-out animate-in fade-in">
