@@ -364,7 +364,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
                         return (
                           <SidebarMenuItem
                             key={n.to}
-                            className="animate-fade-in-scale"
+                            className=""
                             style={{
                               animationDelay: `${groupIndex * 100 + itemIndex * 50}ms`,
                             }}
