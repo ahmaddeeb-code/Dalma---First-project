@@ -314,7 +314,7 @@ export default function BeneficiaryProfile() {
                   <AlertDialogDescription>
                     {b.archived
                       ? ar
-                        ? "هل تريد إلغاء أرشفة هذا الملف؟"
+                        ? "هل ��ريد إلغاء أرشفة هذا الملف؟"
                         : "Unarchive this profile?"
                       : ar
                         ? "هل تريد أرشفة هذا الملف؟"
@@ -412,7 +412,7 @@ export default function BeneficiaryProfile() {
           <CardContent className="pt-0 flex flex-wrap gap-2">
             {b.education.programs.length ? b.education.programs.map((p)=> (
               <Badge key={p} variant="secondary">{p}</Badge>
-            )): <span className="text-sm text-muted-foreground">{ar?"��ا يوجد":"None"}</span>}
+            )): <span className="text-sm text-muted-foreground">{ar?"لا يوجد":"None"}</span>}
           </CardContent>
         </Card>
         <Card>
@@ -434,7 +434,7 @@ export default function BeneficiaryProfile() {
             <Stethoscope className="h-4 w-4 ml-1" /> {ar ? "طبي وإعاقة" : "Medical"}
           </TabsTrigger>
           <TabsTrigger value="care">
-            <ClipboardList className="h-4 w-4 ml-1" /> {ar ? "خطة الرعاية" : "Care Plan"}
+            <ClipboardList className="h-4 w-4 ml-1" /> {ar ? "خطة ا��رعاية" : "Care Plan"}
           </TabsTrigger>
           <TabsTrigger value="education">
             <CalendarDays className="h-4 w-4 ml-1" /> {ar ? "تعليم وأنشطة" : "Education"}
@@ -922,13 +922,24 @@ export default function BeneficiaryProfile() {
                   </label>
                 </div>
               )}
+              <TableToolbar
+                onExport={(type) => {
+                  const cols = [
+                    { header: ar ? 'النوع' : 'Type', accessor: (r:any) => r.type },
+                    { header: ar ? 'العنوان' : 'Title', accessor: (r:any) => r.title },
+                    { header: ar ? 'تاريخ الإصدار' : 'Issued', accessor: (r:any) => r.issuedAt || '' },
+                    { header: ar ? 'تاريخ الانتهاء' : 'Expires', accessor: (r:any) => r.expiresAt || '' },
+                  ];
+                  import('@/lib/export').then((m)=>m.exportAll(b.documents, cols, type, 'documents'));
+                }}
+              />
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>{ar ? "النوع" : "Type"}</TableHead>
                     <TableHead>{ar ? "العنوان" : "Title"}</TableHead>
                     <TableHead>{ar ? "تاريخ الإصدار" : "Issued"}</TableHead>
-                    <TableHead>{ar ? "تاريخ الانتهاء" : "Expires"}</TableHead>
+                    <TableHead>{ar ? "ت��ريخ الانتهاء" : "Expires"}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -1106,14 +1117,14 @@ export default function BeneficiaryProfile() {
               </CardTitle>
               <CardDescription>
                 {ar
-                  ? "جهات ا��صال وملاحظات طبية حرجة"
+                  ? "جهات اتصال وملاحظات طبية حرجة"
                   : "Emergency contacts and critical notes"}
               </CardDescription>
             </CardHeader>
             <CardContent className="grid md:grid-cols-2 gap-4 text-sm">
               <div>
                 <div className="font-medium mb-1">
-                  {ar ? "جهات الاتصال" : "Contacts"}
+                  {ar ? "جهات ا��اتصال" : "Contacts"}
                 </div>
                 <ul className="list-disc pl-5 space-y-1">
                   {b.emergency.contacts.map((c, i) => (
@@ -1138,7 +1149,7 @@ export default function BeneficiaryProfile() {
               <CardTitle>{ar ? "سجل التعديلات" : "Edit History"}</CardTitle>
               <CardDescription>
                 {ar
-                  ? "تعقب التع��يلات للمراجعة"
+                  ? "تعقب التعديلات للمراجعة"
                   : "Audit trail for accountability"}
               </CardDescription>
             </CardHeader>
