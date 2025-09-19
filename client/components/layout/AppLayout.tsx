@@ -145,9 +145,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
   const locale = useLocale();
 
-  // Enable page transition loading for non-login pages
-  const shouldShowPageLoading = !pathname.startsWith('/login');
-  usePageLoading(shouldShowPageLoading);
+  // Page transitions should not trigger a global loading overlay.
   useEffect(() => {
     const el = document.documentElement;
     const wantDir = locale === "ar" ? "rtl" : "ltr";
