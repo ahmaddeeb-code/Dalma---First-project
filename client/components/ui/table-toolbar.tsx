@@ -25,6 +25,7 @@ export default function TableToolbar({
   onPageSizeChange,
   pageSizeOptions = [10, 25, 50, 100],
   children,
+  rightChildren,
 }: TableToolbarProps) {
   return (
     <div
