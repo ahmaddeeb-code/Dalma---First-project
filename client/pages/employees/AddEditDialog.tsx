@@ -1,11 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,20 +8,9 @@ import { Role, User, listRoles, upsertUser, uid } from "@/store/acl";
 import { listDepartments } from "@/store/departments";
 import { getLocale, t } from "@/i18n";
 import { toast } from "sonner";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const titleAbbrevOptions = [
-  "Mr.",
-  "Ms.",
-  "Dr.",
-  "Eng.",
-  "Nrs.",
-  "PT",
-  "OT",
-  "ST",
-  "Admin",
-];
+const titleOptions = ["Mr.", "Ms.", "Dr.", "Eng.", "Nrs.", "PT", "OT", "ST", "Admin"];
 
 function combineName(parts: string[]) {
   return parts.map((p) => p.trim()).filter(Boolean).join(" ");
@@ -47,13 +30,12 @@ export default function AddEditEmployeeDialog({
   const [nameEnParts, setNameEnParts] = useState<string[]>(["", "", "", "", ""]);
   const [nameArParts, setNameArParts] = useState<string[]>(["", "", "", "", ""]);
   // Basics
+  const [title, setTitle] = useState<string>("");
   const [gender, setGender] = useState<"male" | "female">("male");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   // Employment
   const [department, setDepartment] = useState("");
-  const [title, setTitle] = useState("");
-  const [titleAbbrev, setTitleAbbrev] = useState<string>("");
   const [joinedAt, setJoinedAt] = useState<string>("");
   const [active, setActive] = useState(true);
   // Access
@@ -67,24 +49,22 @@ export default function AddEditEmployeeDialog({
     if (user) {
       setNameEnParts(user.nameEnParts || ["", "", "", "", ""]);
       setNameArParts(user.nameArParts || ["", "", "", "", ""]);
+      setTitle(user.title || (user as any).titleAbbrev || "");
       setGender((user.gender as any) || "male");
       setEmail(user.email || "");
       setPhone(user.phone || "");
       setDepartment(user.department || "");
-      setTitle(user.title || "");
-      setTitleAbbrev(user.titleAbbrev || "");
       setJoinedAt(user.joinedAt ? user.joinedAt.slice(0, 10) : "");
       setActive(user.active !== false);
       setRoleIds(user.roleIds || []);
     } else {
       setNameEnParts(["", "", "", "", ""]);
       setNameArParts(["", "", "", "", ""]);
+      setTitle("");
       setGender("male");
       setEmail("");
       setPhone("");
       setDepartment("");
-      setTitle("");
-      setTitleAbbrev("");
       setJoinedAt(new Date().toISOString().slice(0, 10));
       setActive(true);
       setRoleIds([]);
@@ -94,8 +74,8 @@ export default function AddEditEmployeeDialog({
   const valid = useMemo(() => {
     const en = combineName(nameEnParts);
     const hasName = en.trim().length > 0 && nameEnParts[0].trim() && nameEnParts[3].trim();
-    return hasName && /.+@.+\..+/.test(email);
-  }, [nameEnParts, email]);
+    return hasName && /.+@.+\..+/.test(email) && !!title;
+  }, [nameEnParts, email, title]);
 
   function toggleRole(id: string, v: boolean | string) {
     const on = v === true;
@@ -116,8 +96,7 @@ export default function AddEditEmployeeDialog({
       email: email.trim(),
       phone: phone.trim() || undefined,
       department: department || undefined,
-      title: title.trim() || undefined,
-      titleAbbrev: titleAbbrev || undefined,
+      title: title, // abbreviation stored as title per requirement
       gender,
       joinedAt: joinedAt ? new Date(joinedAt).toISOString() : undefined,
       active,
@@ -125,7 +104,8 @@ export default function AddEditEmployeeDialog({
       privilegeIds: user?.privilegeIds || [],
       nameEnParts: nameEnParts.map((p) => p.trim()),
       nameArParts: nameArParts.map((p) => p.trim()),
-    };
+    } as User;
+    (entity as any).titleAbbrev = undefined; // legacy cleanup
     upsertUser(entity);
     toast.success(t("pages.translations.saved") || (ar ? "تم الحفظ" : "Saved"));
     onOpenChange(false);
@@ -140,18 +120,30 @@ export default function AddEditEmployeeDialog({
           </DialogTitle>
         </DialogHeader>
 
-        <Tabs defaultValue="identity" className="mt-1">
-          <TabsList className="flex flex-wrap gap-2">
-            <TabsTrigger value="identity">{ar ? "الهوية" : "Identity"}</TabsTrigger>
-            <TabsTrigger value="employment">{ar ? "الوظيفة" : "Employment"}</TabsTrigger>
-            <TabsTrigger value="contact">{ar ? "التواصل" : "Contact"}</TabsTrigger>
-            <TabsTrigger value="access">{ar ? "الصلاحيات" : "Access"}</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="identity" className="space-y-4 mt-3">
-            <div className="grid grid-cols-1 gap-3">
-              <div>
-                <Label>{ar ? "الاسم (إنجليزي) - 5 أجزاء" : "Name (English) - 5 parts"} *</Label>
+        {/* Section: Title & Identity */}
+        <div className="space-y-4">
+          <div>
+            <div className="text-xs uppercase tracking-wide text-muted-foreground font-semibold mb-2">
+              {ar ? "اللقب والهوية" : "Title & Identity"}
+            </div>
+            <div className="grid md:grid-cols-3 gap-3">
+              <div className="md:col-span-1">
+                <Label>{ar ? "اللقب" : "Title"} *</Label>
+                <Select value={title} onValueChange={setTitle}>
+                  <SelectTrigger className="h-9">
+                    <SelectValue placeholder={ar ? "اختر اللقب" : "Choose title"} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {titleOptions.map((ab) => (
+                      <SelectItem key={ab} value={ab}>
+                        {ab}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="md:col-span-2">
+                <Label>{ar ? "الاسم (إنجليزي)" : "Name (English)"} *</Label>
                 <div className="grid grid-cols-5 gap-2 mt-1">
                   {nameEnParts.map((p, i) => (
                     <Input
@@ -168,8 +160,10 @@ export default function AddEditEmployeeDialog({
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">{combineName(nameEnParts)}</p>
               </div>
-              <div>
-                <Label>{ar ? "الاسم (عربي) - 5 أجزاء" : "Name (Arabic) - 5 parts"}</Label>
+            </div>
+            <div className="grid md:grid-cols-3 gap-3 mt-3">
+              <div className="md:col-span-3">
+                <Label>{ar ? "الاسم (عربي)" : "Name (Arabic)"}</Label>
                 <div className="grid grid-cols-5 gap-2 mt-1">
                   {nameArParts.map((p, i) => (
                     <Input
@@ -186,23 +180,27 @@ export default function AddEditEmployeeDialog({
                   ))}
                 </div>
               </div>
-              <div className="grid md:grid-cols-3 gap-3">
-                <div>
-                  <Label>{ar ? "الجنس" : "Gender"}</Label>
-                  <select
-                    className="w-full h-9 rounded-md border bg-background px-3 text-sm"
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value as any)}
-                  >
-                    <option value="male">{ar ? "ذكر" : "Male"}</option>
-                    <option value="female">{ar ? "أنثى" : "Female"}</option>
-                  </select>
-                </div>
+            </div>
+            <div className="grid md:grid-cols-3 gap-3 mt-3">
+              <div>
+                <Label>{ar ? "الجنس" : "Gender"}</Label>
+                <select
+                  className="w-full h-9 rounded-md border bg-background px-3 text-sm"
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value as any)}
+                >
+                  <option value="male">{ar ? "ذكر" : "Male"}</option>
+                  <option value="female">{ar ? "أنثى" : "Female"}</option>
+                </select>
               </div>
             </div>
-          </TabsContent>
+          </div>
 
-          <TabsContent value="employment" className="space-y-4 mt-3">
+          {/* Section: Employment */}
+          <div>
+            <div className="text-xs uppercase tracking-wide text-muted-foreground font-semibold mb-2">
+              {ar ? "الوظيفة" : "Employment"}
+            </div>
             <div className="grid md:grid-cols-2 gap-3">
               <div>
                 <Label>{ar ? "القسم" : "Department"}</Label>
@@ -220,38 +218,21 @@ export default function AddEditEmployeeDialog({
                 </select>
               </div>
               <div>
-                <Label>{ar ? "المسمى الوظيفي" : "Title"}</Label>
-                <Input value={title} onChange={(e) => setTitle(e.target.value)} />
-              </div>
-            </div>
-            <div className="grid md:grid-cols-2 gap-3">
-              <div>
-                <Label>{ar ? "اختصار المسمى" : "Title Abbreviation"}</Label>
-                <Select value={titleAbbrev || ""} onValueChange={setTitleAbbrev}>
-                  <SelectTrigger className="h-9">
-                    <SelectValue placeholder={ar ? "اختر اختصاراً" : "Choose abbreviation"} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {titleAbbrevOptions.map((ab) => (
-                      <SelectItem key={ab} value={ab}>
-                        {ab}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
                 <Label>{ar ? "تاريخ الالتحاق" : "Date of Joining"}</Label>
                 <Input type="date" value={joinedAt} onChange={(e) => setJoinedAt(e.target.value)} />
               </div>
             </div>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center gap-2 mt-2">
               <Checkbox checked={active} onCheckedChange={(v) => setActive(v === true)} />
               <Label>{t("common.active") || (ar ? "نشط" : "Active")}</Label>
             </div>
-          </TabsContent>
+          </div>
 
-          <TabsContent value="contact" className="space-y-4 mt-3">
+          {/* Section: Contact */}
+          <div>
+            <div className="text-xs uppercase tracking-wide text-muted-foreground font-semibold mb-2">
+              {ar ? "التواصل" : "Contact"}
+            </div>
             <div className="grid md:grid-cols-2 gap-3">
               <div>
                 <Label>Email</Label>
@@ -262,9 +243,13 @@ export default function AddEditEmployeeDialog({
                 <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
               </div>
             </div>
-          </TabsContent>
+          </div>
 
-          <TabsContent value="access" className="space-y-2 mt-3">
+          {/* Section: Access */}
+          <div>
+            <div className="text-xs uppercase tracking-wide text-muted-foreground font-semibold mb-2">
+              {ar ? "الصلاحيات" : "Access"}
+            </div>
             <Label className="mb-1 inline-block">{t("common.roles") || (ar ? "الأدوار" : "Roles")}</Label>
             <div className="border rounded-md p-2 max-h-48 overflow-auto space-y-2">
               {roles.map((r) => (
@@ -277,10 +262,10 @@ export default function AddEditEmployeeDialog({
                 </label>
               ))}
             </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
 
-        <DialogFooter className="mt-2">
+        <DialogFooter className="mt-4">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t("common.cancel")}
           </Button>
