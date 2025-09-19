@@ -26,9 +26,9 @@ export default function Login() {
   const [mfaUserId, setMfaUserId] = useState<string | null>(null);
   const [mfaCode, setMfaCode] = useState("");
 
-  const mounted = useRef(false);
+  const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    const id = requestAnimationFrame(() => (mounted.current = true));
+    const id = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(id);
   }, []);
 
