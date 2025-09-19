@@ -157,29 +157,43 @@ export function forgotPassword(email: string) {
   return { ok: true, token };
 }
 
-export function verifyResetToken(token: string) {
-  const resets = JSON.parse(localStorage.getItem(RESET_KEY) || "{}") as Record<string, { email: string; expiresAt: string }>;
-  const entry = resets[token];
-  if (!entry) return { ok: false, error: "Invalid token" };
-  if (new Date(entry.expiresAt) < new Date()) return { ok: false, error: "Expired" };
-  return { ok: true, email: entry.email };
+export async function verifyResetToken(token: string) {
+  try {
+    const r = await fetch('/api/auth/verify-token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token }) });
+    const d = await r.json();
+    return d;
+  } catch (e) {
+    // fallback to local
+    const resets = JSON.parse(localStorage.getItem(RESET_KEY) || "{}") as Record<string, { email: string; expiresAt: string }>;
+    const entry = resets[token];
+    if (!entry) return { ok: false, error: "Invalid token" };
+    if (new Date(entry.expiresAt) < new Date()) return { ok: false, error: "Expired" };
+    return { ok: true, email: entry.email };
+  }
 }
 
-export function resetPassword(token: string, newPassword: string) {
-  const data = verifyResetToken(token);
-  if (!data.ok) return data;
-  const resets = JSON.parse(localStorage.getItem(RESET_KEY) || "{}") as Record<string, { email: string; expiresAt: string }>;
-  const entry = resets[token];
-  const acl = loadACL();
-  const user = acl.users.find((u) => u.email === entry.email);
-  if (!user) return { ok: false, error: "User not found" };
-  user.password = hashPassword(newPassword);
-  user.failedAttempts = 0;
-  user.lockedUntil = null;
-  upsertUser(user);
-  delete resets[token];
-  localStorage.setItem(RESET_KEY, JSON.stringify(resets));
-  return { ok: true };
+export async function resetPassword(token: string, newPassword: string) {
+  try {
+    const r = await fetch('/api/auth/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token, password: newPassword }) });
+    const d = await r.json();
+    return d;
+  } catch (e) {
+    // fallback local
+    const data = verifyResetToken(token);
+    if (!(data as any).ok) return data as any;
+    const resets = JSON.parse(localStorage.getItem(RESET_KEY) || "{}") as Record<string, { email: string; expiresAt: string }>;
+    const entry = resets[token];
+    const acl = loadACL();
+    const user = acl.users.find((u) => u.email === entry.email);
+    if (!user) return { ok: false, error: "User not found" };
+    user.password = hashPassword(newPassword);
+    user.failedAttempts = 0;
+    user.lockedUntil = null;
+    upsertUser(user);
+    delete resets[token];
+    localStorage.setItem(RESET_KEY, JSON.stringify(resets));
+    return { ok: true };
+  }
 }
 
 export { subscribeAuth as subscribe, verifyOTP, authenticate, setUserPassword, sendOTP };
