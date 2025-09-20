@@ -1,9 +1,25 @@
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import SortableTableHead, { useTableSort } from "@/components/ui/sortable-table-head";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import SortableTableHead, {
+  useTableSort,
+} from "@/components/ui/sortable-table-head";
 import { cn } from "@/lib/utils";
 
 export type TableV2Column = {
@@ -44,7 +60,9 @@ export type TableV2Props = {
   queryParamMapping?: QueryParamMapping;
   onRowClick?: (row: Record<string, any>) => void;
   onAction?: (action: string, row: Record<string, any>) => void;
-  fetcher?: (params: Required<TableV2QueryParams>) => Promise<{ rows: Record<string, any>[]; total: number }>;
+  fetcher?: (
+    params: Required<TableV2QueryParams>,
+  ) => Promise<{ rows: Record<string, any>[]; total: number }>;
   searchable?: boolean;
   className?: string;
 };
@@ -79,7 +97,8 @@ export default function TableV2({
   const [page, setPage] = React.useState(1);
   const [perPage, setPerPage] = React.useState(pageSize);
   const [total, setTotal] = React.useState(initialRows.length);
-  const { sortBy, sortDir, handleSort, sortData, setSortBy, setSortDir } = useTableSort<string>(defaultSort?.key, defaultSort?.dir ?? "asc");
+  const { sortBy, sortDir, handleSort, sortData, setSortBy, setSortDir } =
+    useTableSort<string>(defaultSort?.key, defaultSort?.dir ?? "asc");
 
   // debounce search
   React.useEffect(() => {
@@ -88,7 +107,8 @@ export default function TableV2({
   }, [search]);
 
   // server-side fetch
-  const [serverRows, setServerRows] = React.useState<Record<string, any>[]>(initialRows);
+  const [serverRows, setServerRows] =
+    React.useState<Record<string, any>[]>(initialRows);
   React.useEffect(() => {
     if (!serverSide) return;
     const params: Required<TableV2QueryParams> = {
@@ -110,7 +130,13 @@ export default function TableV2({
     const base = serverSide ? serverRows : initialRows;
     if (!debounced) return base;
     const q = debounced.toLowerCase();
-    return base.filter((r) => Object.values(r).some((v) => String(v ?? "").toLowerCase().includes(q)));
+    return base.filter((r) =>
+      Object.values(r).some((v) =>
+        String(v ?? "")
+          .toLowerCase()
+          .includes(q),
+      ),
+    );
   }, [debounced, initialRows, serverRows, serverSide]);
 
   const sorted = React.useMemo(() => {
@@ -173,7 +199,10 @@ export default function TableV2({
                     currentSortBy={sortBy}
                     currentSortDir={sortDir as any}
                     onSort={sortable ? handleSort : undefined}
-                    className={cn("text-foreground", c.width ? undefined : undefined)}
+                    className={cn(
+                      "text-foreground",
+                      c.width ? undefined : undefined,
+                    )}
                   >
                     {c.label}
                   </SortableTableHead>
@@ -182,7 +211,11 @@ export default function TableV2({
             </TableHeader>
             <TableBody>
               {paged.map((row, idx) => (
-                <TableRow key={rowKey(row, idx)} className="md:hover:bg-accent/40" onClick={onRowClick ? () => onRowClick(row) : undefined}>
+                <TableRow
+                  key={rowKey(row, idx)}
+                  className="md:hover:bg-accent/40"
+                  onClick={onRowClick ? () => onRowClick(row) : undefined}
+                >
                   {columns.map((c) => (
                     <TableCell key={c.key}>
                       {c.render ? c.render(row) : (row as any)[c.key]}
@@ -192,7 +225,10 @@ export default function TableV2({
               ))}
               {paged.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={columns.length} className="text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={columns.length}
+                    className="text-center text-muted-foreground"
+                  >
                     No data
                   </TableCell>
                 </TableRow>
@@ -208,7 +244,8 @@ export default function TableV2({
                 <span>0–0 of 0 items</span>
               ) : (
                 <span>
-                  {Math.min((page - 1) * perPage + 1, total)}–{Math.min(page * perPage, total)} of {total} items
+                  {Math.min((page - 1) * perPage + 1, total)}–
+                  {Math.min(page * perPage, total)} of {total} items
                 </span>
               )}
             </div>

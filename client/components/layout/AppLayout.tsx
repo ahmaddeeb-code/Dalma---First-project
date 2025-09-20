@@ -81,7 +81,11 @@ const groups = [
       { to: "/employees", key: "nav.employees", icon: Users },
       { to: "/admin/families", key: "nav.families", icon: UserCircle2 },
       { to: "/admin/departments", key: "nav.departments", icon: Building2 },
-      { to: "/admin/room-buildings", key: "nav.roomsBuildings", icon: Building2 },
+      {
+        to: "/admin/room-buildings",
+        key: "nav.roomsBuildings",
+        icon: Building2,
+      },
       { to: "/donations", key: "nav.donations", icon: HandHeart },
     ],
   },

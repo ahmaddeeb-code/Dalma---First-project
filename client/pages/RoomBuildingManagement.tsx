@@ -24,7 +24,10 @@ import {
   type Localized,
 } from "@/store/logistics";
 import { getLocale, subscribeLocale } from "@/i18n";
-import TableActions, { createDeleteAction, createEditAction } from "@/components/ui/table-actions";
+import TableActions, {
+  createDeleteAction,
+  createEditAction,
+} from "@/components/ui/table-actions";
 
 function useLocale() {
   return useSyncExternalStore(
@@ -68,7 +71,9 @@ export default function RoomBuildingManagement() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-3xl font-bold">Room & Building Management</CardTitle>
+          <CardTitle className="text-3xl font-bold">
+            Room & Building Management
+          </CardTitle>
         </CardHeader>
       </Card>
 
@@ -76,7 +81,9 @@ export default function RoomBuildingManagement() {
         <Button variant="secondary" onClick={() => setShowBuildingDialog(true)}>
           Add New Building
         </Button>
-        <Button onClick={() => setShowRoomDialog({ open: true })}>Add New Room</Button>
+        <Button onClick={() => setShowRoomDialog({ open: true })}>
+          Add New Room
+        </Button>
       </div>
 
       <Card>
@@ -99,8 +106,13 @@ export default function RoomBuildingManagement() {
                   <div className="flex justify-end">
                     <TableActions
                       actions={[
-                        createEditAction(() => setShowRoomDialog({ open: true, editing: r.__room })),
-                        createDeleteAction(() => removeRoom(r.id), "Delete room"),
+                        createEditAction(() =>
+                          setShowRoomDialog({ open: true, editing: r.__room }),
+                        ),
+                        createDeleteAction(
+                          () => removeRoom(r.id),
+                          "Delete room",
+                        ),
                       ]}
                       maxVisibleActions={2}
                     />
@@ -132,7 +144,10 @@ export default function RoomBuildingManagement() {
         editing={showRoomDialog.editing || null}
       />
 
-      <BuildingDialog open={showBuildingDialog} onOpenChange={setShowBuildingDialog} />
+      <BuildingDialog
+        open={showBuildingDialog}
+        onOpenChange={setShowBuildingDialog}
+      />
     </div>
   );
 }
@@ -148,7 +163,9 @@ function RoomDialog({
 }) {
   const state = useLogistics();
   const loc = useLocale();
-  const [buildingId, setBuildingId] = useState<string>(editing?.buildingId || state.buildings[0]?.id || "");
+  const [buildingId, setBuildingId] = useState<string>(
+    editing?.buildingId || state.buildings[0]?.id || "",
+  );
   const [name, setName] = useState<string>(editing ? L(loc, editing.name) : "");
   const [floor, setFloor] = useState<number>(editing?.floor ?? 0);
   const [capacity, setCapacity] = useState<number>(editing?.capacity ?? 0);
@@ -197,7 +214,11 @@ function RoomDialog({
             </div>
             <div className="space-y-2">
               <Label htmlFor="rb-name">Room Name</Label>
-              <Input id="rb-name" value={name} onChange={(e) => setName(e.target.value)} />
+              <Input
+                id="rb-name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="rb-floor">Floor</Label>
@@ -218,7 +239,11 @@ function RoomDialog({
               />
             </div>
             <div className="flex items-center space-x-2">
-              <Checkbox id="rb-active" checked={active} onCheckedChange={(v) => setActive(Boolean(v))} />
+              <Checkbox
+                id="rb-active"
+                checked={active}
+                onCheckedChange={(v) => setActive(Boolean(v))}
+              />
               <Label htmlFor="rb-active">Active</Label>
             </div>
           </div>
@@ -234,7 +259,13 @@ function RoomDialog({
   );
 }
 
-function BuildingDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+function BuildingDialog({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   const [name, setName] = useState("");
   const [floors, setFloors] = useState(1);
   const [capacity, setCapacity] = useState(0);
@@ -259,7 +290,11 @@ function BuildingDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="bld-name">Building Name</Label>
-            <Input id="bld-name" value={name} onChange={(e) => setName(e.target.value)} />
+            <Input
+              id="bld-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="bld-floors">Floors</Label>
