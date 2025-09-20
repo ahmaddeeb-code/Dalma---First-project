@@ -24,6 +24,7 @@ const OrganizationSettings = lazy(() => import("@/pages/OrganizationSettings"));
 const SecuritySettings = lazy(() => import("@/pages/SecuritySettings"));
 const FamilyProfiles = lazy(() => import("@/pages/FamilyProfiles"));
 const DepartmentsPage = lazy(() => import("@/pages/admin/Departments"));
+const RoomBuildingManagement = lazy(() => import("@/pages/RoomBuildingManagement"));
 import LoginAdmin from "./pages/auth/LoginAdmin";
 import LoginStaff from "./pages/auth/LoginStaff";
 import LoginFamily from "./pages/auth/LoginFamily";
@@ -108,6 +109,7 @@ const App = () => (
                     element={<DepartmentsPage />}
                   />
                   <Route path="/admin/users" element={<AdminUsers />} />
+                  <Route path="/admin/room-buildings" element={<RoomBuildingManagement />} />
                   <Route path="/beneficiaries" element={<Beneficiaries />} />
                   <Route
                     path="/beneficiaries/:id"
