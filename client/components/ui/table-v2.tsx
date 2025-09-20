@@ -184,7 +184,7 @@ export default function TableV2({
               {paged.map((row, idx) => (
                 <TableRow key={rowKey(row, idx)} className="hover:bg-accent/40" onClick={onRowClick ? () => onRowClick(row) : undefined}>
                   {columns.map((c) => (
-                    <TableCell key={c.key} style={c.width ? { width: c.width as any } : undefined}>
+                    <TableCell key={c.key}>
                       {c.render ? c.render(row) : (row as any)[c.key]}
                     </TableCell>
                   ))}
