@@ -14,14 +14,7 @@ import TableActions, {
 } from "@/components/ui/table-actions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import TableV2 from "@/components/ui/table-v2";
 import SortableTableHead from "@/components/ui/sortable-table-head";
 import {
   Dialog,
@@ -105,49 +98,42 @@ export default function DepartmentsPage() {
               }}
             />
           </div>
-          <div className="w-full overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <SortableTableHead sortable={false}>
-                    {t("common.name") || "Name"}
-                  </SortableTableHead>
-                  <TableHead className="w-[160px] text-center">
-                    {t("common.actions") || "Actions"}
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {[...deps]
-                  .sort((a, b) =>
-                    sortDir === "asc"
-                      ? a.name.localeCompare(b.name)
-                      : b.name.localeCompare(a.name),
-                  )
-                  .map((d) => (
-                    <TableRow key={d.id}>
-                      <TableCell className="font-medium">{d.name}</TableCell>
-                      <TableCell className="text-center">
-                        <TableActions
-                          actions={[
-                            createEditAction(() => {
-                              setEditing(d);
-                              setName(d.name);
-                              setOpen(true);
-                            }),
-                            createDeleteAction(
-                              () => removeDepartment(d.id),
-                              t("common.confirmDelete") || "Confirm delete",
-                              `Delete department "${d.name}"?`,
-                            ),
-                          ]}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </div>
+          <TableV2
+            title={t("common.departments") || "Departments"}
+            columns={[
+              { key: "name", label: t("common.name") || "Name", sortable: true },
+              {
+                key: "actions",
+                label: t("common.actions") || "Actions",
+                sortable: false,
+                render: (r) => (
+                  <div className="flex justify-center">
+                    <TableActions
+                      actions={[
+                        createEditAction(() => {
+                          const d = deps.find((x) => x.id === r.id)!;
+                          setEditing(d);
+                          setName(d.name);
+                          setOpen(true);
+                        }),
+                        createDeleteAction(
+                          () => removeDepartment(r.id),
+                          t("common.confirmDelete") || "Confirm delete",
+                          `Delete department "${r.name}"?`,
+                        ),
+                      ]}
+                    />
+                  </div>
+                ),
+              },
+            ]}
+            rows={deps.map((d) => ({ id: d.id, name: d.name }))}
+            paginationEnabled
+            pageSize={10}
+            pageSizeOptions={[10,25,50]}
+            sortable
+            defaultSort={{ key: "name", dir: "asc" }}
+          />
         </CardContent>
       </Card>
 
