@@ -23,7 +23,6 @@ const BeneficiarySettings = lazy(() => import("@/pages/BeneficiarySettings"));
 const OrganizationSettings = lazy(() => import("@/pages/OrganizationSettings"));
 const SecuritySettings = lazy(() => import("@/pages/SecuritySettings"));
 const FamilyProfiles = lazy(() => import("@/pages/FamilyProfiles"));
-const Logistics = lazy(() => import("@/pages/Logistics"));
 const DepartmentsPage = lazy(() => import("@/pages/admin/Departments"));
 import LoginAdmin from "./pages/auth/LoginAdmin";
 import LoginStaff from "./pages/auth/LoginStaff";
@@ -108,7 +107,6 @@ const App = () => (
                     path="/admin/departments"
                     element={<DepartmentsPage />}
                   />
-                  <Route path="/admin/logistics" element={<Logistics />} />
                   <Route path="/admin/users" element={<AdminUsers />} />
                   <Route path="/beneficiaries" element={<Beneficiaries />} />
                   <Route
