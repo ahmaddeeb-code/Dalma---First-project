@@ -69,7 +69,7 @@ export default function SortableTableHead({
           align === "right" && "justify-end",
         )}
       >
-        <span className="font-semibold">{children}</span>
+        <span className={cn(isActive ? "font-semibold" : "font-medium")}>{children}</span>
         {getSortIcon()}
       </div>
     </TableHead>
