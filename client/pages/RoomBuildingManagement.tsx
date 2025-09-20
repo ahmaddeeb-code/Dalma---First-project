@@ -91,42 +91,45 @@ export default function RoomBuildingManagement() {
           <CardTitle className="text-xl font-semibold">Rooms</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="relative w-full overflow-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Building Name</TableHead>
-                  <TableHead>Room Name</TableHead>
-                  <TableHead>Floor</TableHead>
-                  <TableHead>Capacity</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {rows.map(({ id, building, room }) => (
-                  <TableRow key={id}>
-                    <TableCell>{building ? L(loc, building.name) : "-"}</TableCell>
-                    <TableCell>{L(loc, room.name)}</TableCell>
-                    <TableCell>{room.floor}</TableCell>
-                    <TableCell>{room.capacity}</TableCell>
-                    <TableCell>{room.active ? "Active" : "Inactive"}</TableCell>
-                    <TableCell className="text-right">
-                      <TableActions
-                        actions={[
-                          createEditAction(() =>
-                            setShowRoomDialog({ open: true, editing: room }),
-                          ),
-                          createDeleteAction(() => removeRoom(room.id), "Delete room"),
-                        ]}
-                        maxVisibleActions={2}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+          <TableV2
+            columns={[
+              { key: "buildingName", label: "Building Name", sortable: true },
+              { key: "roomName", label: "Room Name", sortable: true },
+              { key: "floor", label: "Floor", sortable: true },
+              { key: "capacity", label: "Capacity", sortable: true },
+              { key: "status", label: "Status", sortable: true },
+              {
+                key: "actions",
+                label: "Actions",
+                sortable: false,
+                render: (r) => (
+                  <div className="flex justify-end">
+                    <TableActions
+                      actions={[
+                        createEditAction(() => setShowRoomDialog({ open: true, editing: r.__room })),
+                        createDeleteAction(() => removeRoom(r.id), "Delete room"),
+                      ]}
+                      maxVisibleActions={2}
+                    />
+                  </div>
+                ),
+              },
+            ]}
+            rows={rows.map(({ id, building, room }) => ({
+              id,
+              buildingName: building ? L(loc, building.name) : "-",
+              roomName: L(loc, room.name),
+              floor: room.floor,
+              capacity: room.capacity,
+              status: room.active ? "Active" : "Inactive",
+              __room: room,
+            }))}
+            paginationEnabled
+            pageSize={10}
+            pageSizeOptions={[10, 25, 50]}
+            sortable
+            defaultSort={{ key: "buildingName", dir: "asc" }}
+          />
         </CardContent>
       </Card>
 
