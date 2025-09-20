@@ -42,6 +42,7 @@ const messages = {
       medicalSettings: "Medical Settings",
       beneficiarySettings: "Beneficiary Settings",
       logistics: "Logistics",
+      roomsBuildings: "Rooms & Buildings",
       organizationSettings: "Organization Settings",
       securitySettings: "Security",
       families: "Family Profiles",
@@ -494,7 +495,7 @@ const messages = {
     },
   },
   ar: {
-    brand: "منصة دلما الذكية",
+    brand: "من��ة دلما الذكية",
     nav: {
       home: "الرئيسية",
       admin: "لوحة التحكم",
@@ -507,6 +508,7 @@ const messages = {
       medicalSettings: "إعدادات طبية",
       beneficiarySettings: "إعدادات المستفيد",
       logistics: "الخدمات اللوجستية",
+      roomsBuildings: "الغرف والمباني",
       organizationSettings: "إعدادات المؤسسة",
       securitySettings: "الأمان",
       families: "ملفات العائلات",
@@ -592,7 +594,7 @@ const messages = {
         cards: { total: "إجمالي", doctors: "الأطباء", therapists: "المعالجون" },
         table: {
           title: "الموظفون",
-          desc: "انقر تعديل لتحديث الأدوار والصلاحيات",
+          desc: "انقر تعديل لتحديث الأدوار والصلاح��ات",
         },
         filters: { searchPlaceholder: "اسم، بريد، قسم..." },
         confirmDeleteTitle: "حذف الموظف؟",
@@ -682,7 +684,7 @@ const messages = {
           freq: { daily: "يومي", weekly: "أسبوعي", monthly: "شهري" },
         },
         plans: {
-          title: "قوالب خطط العلاج",
+          title: "قوالب خطط العل��ج",
           desc: "أهداف وتدخلات قياسية.",
           assigned: "مخصص لـ",
           doctor: "طبيب",
@@ -741,7 +743,7 @@ const messages = {
       },
       beneficiaries: {
         title: "إدارة المستفيدين",
-        desc: "قائمة المستفيدين مع البحث والفلاتر والوصول السريع للملفات",
+        desc: "قائم�� المستفيدين مع البحث والفلاتر والوصول السريع للملفات",
         stats: {
           total: "إجمالي",
           active: "نشطون",
@@ -776,7 +778,7 @@ const messages = {
           age: "العمر",
           disability: "الإعاقة",
           programs: "البرامج",
-          therapist: "المعالج",
+          therapist: "الم��الج",
           status: "الحالة",
           profile: "الملف",
         },
@@ -784,7 +786,7 @@ const messages = {
           active: "نشط",
           underTreatment: "تحت العلاج",
           graduated: "متخرج",
-          inactive: "غير نشط",
+          inactive: "غير ��شط",
         },
         alerts: {
           title: "تنبيهات",
@@ -812,7 +814,7 @@ const messages = {
           },
           quality: {
             title: "مؤشر الجودة",
-            desc: "استناداً إلى إكمال العلاج، معدل الحوادث، واستبيانات الرضا.",
+            desc: "استناداً إلى إكمال العلاج، معدل الحوادث، واستبيانات ��لرضا.",
           },
         },
         chart: {
@@ -865,7 +867,7 @@ const messages = {
         desc: "بوابات المستفيد والموظف والإدارة والعائلة لتبسيط العمليات اليومية — التسجيل والسجلات والعلاجات والحضور والتواصل الآمن.",
         open: "فتح",
         beneficiary: {
-          title: "بوابة المستفيد",
+          title: "بوابة المستف��د",
           bullets: [
             "التسجيل والملفات الشخصية",
             "رفع المستندات",
