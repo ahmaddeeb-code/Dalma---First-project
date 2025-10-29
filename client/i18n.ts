@@ -336,7 +336,7 @@ const messages = {
         },
       },
       admin: {
-        title: "Admin Dashboard",
+        title: "admin",
         subtitle:
           "Real-time view over beneficiaries, staff, services and alerts.",
         buttons: {
@@ -396,7 +396,7 @@ const messages = {
       hero: {
         badge: "End-to-end care for people with disabilities",
         title: "DALMA Smart Platform",
-        desc: "A unified, cloud-based system connecting beneficiaries, employees, administrators, and families—delivering transparent, efficient, and sustainable services.",
+        desc: "A unified, cloud-based system connecting beneficiaries, employees, administrators, and families��delivering transparent, efficient, and sustainable services.",
         ctaAdmin: "Explore admin",
         ctaDonate: "Support with a Donation",
       },
@@ -606,7 +606,7 @@ const messages = {
         subtitle: "إدارة المستخدمين والأدوار وا��ص��احيات؛ وتعيينها بأمان.",
         tabs: { users: "المستخدمون", roles: "الأدوار", privs: "الصلاحيات" },
         users: {
-          title: "المستخدمون",
+          title: "المستخدمو��",
           desc: "إنشاء الحسابات وتعيين الأدوار/��لصلاحيات.",
           headers: {
             name: "الاسم",
@@ -823,7 +823,7 @@ const messages = {
           labels: { residential: "سكنية", daycare: "نهارية", home: "منزلية" },
         },
         alerts: {
-          title: "تنبيهات عاجلة",
+          title: "ت��بيهات عاجلة",
           desc: "تنبيهات حرجة بالوقت الحقيقي.",
           items: {
             missedMedication: "دواء فائت (غرفة ٢٠٣)",
@@ -916,7 +916,7 @@ const messages = {
         title: "تنبيهات ذكية",
         desc: "تنبيهات ذات أولوية للطوارئ والغيابات وتغييرات الجداول.",
         urgentFlag: "إشارة طوارئ مرفوعة (جناح ب)",
-        urgent: "عاجل",
+        urgent: "عاج��",
         absences: "تم رصد ٣ غيابات",
         medium: "متوسط",
         schedule: "تم تحديث جدول العلاجات",
