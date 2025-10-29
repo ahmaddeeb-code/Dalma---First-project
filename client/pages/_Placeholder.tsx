@@ -16,7 +16,7 @@ export default function Placeholder({
       ) : null}
       <div className="mt-6 flex items-center justify-center gap-3">
         <Button asChild>
-          <Link to="/admin">Open Admin Dashboard</Link>
+          <Link to="/admin">Open admin</Link>
         </Button>
         <Button asChild variant="secondary">
           <Link to="/">Back to Home</Link>
