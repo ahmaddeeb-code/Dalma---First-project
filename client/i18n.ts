@@ -397,7 +397,7 @@ const messages = {
         badge: "End-to-end care for people with disabilities",
         title: "DALMA Smart Platform",
         desc: "A unified, cloud-based system connecting beneficiaries, employees, administrators, and families—delivering transparent, efficient, and sustainable services.",
-        ctaAdmin: "Explore Admin Dashboard",
+        ctaAdmin: "Explore admin",
         ctaDonate: "Support with a Donation",
       },
       metrics: {
@@ -428,7 +428,7 @@ const messages = {
           ],
         },
         admin: {
-          title: "Admin Dashboard",
+          title: "admin",
           bullets: [
             "KPI analytics",
             "Roles & permissions",
@@ -583,7 +583,7 @@ const messages = {
       all: "الكل",
       pageSize: "حجم الصفحة",
       filtered: "المجموعة المفلترة",
-      fullDataset: "كامل البيانات",
+      fullDataset: "��امل البيانات",
       format: "تنسيق",
     },
     pages: {
@@ -607,7 +607,7 @@ const messages = {
         tabs: { users: "المستخدمون", roles: "الأدوار", privs: "الصلاحيات" },
         users: {
           title: "المستخدمون",
-          desc: "إنشاء الحسابات وتعيين الأدوار/الصلاحيات.",
+          desc: "إنشاء الحسابات وتعيين الأدوار/��لصلاحيات.",
           headers: {
             name: "الاسم",
             email: "البريد الإلكتروني",
@@ -672,7 +672,7 @@ const messages = {
           medication: "الأدوية",
           scheduling: "الجدولة",
           progress: "متابعة التقدم",
-          emergency: "الطوارئ والملاحظات",
+          emergency: "ال��وارئ والملاحظات",
         },
         common: { description: "الوصف", addNew: "إضافة جديد" },
         therapy: {
@@ -760,7 +760,7 @@ const messages = {
           sortDir: "الاتجاه",
           minAge: "العمر الأدنى",
           maxAge: "ال��مر الأقصى",
-          searchPlaceholder: "اسم، رقم هوية، ولي أمر...",
+          searchPlaceholder: "اسم، رقم هو��ة، ولي أمر...",
           asc: "تصاعدي",
           desc: "تنازلي",
           all: "الكل",
@@ -887,7 +887,7 @@ const messages = {
         admin: {
           title: "لوحة التحكم",
           bullets: [
-            "تحليلات المؤشرات",
+            "تحليلات المؤشر��ت",
             "الأدوار والصلاحيات",
             "الميزانيات والمالية",
             "سجلات ��لتدقيق",
